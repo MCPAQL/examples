@@ -1,9 +1,11 @@
 # Pending Work: Infrastructure Setup
 
 ## Summary
+
 Infrastructure setup for the examples repository - a collection of example MCP-AQL adapter implementations demonstrating various patterns and use cases.
 
 ## Current State
+
 - Repository exists with basic structure
 - No CI/CD workflows
 - No branch protection or git flow
@@ -12,6 +14,7 @@ Infrastructure setup for the examples repository - a collection of example MCP-A
 ## Work To Complete
 
 ### 1. Git Flow Setup (Issue #1)
+
 **Purpose**: Establish consistent branching strategy
 
 Tasks:
@@ -20,6 +23,7 @@ Tasks:
 - Document branching strategy
 
 ### 2. Example Validation Workflow (Issue #2)
+
 **Purpose**: Ensure all examples are correct and runnable
 
 Tasks:
@@ -42,6 +46,7 @@ strategy:
 ```
 
 ### 3. Spec Version Sync Check (Issue #3)
+
 **Purpose**: Verify examples match current MCP-AQL spec version
 
 Tasks:
@@ -54,6 +59,7 @@ Tasks:
   - Automated check against MCPAQL/spec releases
 
 ### 4. Issue and PR Templates (Issue #4)
+
 **Purpose**: Standardize contributions
 
 Tasks:
@@ -62,6 +68,7 @@ Tasks:
 - PR template with validation checklist
 
 ### 5. CODEOWNERS (Issue #5)
+
 **Purpose**: Automatic review assignment
 
 Tasks:
