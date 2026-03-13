@@ -3,7 +3,10 @@
     "source_operation_count": 43,
     "adapter_operation_count": 44,
     "missing_operations": [],
-    "extra_operations": []
+    "extra_operations": [],
+    "notes": [
+      "adapter_operation_count includes 1 synthetic adapter operation(s): introspect."
+    ]
   },
   "operations": [
     {

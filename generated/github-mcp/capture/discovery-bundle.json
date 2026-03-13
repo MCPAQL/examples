@@ -1,10 +1,10 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.0.0-draft",
   "source": {
     "name": "github-mcp-remote",
     "server_url": "https://api.githubcopilot.com/mcp/",
     "transport": "streamable_http",
-    "captured_at": "2026-03-13T18:59:59.456Z",
+    "captured_at": "2026-03-13T20:08:48.081Z",
     "server": {
       "name": "github-mcp-server",
       "version": "github-mcp-server/remote-9f836f5fe414b6a085717f480c7f23093404340d",
@@ -2527,7 +2527,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -2586,7 +2593,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -2653,7 +2667,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -2721,7 +2742,14 @@
             "title",
             "idempotentHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -2780,7 +2808,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -2865,7 +2900,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -2956,7 +2998,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3024,7 +3073,14 @@
             "title",
             "openWorldHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3091,7 +3147,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3159,7 +3222,14 @@
             "title",
             "destructiveHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3210,7 +3280,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3290,7 +3367,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3343,7 +3427,14 @@
             "readOnlyHint",
             "openWorldHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3412,7 +3503,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3464,7 +3562,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3508,7 +3613,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3535,7 +3647,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3587,7 +3706,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3639,7 +3765,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3683,7 +3816,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3719,7 +3859,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3804,7 +3951,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -3950,7 +4104,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4013,7 +4174,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4092,7 +4260,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4128,7 +4303,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4243,7 +4425,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4361,7 +4550,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4424,7 +4620,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4487,7 +4690,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4569,7 +4779,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4658,7 +4875,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4753,7 +4977,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4822,7 +5053,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4875,7 +5113,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -4950,7 +5195,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5054,7 +5306,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5158,7 +5417,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5248,7 +5514,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5328,7 +5601,14 @@
             "title",
             "readOnlyHint"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5421,7 +5701,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5532,7 +5819,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       },
       {
@@ -5591,7 +5885,14 @@
           "annotations": [
             "title"
           ],
-          "input_schema_present": true
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
         }
       }
     ],

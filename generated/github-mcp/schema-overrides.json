@@ -21,6 +21,10 @@
     "merge_pull_request": {
       "endpoint": "EXECUTE"
     },
+    "push_files": {
+      "endpoint": "EXECUTE",
+      "review_reason": "push_files can create and update multiple files plus branch history in a single workflow, so the first golden-path adapter keeps it in EXECUTE rather than collapsing it into CREATE or UPDATE."
+    },
     "pull_request_review_write": {
       "endpoint": "UPDATE",
       "review_reason": "Review-write semantics are treated as UPDATE in the first pass."

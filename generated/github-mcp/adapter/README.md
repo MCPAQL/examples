@@ -1,6 +1,6 @@
-# Github-mcp
+# GitHub MCP
 
-Generated MCP-AQL adapter package for Generated MCP-AQL adapter for the official GitHub MCP server..
+Generated MCP-AQL adapter package for the official GitHub MCP server.
 
 ## Supported Endpoints
 

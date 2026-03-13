@@ -541,7 +541,8 @@
       "endpoint": "EXECUTE",
       "needs_review": true,
       "review_reasons": [
-        "Action-oriented tool classified as EXECUTE conservatively."
+        "Action-oriented tool classified as EXECUTE conservatively.",
+        "push_files can create and update multiple files plus branch history in a single workflow, so the first golden-path adapter keeps it in EXECUTE rather than collapsing it into CREATE or UPDATE."
       ]
     },
     {

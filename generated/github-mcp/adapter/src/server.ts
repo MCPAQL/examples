@@ -1,18 +1,33 @@
-// @ts-nocheck
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+import type {
+  CallToolRequest,
+  CallToolResult,
+  ListToolsResult,
+} from "@modelcontextprotocol/sdk/types.js";
 import schema from "./schema.json" with { type: "json" };
 import provenance from "./provenance.json" with { type: "json" };
 
-const TOOL_BY_OPERATION = new Map(
-  Object.entries(schema.operations)
-    .flatMap(([endpoint, operations]) => (operations ?? []).map((operation) => [operation.name, { endpoint: endpoint.toUpperCase(), definition: operation }]))
-);
+type SchemaOperations = typeof schema.operations;
+type EndpointKey = keyof SchemaOperations;
+type EndpointName = Uppercase<EndpointKey>;
+type OperationDefinition = NonNullable<SchemaOperations[EndpointKey]>[number];
+type OperationIndexEntry = {
+  endpoint: EndpointName;
+  definition: OperationDefinition;
+};
+type OperationArguments = Record<string, unknown> & {
+  operation?: unknown;
+  params?: unknown;
+};
 
-const TOOL_NAME_BY_ENDPOINT = {
+const TOOL_NAME_BY_ENDPOINT: Record<EndpointName, string> = {
   CREATE: "mcp_aql_create",
   READ: "mcp_aql_read",
   UPDATE: "mcp_aql_update",
@@ -20,12 +35,26 @@ const TOOL_NAME_BY_ENDPOINT = {
   EXECUTE: "mcp_aql_execute",
 };
 
-/** @type {Client | undefined} */
-let upstreamClient;
-/** @type {StreamableHTTPClientTransport | undefined} */
-let upstreamTransport;
+const TOOL_BY_OPERATION = new Map<string, OperationIndexEntry>();
+for (const [endpoint, operations] of Object.entries(schema.operations) as Array<[EndpointKey, OperationDefinition[] | undefined]>) {
+  for (const operation of operations ?? []) {
+    TOOL_BY_OPERATION.set(operation.name, {
+      endpoint: endpoint.toUpperCase() as EndpointName,
+      definition: operation,
+    });
+  }
+}
 
-function resolveToken() {
+let upstreamClient: Client | undefined;
+let upstreamTransport: StreamableHTTPClientTransport | undefined;
+
+function textResult(payload: unknown): CallToolResult {
+  return {
+    content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+  };
+}
+
+function resolveToken(): string {
   const configured = schema.auth?.token_env;
   if (configured && process.env[configured]) {
     return process.env[configured];
@@ -34,7 +63,7 @@ function resolveToken() {
   throw new Error(`Missing upstream bearer token in env var '${configured ?? "GITHUB_PERSONAL_ACCESS_TOKEN"}'.`);
 }
 
-async function getUpstreamClient() {
+async function getUpstreamClient(): Promise<Client> {
   if (upstreamClient) {
     return upstreamClient;
   }
@@ -53,12 +82,12 @@ async function getUpstreamClient() {
   return upstreamClient;
 }
 
-function resolveParams(args) {
-  if (args && typeof args.params === "object" && args.params !== null) {
-    return args.params;
+function resolveParams(args: OperationArguments | undefined): Record<string, unknown> {
+  if (args && typeof args.params === "object" && args.params !== null && !Array.isArray(args.params)) {
+    return args.params as Record<string, unknown>;
   }
 
-  if (!args || typeof args !== "object") {
+  if (!args) {
     return {};
   }
 
@@ -67,7 +96,7 @@ function resolveParams(args) {
   return clone;
 }
 
-function buildToolDescription(endpoint, operations) {
+function buildToolDescription(endpoint: EndpointName, operations: OperationDefinition[]): string {
   const names = operations.map((operation) => operation.name).join(", ");
   const quickStart = endpoint === "READ"
     ? '{ operation: "introspect", params: { query: "operations" } }'
@@ -84,7 +113,7 @@ function buildToolDescription(endpoint, operations) {
 }
 
 function buildIntrospectionOperations() {
-  const operations = [
+  const operations: Array<{ name: string; endpoint: EndpointName; description: string }> = [
     {
       name: "introspect",
       endpoint: "READ",
@@ -92,11 +121,11 @@ function buildIntrospectionOperations() {
     },
   ];
 
-  for (const [endpoint, entries] of Object.entries(schema.operations)) {
+  for (const [endpoint, entries] of Object.entries(schema.operations) as Array<[EndpointKey, OperationDefinition[] | undefined]>) {
     for (const operation of entries ?? []) {
       operations.push({
         name: operation.name,
-        endpoint: endpoint.toUpperCase(),
+        endpoint: endpoint.toUpperCase() as EndpointName,
         description: operation.description,
       });
     }
@@ -105,7 +134,7 @@ function buildIntrospectionOperations() {
   return operations;
 }
 
-function buildOperationDetails(name) {
+function buildOperationDetails(name: string) {
   if (name === "introspect") {
     return {
       name: "introspect",
@@ -180,7 +209,7 @@ function buildTypeList() {
   ];
 }
 
-function buildTypeDetails(name) {
+function buildTypeDetails(name: string) {
   if (name !== "WrappedToolResult") {
     return null;
   }
@@ -198,18 +227,21 @@ function buildTypeDetails(name) {
   };
 }
 
-function buildIntrospection(params) {
-  if (params.query === "operations") {
-    if (params.name) {
-      const operation = buildOperationDetails(params.name);
+function buildIntrospection(params: Record<string, unknown>) {
+  const query = typeof params.query === "string" ? params.query : undefined;
+  const name = typeof params.name === "string" ? params.name : undefined;
+
+  if (query === "operations") {
+    if (name) {
+      const operation = buildOperationDetails(name);
       if (!operation) {
-        return { success: false, error: { code: "NOT_FOUND_OPERATION", message: `Unknown operation: ${params.name}` } };
+        return { success: false, error: { code: "NOT_FOUND_OPERATION", message: `Unknown operation: ${name}` } };
       }
 
-    return {
-      success: true,
-      data: { operation },
-    };
+      return {
+        success: true,
+        data: { operation },
+      };
     }
 
     return {
@@ -224,11 +256,11 @@ function buildIntrospection(params) {
     };
   }
 
-  if (params.query === "types") {
-    if (params.name) {
-      const type = buildTypeDetails(params.name);
+  if (query === "types") {
+    if (name) {
+      const type = buildTypeDetails(name);
       if (!type) {
-        return { success: false, error: { code: "NOT_FOUND_TYPE", message: `Unknown type: ${params.name}` } };
+        return { success: false, error: { code: "NOT_FOUND_TYPE", message: `Unknown type: ${name}` } };
       }
 
       return {
@@ -247,12 +279,12 @@ function buildIntrospection(params) {
     success: false,
     error: {
       code: "VALIDATION_INVALID_QUERY",
-      message: `Unknown introspection query: ${params.query}`,
+      message: `Unknown introspection query: ${String(params.query)}`,
     },
   };
 }
 
-async function proxyOperation(operationName, params) {
+async function proxyOperation(operationName: string, params: Record<string, unknown>) {
   const item = TOOL_BY_OPERATION.get(operationName);
   if (!item) {
     return {
@@ -304,12 +336,12 @@ const server = new Server(
   { capabilities: { tools: {} } },
 );
 
-server.setRequestHandler(ListToolsRequestSchema as any, async () => ({
-  tools: Object.entries(schema.operations)
+server.setRequestHandler(ListToolsRequestSchema, async (): Promise<ListToolsResult> => ({
+  tools: (Object.entries(schema.operations) as Array<[EndpointKey, OperationDefinition[] | undefined]>)
     .filter(([, operations]) => Array.isArray(operations) && operations.length > 0)
     .map(([endpoint, operations]) => ({
-      name: TOOL_NAME_BY_ENDPOINT[endpoint.toUpperCase()],
-      description: buildToolDescription(endpoint.toUpperCase(), operations),
+      name: TOOL_NAME_BY_ENDPOINT[endpoint.toUpperCase() as EndpointName],
+      description: buildToolDescription(endpoint.toUpperCase() as EndpointName, operations ?? []),
       inputSchema: {
         type: "object",
         properties: {
@@ -325,37 +357,35 @@ server.setRequestHandler(ListToolsRequestSchema as any, async () => ({
     })),
 }));
 
-server.setRequestHandler(CallToolRequestSchema as any, async (request: any) => {
+server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest): Promise<CallToolResult> => {
   const toolName = request.params.name;
-  const args = request.params.arguments ?? {};
-  const operation = args.operation;
+  const args = (request.params.arguments ?? {}) as OperationArguments;
+  const operation = typeof args.operation === "string" ? args.operation : "";
   const params = resolveParams(args);
 
   if (operation === "introspect") {
     const result = buildIntrospection(params);
-    return {
-      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-    };
+    return textResult(result);
   }
 
   const item = TOOL_BY_OPERATION.get(operation);
   if (!item) {
-    return {
-      content: [{ type: "text", text: JSON.stringify({ success: false, error: { code: "NOT_FOUND_OPERATION", message: `Unknown operation: ${operation}` } }, null, 2) }],
-    };
+    return textResult({ success: false, error: { code: "NOT_FOUND_OPERATION", message: `Unknown operation: ${operation}` } });
   }
 
   const expectedToolName = TOOL_NAME_BY_ENDPOINT[item.endpoint];
   if (toolName !== expectedToolName) {
-    return {
-      content: [{ type: "text", text: JSON.stringify({ success: false, error: { code: "VALIDATION_WRONG_ENDPOINT", message: `Operation '${operation}' must be called via ${expectedToolName}.` } }, null, 2) }],
-    };
+    return textResult({
+      success: false,
+      error: {
+        code: "VALIDATION_WRONG_ENDPOINT",
+        message: `Operation '${operation}' must be called via ${expectedToolName}.`,
+      },
+    });
   }
 
   const result = await proxyOperation(operation, params);
-  return {
-    content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-  };
+  return textResult(result);
 });
 
 const transport = new StdioServerTransport();

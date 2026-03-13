@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-13T19:00:32.194Z",
+  "generated_at": "2026-03-13T20:09:00.840Z",
   "source_server_name": "github-mcp-server",
   "source_server_version": "github-mcp-server/remote-9f836f5fe414b6a085717f480c7f23093404340d",
   "source_capture_name": "github-mcp-remote",
@@ -256,7 +256,8 @@
       "endpoint": "EXECUTE",
       "needs_review": true,
       "review_reasons": [
-        "Action-oriented tool classified as EXECUTE conservatively."
+        "Action-oriented tool classified as EXECUTE conservatively.",
+        "push_files can create and update multiple files plus branch history in a single workflow, so the first golden-path adapter keeps it in EXECUTE rather than collapsing it into CREATE or UPDATE."
       ]
     },
     {
