@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "name": "github-mcp-remote",
+    "server_url": "https://api.githubcopilot.com/mcp/",
+    "transport": "streamable_http",
+    "captured_at": "2026-03-13T18:59:59.456Z",
+    "server": {
+      "name": "github-mcp-server",
+      "version": "github-mcp-server/remote-9f836f5fe414b6a085717f480c7f23093404340d",
+      "title": "GitHub MCP Server"
+    },
+    "auth": {
+      "type": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer ",
+      "token_command": "gh auth token"
+    },
+    "capture_config_redacted": {
+      "name": "github-mcp-remote",
+      "server_url": "https://api.githubcopilot.com/mcp/",
+      "transport": {
+        "type": "streamable_http"
+      },
+      "auth": {
+        "type": "bearer",
+        "token_command": "<redacted>",
+        "header": "Authorization",
+        "prefix": "Bearer "
+      }
+    }
+  },
+  "tool_count": 43,
+  "warning_count": 37
+}

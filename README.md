@@ -16,6 +16,12 @@ For **normative protocol specifications**, see the [spec repository](https://git
 |---------|-------------|-----|
 | [GitHub API Adapter](adapters/github-api-adapter.md) | Complete adapter for GitHub REST API v3 | GitHub REST API |
 
+### Generated Golden Paths
+
+| Example | Description | Source |
+|---------|-------------|--------|
+| [GitHub MCP Golden Path](generated/github-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | GitHub MCP server |
+
 ## Structure
 
 Each example adapter is a Markdown file with YAML front matter following the [Adapter Element Type Specification](https://github.com/MCPAQL/spec/blob/develop/docs/adapter/element-type.md). The front matter contains all operation mappings, and the Markdown body provides human-readable documentation.
