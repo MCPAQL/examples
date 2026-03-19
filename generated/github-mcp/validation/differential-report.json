@@ -1,0 +1,321 @@
+{
+  "summary": {
+    "source_operation_count": 44,
+    "adapter_operation_count": 45,
+    "missing_operations": [],
+    "extra_operations": [],
+    "notes": [
+      "adapter_operation_count includes 1 synthetic adapter operation(s): introspect."
+    ]
+  },
+  "operations": [
+    {
+      "operation": "get_commit",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_copilot_job_status",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_file_contents",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_latest_release",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_me",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_release_by_tag",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_tag",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_team_members",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_teams",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "issue_read",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_branches",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_commits",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_issue_types",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_issues",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_pull_requests",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_releases",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_tags",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "pull_request_read",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "search_code",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "search_issues",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "search_pull_requests",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "search_repositories",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "search_users",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "add_comment_to_pending_review",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "add_issue_comment",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "add_reply_to_pull_request_comment",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_branch",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_pull_request",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_repository",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "fork_repository",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "assign_copilot_to_issue",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_or_update_file",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "issue_write",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "pull_request_review_write",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "sub_issue_write",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_pull_request",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_pull_request_branch",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_pull_request_with_copilot",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "merge_pull_request",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "push_files",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "request_copilot_review",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "run_secret_scanning",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_file",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    }
+  ]
+}

@@ -30,3 +30,7 @@ CLAUDE.md
 
 # DollhouseMCP (local MCP server state)
 .dollhousemcp/
+
+# Generated package build/install outputs
+generated/*/adapter/node_modules/
+generated/*/adapter/dist/

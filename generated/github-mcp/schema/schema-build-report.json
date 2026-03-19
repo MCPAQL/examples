@@ -1,0 +1,642 @@
+{
+  "warnings": [
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'startLine' was normalized to 'start_line'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "startLine",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'startSide' was normalized to 'start_side'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "startSide",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'subjectType' was normalized to 'subject_type'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "subjectType",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'commentId' was normalized to 'comment_id'.",
+      "tool": "add_reply_to_pull_request_comment",
+      "field": "commentId",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "add_reply_to_pull_request_comment",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Assignment semantics treated as UPDATE on an existing resource.",
+      "tool": "assign_copilot_to_issue",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "Tool name spans both create and update semantics.",
+      "tool": "create_or_update_file",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'autoInit' was normalized to 'auto_init'.",
+      "tool": "create_repository",
+      "field": "autoInit",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "get_commit",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "issue_read",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Write suffix is semantically broad and may hide create/update behavior.",
+      "tool": "issue_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_branches",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_commits",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'orderBy' was normalized to 'order_by'.",
+      "tool": "list_issues",
+      "field": "orderBy",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_issues",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_pull_requests",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_releases",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_tags",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Action-oriented tool classified as EXECUTE conservatively.",
+      "tool": "merge_pull_request",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "merge_pull_request",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "pull_request_read",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "pull_request_read",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies destructive behavior.",
+      "tool": "pull_request_review_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'commitID' was normalized to 'commit_id'.",
+      "tool": "pull_request_review_write",
+      "field": "commitID",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "pull_request_review_write",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Action-oriented tool classified as EXECUTE conservatively.",
+      "tool": "push_files",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Action-oriented tool classified as EXECUTE conservatively.",
+      "tool": "request_copilot_review",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "request_copilot_review",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies workflow execution.",
+      "tool": "run_secret_scanning",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_code",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_issues",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_pull_requests",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_repositories",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_users",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Write suffix is semantically broad and may hide create/update behavior.",
+      "tool": "sub_issue_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "update_pull_request",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'expectedHeadSha' was normalized to 'expected_head_sha'.",
+      "tool": "update_pull_request_branch",
+      "field": "expectedHeadSha",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "update_pull_request_branch",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    }
+  ],
+  "operations": [
+    {
+      "source_tool_name": "add_comment_to_pending_review",
+      "operation_name": "add_comment_to_pending_review",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "add_issue_comment",
+      "operation_name": "add_issue_comment",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "add_reply_to_pull_request_comment",
+      "operation_name": "add_reply_to_pull_request_comment",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "assign_copilot_to_issue",
+      "operation_name": "assign_copilot_to_issue",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Assignment semantics treated as UPDATE on an existing resource."
+      ]
+    },
+    {
+      "source_tool_name": "create_branch",
+      "operation_name": "create_branch",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_or_update_file",
+      "operation_name": "create_or_update_file",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Tool name spans both create and update semantics.",
+        "Mixed create/update semantics mapped to UPDATE for the first generated adapter."
+      ]
+    },
+    {
+      "source_tool_name": "create_pull_request",
+      "operation_name": "create_pull_request",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_pull_request_with_copilot",
+      "operation_name": "create_pull_request_with_copilot",
+      "endpoint": "EXECUTE",
+      "needs_review": false,
+      "review_reasons": [
+        "Copilot-assisted pull request creation is treated as workflow execution in the first pass."
+      ]
+    },
+    {
+      "source_tool_name": "create_repository",
+      "operation_name": "create_repository",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_file",
+      "operation_name": "delete_file",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "fork_repository",
+      "operation_name": "fork_repository",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_commit",
+      "operation_name": "get_commit",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_copilot_job_status",
+      "operation_name": "get_copilot_job_status",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_file_contents",
+      "operation_name": "get_file_contents",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_label",
+      "operation_name": "get_label",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_latest_release",
+      "operation_name": "get_latest_release",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_me",
+      "operation_name": "get_me",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_release_by_tag",
+      "operation_name": "get_release_by_tag",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_tag",
+      "operation_name": "get_tag",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_team_members",
+      "operation_name": "get_team_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_teams",
+      "operation_name": "get_teams",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "issue_read",
+      "operation_name": "issue_read",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "issue_write",
+      "operation_name": "issue_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior.",
+        "issue_write spans create and update behavior; pinned to UPDATE pending finer-grained decomposition."
+      ]
+    },
+    {
+      "source_tool_name": "list_branches",
+      "operation_name": "list_branches",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_commits",
+      "operation_name": "list_commits",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_issue_types",
+      "operation_name": "list_issue_types",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_issues",
+      "operation_name": "list_issues",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_pull_requests",
+      "operation_name": "list_pull_requests",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_releases",
+      "operation_name": "list_releases",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_tags",
+      "operation_name": "list_tags",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "merge_pull_request",
+      "operation_name": "merge_pull_request",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ]
+    },
+    {
+      "source_tool_name": "pull_request_read",
+      "operation_name": "pull_request_read",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "pull_request_review_write",
+      "operation_name": "pull_request_review_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior.",
+        "Review-write semantics are treated as UPDATE in the first pass."
+      ]
+    },
+    {
+      "source_tool_name": "push_files",
+      "operation_name": "push_files",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively.",
+        "push_files can create and update multiple files plus branch history in a single workflow, so the first golden-path adapter keeps it in EXECUTE rather than collapsing it into CREATE or UPDATE."
+      ]
+    },
+    {
+      "source_tool_name": "request_copilot_review",
+      "operation_name": "request_copilot_review",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ]
+    },
+    {
+      "source_tool_name": "run_secret_scanning",
+      "operation_name": "run_secret_scanning",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "search_code",
+      "operation_name": "search_code",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_issues",
+      "operation_name": "search_issues",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_pull_requests",
+      "operation_name": "search_pull_requests",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_repositories",
+      "operation_name": "search_repositories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_users",
+      "operation_name": "search_users",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "sub_issue_write",
+      "operation_name": "sub_issue_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior.",
+        "sub_issue_write is treated as UPDATE until the source server exposes narrower tool semantics."
+      ]
+    },
+    {
+      "source_tool_name": "update_pull_request",
+      "operation_name": "update_pull_request",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_pull_request_branch",
+      "operation_name": "update_pull_request_branch",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    }
+  ]
+}
