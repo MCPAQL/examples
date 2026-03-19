@@ -1119,43 +1119,6 @@
         "non_idempotent": false
       },
       {
-        "name": "assign_copilot_to_issue",
-        "maps_to": "tool:assign_copilot_to_issue",
-        "description": "Assign Copilot to a specific issue in a GitHub repository.\n\nThis tool can help with the following outcomes:\n- a Pull Request created with source code changes to resolve the issue\n\n\nMore information can be found at:\n- https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent-to-work-on-tasks/about-assigning-tasks-to-copilot\n",
-        "params": {
-          "base_ref": {
-            "type": "string",
-            "description": "Git reference (e.g., branch) that the agent will start its work from. If not specified, defaults to the repository's default branch"
-          },
-          "custom_instructions": {
-            "type": "string",
-            "description": "Optional custom instructions to guide the agent beyond the issue body. Use this to provide additional context, constraints, or guidance that is not captured in the issue description"
-          },
-          "issue_number": {
-            "type": "number",
-            "required": true,
-            "description": "Issue number"
-          },
-          "owner": {
-            "type": "string",
-            "required": true,
-            "description": "Repository owner"
-          },
-          "repo": {
-            "type": "string",
-            "required": true,
-            "description": "Repository name"
-          }
-        },
-        "response": {
-          "type": "object",
-          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
-        },
-        "danger_level": "reversible",
-        "requires_confirmation": false,
-        "non_idempotent": false
-      },
-      {
         "name": "create_branch",
         "maps_to": "tool:create_branch",
         "description": "Create a new branch in a GitHub repository",
@@ -1304,6 +1267,43 @@
       }
     ],
     "update": [
+      {
+        "name": "assign_copilot_to_issue",
+        "maps_to": "tool:assign_copilot_to_issue",
+        "description": "Assign Copilot to a specific issue in a GitHub repository.\n\nThis tool can help with the following outcomes:\n- a Pull Request created with source code changes to resolve the issue\n\n\nMore information can be found at:\n- https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent-to-work-on-tasks/about-assigning-tasks-to-copilot\n",
+        "params": {
+          "base_ref": {
+            "type": "string",
+            "description": "Git reference (e.g., branch) that the agent will start its work from. If not specified, defaults to the repository's default branch"
+          },
+          "custom_instructions": {
+            "type": "string",
+            "description": "Optional custom instructions to guide the agent beyond the issue body. Use this to provide additional context, constraints, or guidance that is not captured in the issue description"
+          },
+          "issue_number": {
+            "type": "number",
+            "required": true,
+            "description": "Issue number"
+          },
+          "owner": {
+            "type": "string",
+            "required": true,
+            "description": "Repository owner"
+          },
+          "repo": {
+            "type": "string",
+            "required": true,
+            "description": "Repository name"
+          }
+        },
+        "response": {
+          "type": "object",
+          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
+        },
+        "danger_level": "reversible",
+        "requires_confirmation": false,
+        "non_idempotent": false
+      },
       {
         "name": "create_or_update_file",
         "maps_to": "tool:create_or_update_file",
@@ -1486,8 +1486,8 @@
           "type": "object",
           "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
         },
-        "danger_level": "reversible",
-        "requires_confirmation": false,
+        "danger_level": "destructive",
+        "requires_confirmation": true,
         "non_idempotent": false
       },
       {
@@ -1774,6 +1774,35 @@
             "type": "number",
             "required": true,
             "description": "Pull request number"
+          },
+          "repo": {
+            "type": "string",
+            "required": true,
+            "description": "Repository name"
+          }
+        },
+        "response": {
+          "type": "object",
+          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
+        },
+        "danger_level": "dangerous",
+        "requires_confirmation": true,
+        "non_idempotent": true
+      },
+      {
+        "name": "run_secret_scanning",
+        "maps_to": "tool:run_secret_scanning",
+        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. It accepts file contents or diffs and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
+        "params": {
+          "files": {
+            "type": "array",
+            "required": true,
+            "description": "Array of file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths."
+          },
+          "owner": {
+            "type": "string",
+            "required": true,
+            "description": "Repository owner"
           },
           "repo": {
             "type": "string",

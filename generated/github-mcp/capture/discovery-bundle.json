@@ -4,10 +4,10 @@
     "name": "github-mcp-remote",
     "server_url": "https://api.githubcopilot.com/mcp/",
     "transport": "streamable_http",
-    "captured_at": "2026-03-13T20:08:48.081Z",
+    "captured_at": "2026-03-19T04:08:21.992Z",
     "server": {
       "name": "github-mcp-server",
-      "version": "github-mcp-server/remote-9f836f5fe414b6a085717f480c7f23093404340d",
+      "version": "github-mcp-server/remote-212864f3b76a000b57f4f4f0435df686fc2bbc66",
       "title": "GitHub MCP Server"
     },
     "auth": {
@@ -1891,6 +1891,54 @@
         }
       },
       {
+        "name": "run_secret_scanning",
+        "icons": [
+          {
+            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAC20lEQVRIidWUS4wMURSGv3O7kWmPEMRrSMzcbl1dpqtmGuOxsCKECCKxEBusSJhIWEhsWLFAbC1sWFiISBARCyQ2kzSZGaMxHokgXvGIiMH0PRZjpJqqHpb+TeX+59z//H/q5sD/DqlX9H1/zFeX2qzIKoFWYDKgwBtUymL0UkNaT3V3d3/+5wG2EGxB9TDIxGFMvhVhb9/drpN/NaDJC7MGdwJk6TDCv0Gvq0lve9R762GUNdFDLleaZNBrICGq+4yhvf9TJtP/KZNB2PrLlbBliBfRhajuAwnFVa/n8/nkxFkv3GO9oJrzgwVxdesV71ov6I2r5fxggfWCatYL9yYmUJgLPH7Q29WZ4OED6Me4wuAdeQK6MMqna9t0GuibBHFAmgZ9JMG9BhkXZWoSCDSATIq7aguBD0wBplq/tZBgYDIwKnZAs99mFRYD9vd/YK0dpcqhobM6d9haWyOULRTbAauwuNlvsxHTYP3iBnVyXGAa8BIYC3oVeAKioCtAPEE7FCOgR0ErIJdBBZgNskzh40+NF6K6s+9e91lp9osrxMnFoTSmSmPVsF+E5cB0YEDgtoMjjypd5wCy+WC9GnajhEAa4bkqV9LOHKwa9/yneYeyUqwX3AdyQ5EeVrrqro/hYL0g+ggemKh4HGbPmVu0+fB8U76lpR6XgJwZpoGUpNYiusZg1tXjkmCAav0OMTXfJC4eVYPqwbot6l4BCPqyLhd7lwMAWC/cYb3gi/UCzRaKOxsbFzVEM1iv2Ebt5v2Dm14qZbJecZf1Ah3UCrcTbbB+awHnjgHLgHeinHYqZ8aPSXWWy+XvcQZLpdKI9/0D7UbZiLIJmABckVSqo+/OrUrNgF+D8q1LEdcBrAJGAJ8ROlGeicorABWdAswE5gOjge8CF8Ad66v03IjqJb75WS0tE0YOmNWqLBGReaAzgIkMLrt3oM9UpSzCzW9pd+FpT8/7JK3/Gz8Ao5X6wtwP7N4AAAAASUVORK5CYII=",
+            "mimeType": "image/png",
+            "theme": "light"
+          },
+          {
+            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAACCElEQVRIid2UPWsUYRSFn3dxWWJUkESiBgslFokfhehGiGClBBQx4h9IGlEh2ijYxh+gxEL/hIWwhYpF8KNZsFRJYdJEiUbjCkqisj4W+y6Mk5nd1U4PDMOce+45L3fmDvzXUDeo59WK+kb9rn5TF9R76jm1+2/NJ9QPtseSOv4nxrvVmQ6M05hRB9qZ98ZR1NRralntitdEwmw8wQ9HbS329rQKuKLW1XJO/aX6IqdWjr1Xk/y6lG4vMBdCqOacoZZ3uBBCVZ0HDrcK2AYs5ZkAuwBb1N8Dm5JEISXoAnqzOtU9QB+wVR3KCdgClDIr6kCc4c/0O1BLNnahiYpaSmmGY62e/JpCLJ4FpmmMaBHYCDwC5mmMZBQYBC7HnhvAK+B+fN4JHAM+R4+3wGQI4S7qaExtol+9o86pq+oX9Yk6ljjtGfVprK2qr9Xb6vaET109jjqb3Jac2XaM1PLNpok1Aep+G/+dfa24nADTX1EWTgOngLE2XCYKQL0DTfKex2WhXgCutxG9i/fFNlwWpgBQL6orcWyTaldToRbUA2pow61XL0WPFfXCb1HqkPowCj6q0+qIWsw7nlpUj6i31OXY+0AdbGpCRtNRGgt1AigCX4EqsJAYTR+wAzgEdAM/gApwM4TwOOm3JiARtBk4CYwAB4F+oIfGZi/HwOfAM6ASQviU5/Vv4xcBzmW2eT1nrQAAAABJRU5ErkJggg==",
+            "mimeType": "image/png",
+            "theme": "dark"
+          }
+        ],
+        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. It accepts file contents or diffs and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths.",
+              "minItems": 1,
+              "maxItems": 100
+            },
+            "owner": {
+              "type": "string",
+              "description": "Repository owner"
+            },
+            "repo": {
+              "type": "string",
+              "description": "Repository name"
+            }
+          },
+          "required": [
+            "files",
+            "owner",
+            "repo"
+          ]
+        },
+        "annotations": {
+          "title": "Run Secret Scanning",
+          "readOnlyHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
         "name": "search_code",
         "icons": [
           {
@@ -2407,6 +2455,14 @@
           "title": "Update pull request branch"
         }
       }
+    ],
+    "list_tools_page_count": 1,
+    "list_tools_pages": [
+      {
+        "cursor": null,
+        "next_cursor": null,
+        "tool_count": 44
+      }
     ]
   },
   "normalized_bundle": {
@@ -2682,11 +2738,13 @@
         "operation_name": "assign_copilot_to_issue",
         "title": "Assign Copilot to issue",
         "description": "Assign Copilot to a specific issue in a GitHub repository.\n\nThis tool can help with the following outcomes:\n- a Pull Request created with source code changes to resolve the issue\n\n\nMore information can be found at:\n- https://docs.github.com/en/copilot/using-github-copilot/using-copilot-coding-agent-to-work-on-tasks/about-assigning-tasks-to-copilot\n",
-        "endpoint": "CREATE",
-        "endpoint_confidence": "high",
+        "endpoint": "UPDATE",
+        "endpoint_confidence": "medium",
         "danger_level": "reversible",
-        "needs_review": false,
-        "review_reasons": [],
+        "needs_review": true,
+        "review_reasons": [
+          "Assignment semantics treated as UPDATE on an existing resource."
+        ],
         "params": [
           {
             "name": "base_ref",
@@ -4890,12 +4948,12 @@
         "operation_name": "pull_request_review_write",
         "title": "Write operations (create, submit, delete) on pull request reviews.",
         "description": "Create and/or submit, delete review of a pull request.\n\nAvailable methods:\n- create: Create a new review of a pull request. If \"event\" parameter is provided, the review is submitted. If \"event\" is omitted, a pending review is created.\n- submit_pending: Submit an existing pending review of a pull request. This requires that a pending review exists for the current user on the specified pull request. The \"body\" and \"event\" parameters are used when submitting the review.\n- delete_pending: Delete an existing pending review of a pull request. This requires that a pending review exists for the current user on the specified pull request.\n",
-        "endpoint": "UPDATE",
+        "endpoint": "DELETE",
         "endpoint_confidence": "medium",
-        "danger_level": "reversible",
+        "danger_level": "destructive",
         "needs_review": true,
         "review_reasons": [
-          "Write suffix is semantically broad and may hide create/update behavior."
+          "Description implies destructive behavior."
         ],
         "params": [
           {
@@ -5112,6 +5170,68 @@
           "description": "description",
           "annotations": [
             "title"
+          ],
+          "input_schema_present": true,
+          "inference_sources": {
+            "operation_name": "direct_source_metadata",
+            "description": "direct_source_metadata",
+            "endpoint": "heuristic_classification",
+            "danger_level": "heuristic_classification",
+            "maps_to": "deterministic_normalization"
+          }
+        }
+      },
+      {
+        "source_tool_name": "run_secret_scanning",
+        "operation_name": "run_secret_scanning",
+        "title": "Run Secret Scanning",
+        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. It accepts file contents or diffs and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
+        "endpoint": "EXECUTE",
+        "endpoint_confidence": "medium",
+        "danger_level": "dangerous",
+        "needs_review": true,
+        "review_reasons": [
+          "Description implies workflow execution."
+        ],
+        "params": [
+          {
+            "name": "files",
+            "original_name": "files",
+            "type": "array",
+            "required": true,
+            "description": "Array of file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths.",
+            "source_path": "inputSchema.properties.files"
+          },
+          {
+            "name": "owner",
+            "original_name": "owner",
+            "type": "string",
+            "required": true,
+            "description": "Repository owner",
+            "source_path": "inputSchema.properties.owner"
+          },
+          {
+            "name": "repo",
+            "original_name": "repo",
+            "type": "string",
+            "required": true,
+            "description": "Repository name",
+            "source_path": "inputSchema.properties.repo"
+          }
+        ],
+        "maps_to": "tool:run_secret_scanning",
+        "returns": {
+          "type": "object",
+          "name": "WrappedToolResult",
+          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
+        },
+        "provenance": {
+          "name": "name",
+          "description": "description",
+          "annotations": [
+            "title",
+            "readOnlyHint",
+            "openWorldHint"
           ],
           "input_schema_present": true,
           "inference_sources": {
@@ -5947,6 +6067,13 @@
       },
       {
         "code": "REVIEW_REQUIRED",
+        "severity": "info",
+        "message": "Assignment semantics treated as UPDATE on an existing resource.",
+        "tool": "assign_copilot_to_issue",
+        "heuristic": "endpoint_classification"
+      },
+      {
+        "code": "REVIEW_REQUIRED",
         "severity": "warning",
         "message": "Tool name spans both create and update semantics.",
         "tool": "create_or_update_file",
@@ -6073,7 +6200,7 @@
       {
         "code": "REVIEW_REQUIRED",
         "severity": "info",
-        "message": "Write suffix is semantically broad and may hide create/update behavior.",
+        "message": "Description implies destructive behavior.",
         "tool": "pull_request_review_write",
         "heuristic": "endpoint_classification"
       },
@@ -6114,6 +6241,13 @@
         "tool": "request_copilot_review",
         "field": "pullNumber",
         "heuristic": "snake_case_normalization"
+      },
+      {
+        "code": "REVIEW_REQUIRED",
+        "severity": "info",
+        "message": "Description implies workflow execution.",
+        "tool": "run_secret_scanning",
+        "heuristic": "endpoint_classification"
       },
       {
         "code": "PARAM_NAME_NORMALIZED",

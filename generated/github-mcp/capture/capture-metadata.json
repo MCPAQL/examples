@@ -4,10 +4,10 @@
     "name": "github-mcp-remote",
     "server_url": "https://api.githubcopilot.com/mcp/",
     "transport": "streamable_http",
-    "captured_at": "2026-03-13T20:08:48.081Z",
+    "captured_at": "2026-03-19T04:08:21.992Z",
     "server": {
       "name": "github-mcp-server",
-      "version": "github-mcp-server/remote-9f836f5fe414b6a085717f480c7f23093404340d",
+      "version": "github-mcp-server/remote-212864f3b76a000b57f4f4f0435df686fc2bbc66",
       "title": "GitHub MCP Server"
     },
     "auth": {
@@ -30,6 +30,6 @@
       }
     }
   },
-  "tool_count": 43,
-  "warning_count": 37
+  "tool_count": 44,
+  "warning_count": 39
 }

@@ -1,7 +1,7 @@
 {
   "summary": {
-    "source_operation_count": 43,
-    "adapter_operation_count": 44,
+    "source_operation_count": 44,
+    "adapter_operation_count": 45,
     "missing_operations": [],
     "extra_operations": [],
     "notes": [
@@ -199,13 +199,6 @@
       "extra_parameters": []
     },
     {
-      "operation": "assign_copilot_to_issue",
-      "endpoint_match": true,
-      "parameter_names_match": true,
-      "missing_parameters": [],
-      "extra_parameters": []
-    },
-    {
       "operation": "create_branch",
       "endpoint_match": true,
       "parameter_names_match": true,
@@ -228,6 +221,13 @@
     },
     {
       "operation": "fork_repository",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "assign_copilot_to_issue",
       "endpoint_match": true,
       "parameter_names_match": true,
       "missing_parameters": [],
@@ -298,6 +298,13 @@
     },
     {
       "operation": "request_copilot_review",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "run_secret_scanning",
       "endpoint_match": true,
       "parameter_names_match": true,
       "missing_parameters": [],

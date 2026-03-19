@@ -2,6 +2,9 @@
   "name": "@mcpaql/generated-github-mcp",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "tsx src/server.ts"

@@ -49,6 +49,13 @@
   },
   {
     "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Assignment semantics treated as UPDATE on an existing resource.",
+    "tool": "assign_copilot_to_issue",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
     "severity": "warning",
     "message": "Tool name spans both create and update semantics.",
     "tool": "create_or_update_file",
@@ -175,7 +182,7 @@
   {
     "code": "REVIEW_REQUIRED",
     "severity": "info",
-    "message": "Write suffix is semantically broad and may hide create/update behavior.",
+    "message": "Description implies destructive behavior.",
     "tool": "pull_request_review_write",
     "heuristic": "endpoint_classification"
   },
@@ -216,6 +223,13 @@
     "tool": "request_copilot_review",
     "field": "pullNumber",
     "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description implies workflow execution.",
+    "tool": "run_secret_scanning",
+    "heuristic": "endpoint_classification"
   },
   {
     "code": "PARAM_NAME_NORMALIZED",

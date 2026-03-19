@@ -17,6 +17,12 @@ The generated outputs are intended to be reproducible from the committed config 
 - `capture/warnings.json` is the capture-time warning list emitted during interrogation and normalization.
 - `schema/schema-build-report.json` intentionally carries those warnings forward alongside the schema-builder operation summary so reviewers can see both the original warnings and the reviewed output in one place.
 - `capture/capture-metadata.json` records the upstream GitHub MCP server identity observed during capture. When that upstream server revision changes, this golden-path example should be refreshed.
+- The current saved capture reflects the GitHub MCP server observed on `2026-03-19`, including the newly surfaced `run_secret_scanning` tool. Expect operation counts and warnings to move when the upstream server changes.
+
+## Known Limitations
+
+- The generated adapter keeps a singleton upstream connection and currently expects a restart if that upstream connection is dropped.
+- This example is intentionally saved as a point-in-time artifact. If GitHub changes its MCP surface, the checked-in capture, schema, and validation reports should be regenerated together.
 
 ## Regenerating
 

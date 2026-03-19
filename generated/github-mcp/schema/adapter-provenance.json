@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-13T20:09:00.840Z",
+  "generated_at": "2026-03-19T04:08:34.476Z",
   "source_server_name": "github-mcp-server",
-  "source_server_version": "github-mcp-server/remote-9f836f5fe414b6a085717f480c7f23093404340d",
+  "source_server_version": "github-mcp-server/remote-212864f3b76a000b57f4f4f0435df686fc2bbc66",
   "source_capture_name": "github-mcp-remote",
-  "warning_count": 37,
-  "operation_count": 43,
+  "warning_count": 39,
+  "operation_count": 44,
   "operations": [
     {
       "source_tool_name": "add_comment_to_pending_review",
@@ -30,9 +30,11 @@
     {
       "source_tool_name": "assign_copilot_to_issue",
       "operation_name": "assign_copilot_to_issue",
-      "endpoint": "CREATE",
-      "needs_review": false,
-      "review_reasons": []
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Assignment semantics treated as UPDATE on an existing resource."
+      ]
     },
     {
       "source_tool_name": "create_branch",
@@ -246,7 +248,7 @@
       "endpoint": "UPDATE",
       "needs_review": true,
       "review_reasons": [
-        "Write suffix is semantically broad and may hide create/update behavior.",
+        "Description implies destructive behavior.",
         "Review-write semantics are treated as UPDATE in the first pass."
       ]
     },
@@ -267,6 +269,15 @@
       "needs_review": true,
       "review_reasons": [
         "Action-oriented tool classified as EXECUTE conservatively."
+      ]
+    },
+    {
+      "source_tool_name": "run_secret_scanning",
+      "operation_name": "run_secret_scanning",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
       ]
     },
     {
