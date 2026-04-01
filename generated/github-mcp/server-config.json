@@ -6,7 +6,7 @@
   },
   "auth": {
     "type": "bearer",
-    "token_command": "gh auth token",
+    "token_env": "GITHUB_PERSONAL_ACCESS_TOKEN",
     "header": "Authorization",
     "prefix": "Bearer "
   }

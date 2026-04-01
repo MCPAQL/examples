@@ -14,6 +14,8 @@ Generated MCP-AQL adapter package for the official GitHub MCP server.
 
 Requires Node.js 20 or newer.
 
+Set `MCPAQL_TARGET_BASE_URL` if you want this adapter to connect to a different upstream server than the bundled `https://api.githubcopilot.com/mcp`.
+
 Set `GITHUB_PERSONAL_ACCESS_TOKEN` and run:
 
 ```bash

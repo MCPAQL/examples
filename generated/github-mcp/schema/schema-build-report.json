@@ -310,7 +310,13 @@
       "operation_name": "add_comment_to_pending_review",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "pull_number": "pullNumber",
+        "start_line": "startLine",
+        "start_side": "startSide",
+        "subject_type": "subjectType"
+      }
     },
     {
       "source_tool_name": "add_issue_comment",
@@ -324,7 +330,11 @@
       "operation_name": "add_reply_to_pull_request_comment",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "comment_id": "commentId",
+        "pull_number": "pullNumber"
+      }
     },
     {
       "source_tool_name": "assign_copilot_to_issue",
@@ -373,7 +383,10 @@
       "operation_name": "create_repository",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "auto_init": "autoInit"
+      }
     },
     {
       "source_tool_name": "delete_file",
@@ -394,7 +407,10 @@
       "operation_name": "get_commit",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "get_copilot_job_status",
@@ -464,7 +480,10 @@
       "operation_name": "issue_read",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "issue_write",
@@ -481,14 +500,20 @@
       "operation_name": "list_branches",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "list_commits",
       "operation_name": "list_commits",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "list_issue_types",
@@ -502,28 +527,41 @@
       "operation_name": "list_issues",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "order_by": "orderBy",
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "list_pull_requests",
       "operation_name": "list_pull_requests",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "list_releases",
       "operation_name": "list_releases",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "list_tags",
       "operation_name": "list_tags",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "merge_pull_request",
@@ -532,14 +570,21 @@
       "needs_review": true,
       "review_reasons": [
         "Action-oriented tool classified as EXECUTE conservatively."
-      ]
+      ],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
     },
     {
       "source_tool_name": "pull_request_read",
       "operation_name": "pull_request_read",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage",
+        "pull_number": "pullNumber"
+      }
     },
     {
       "source_tool_name": "pull_request_review_write",
@@ -549,7 +594,11 @@
       "review_reasons": [
         "Description implies destructive behavior.",
         "Review-write semantics are treated as UPDATE in the first pass."
-      ]
+      ],
+      "param_mappings": {
+        "commit_id": "commitID",
+        "pull_number": "pullNumber"
+      }
     },
     {
       "source_tool_name": "push_files",
@@ -568,7 +617,10 @@
       "needs_review": true,
       "review_reasons": [
         "Action-oriented tool classified as EXECUTE conservatively."
-      ]
+      ],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
     },
     {
       "source_tool_name": "run_secret_scanning",
@@ -584,35 +636,50 @@
       "operation_name": "search_code",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "search_issues",
       "operation_name": "search_issues",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "search_pull_requests",
       "operation_name": "search_pull_requests",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "search_repositories",
       "operation_name": "search_repositories",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "search_users",
       "operation_name": "search_users",
       "endpoint": "READ",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
     },
     {
       "source_tool_name": "sub_issue_write",
@@ -629,14 +696,21 @@
       "operation_name": "update_pull_request",
       "endpoint": "UPDATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
     },
     {
       "source_tool_name": "update_pull_request_branch",
       "operation_name": "update_pull_request_branch",
       "endpoint": "UPDATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [],
+      "param_mappings": {
+        "expected_head_sha": "expectedHeadSha",
+        "pull_number": "pullNumber"
+      }
     }
   ]
 }
