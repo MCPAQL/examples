@@ -1,0 +1,40 @@
+{
+  "adapter": {
+    "name": "github-mcp",
+    "version": "0.1.0",
+    "description": "Generated MCP-AQL adapter for the official GitHub MCP server.",
+    "token_env": "GITHUB_PERSONAL_ACCESS_TOKEN"
+  },
+  "operations": {
+    "create_or_update_file": {
+      "endpoint": "UPDATE",
+      "review_reason": "Mixed create/update semantics mapped to UPDATE for the first generated adapter."
+    },
+    "create_pull_request_with_copilot": {
+      "endpoint": "EXECUTE",
+      "review_reason": "Copilot-assisted pull request creation is treated as workflow execution in the first pass."
+    },
+    "issue_write": {
+      "endpoint": "UPDATE",
+      "review_reason": "issue_write spans create and update behavior; pinned to UPDATE pending finer-grained decomposition."
+    },
+    "merge_pull_request": {
+      "endpoint": "EXECUTE"
+    },
+    "push_files": {
+      "endpoint": "EXECUTE",
+      "review_reason": "push_files can create and update multiple files plus branch history in a single workflow, so the first golden-path adapter keeps it in EXECUTE rather than collapsing it into CREATE or UPDATE."
+    },
+    "pull_request_review_write": {
+      "endpoint": "UPDATE",
+      "review_reason": "Review-write semantics are treated as UPDATE in the first pass."
+    },
+    "request_copilot_review": {
+      "endpoint": "EXECUTE"
+    },
+    "sub_issue_write": {
+      "endpoint": "UPDATE",
+      "review_reason": "sub_issue_write is treated as UPDATE until the source server exposes narrower tool semantics."
+    }
+  }
+}

@@ -1,0 +1,305 @@
+[
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "add_comment_to_pending_review",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'startLine' was normalized to 'start_line'.",
+    "tool": "add_comment_to_pending_review",
+    "field": "startLine",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'startSide' was normalized to 'start_side'.",
+    "tool": "add_comment_to_pending_review",
+    "field": "startSide",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'subjectType' was normalized to 'subject_type'.",
+    "tool": "add_comment_to_pending_review",
+    "field": "subjectType",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'commentId' was normalized to 'comment_id'.",
+    "tool": "add_reply_to_pull_request_comment",
+    "field": "commentId",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "add_reply_to_pull_request_comment",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Assignment semantics treated as UPDATE on an existing resource.",
+    "tool": "assign_copilot_to_issue",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Tool name spans both create and update semantics.",
+    "tool": "create_or_update_file",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'autoInit' was normalized to 'auto_init'.",
+    "tool": "create_repository",
+    "field": "autoInit",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "get_commit",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "issue_read",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Write suffix is semantically broad and may hide create/update behavior.",
+    "tool": "issue_write",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "list_branches",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "list_commits",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'orderBy' was normalized to 'order_by'.",
+    "tool": "list_issues",
+    "field": "orderBy",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "list_issues",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "list_pull_requests",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "list_releases",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "list_tags",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Action-oriented tool classified as EXECUTE conservatively.",
+    "tool": "merge_pull_request",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "merge_pull_request",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "pull_request_read",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "pull_request_read",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description implies destructive behavior.",
+    "tool": "pull_request_review_write",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'commitID' was normalized to 'commit_id'.",
+    "tool": "pull_request_review_write",
+    "field": "commitID",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "pull_request_review_write",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Action-oriented tool classified as EXECUTE conservatively.",
+    "tool": "push_files",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Action-oriented tool classified as EXECUTE conservatively.",
+    "tool": "request_copilot_review",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "request_copilot_review",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description implies workflow execution.",
+    "tool": "run_secret_scanning",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "search_code",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "search_issues",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "search_pull_requests",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "search_repositories",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'perPage' was normalized to 'per_page'.",
+    "tool": "search_users",
+    "field": "perPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Write suffix is semantically broad and may hide create/update behavior.",
+    "tool": "sub_issue_write",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "update_pull_request",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'expectedHeadSha' was normalized to 'expected_head_sha'.",
+    "tool": "update_pull_request_branch",
+    "field": "expectedHeadSha",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+    "tool": "update_pull_request_branch",
+    "field": "pullNumber",
+    "heuristic": "snake_case_normalization"
+  }
+]

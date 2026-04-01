@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0-draft",
+  "source": {
+    "name": "playwright-mcp-local",
+    "server_url": "http://localhost:8931/mcp",
+    "transport": "streamable_http",
+    "captured_at": "2026-04-01T13:00:21.058Z",
+    "server": {
+      "name": "Playwright",
+      "version": "0.0.41"
+    },
+    "auth": {
+      "type": "none"
+    },
+    "capture_config_redacted": {
+      "name": "playwright-mcp-local",
+      "server_url": "http://localhost:8931/mcp",
+      "transport": {
+        "type": "streamable_http"
+      }
+    }
+  },
+  "tool_count": 21,
+  "warning_count": 30
+}
