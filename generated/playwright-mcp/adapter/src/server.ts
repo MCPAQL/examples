@@ -125,12 +125,21 @@ function resolveToken(): string {
   throw new Error(`Missing upstream bearer token in env var '${configured ?? "UPSTREAM_BEARER_TOKEN"}'.`);
 }
 
+function resolveBaseUrl(): string {
+  const override = process.env.MCPAQL_TARGET_BASE_URL?.trim();
+  if (override) {
+    return override;
+  }
+
+  return schema.target.base_url;
+}
+
 async function getUpstreamClient(): Promise<Client> {
   if (upstreamClient) {
     return upstreamClient;
   }
 
-  const transport = new StreamableHTTPClientTransport(new URL(schema.target.base_url), {
+  const transport = new StreamableHTTPClientTransport(new URL(resolveBaseUrl()), {
     requestInit: {
       headers:
         schema.auth?.type === "bearer"
