@@ -2,6 +2,15 @@
 
 Generated MCP-AQL adapter package for the official Playwright MCP server.
 
+## What This Package Is
+
+This package is a local MCP-AQL adapter that runs over `stdio`.
+
+It is designed to sit between:
+
+- your MCP client, which launches this adapter locally
+- an upstream Playwright MCP server, which this generated adapter connects to over HTTP at `http://localhost:8931/mcp`
+
 ## Adapter Shape
 
 - Upstream Playwright MCP tools captured: `21`
@@ -42,6 +51,23 @@ To point the adapter at a different upstream Playwright MCP server for a one-off
 
 ```bash
 MCPAQL_TARGET_BASE_URL=http://your-host:8931/mcp node dist/server.js
+```
+
+Example client config shape:
+
+Replace the `args` path below with the absolute path to this repository on your machine.
+
+```json
+{
+  "mcpServers": {
+    "playwright-mcpaql": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/generated/playwright-mcp/adapter/dist/server.js"
+      ]
+    }
+  }
+}
 ```
 
 ## Supported Endpoints
