@@ -1,0 +1,7 @@
+{
+  "adapter": {
+    "name": "playwright-mcp",
+    "version": "0.1.0",
+    "description": "Generated MCP-AQL adapter for the official Playwright MCP server."
+  }
+}

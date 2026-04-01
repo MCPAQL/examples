@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "tool-registration",
+      "passed": true,
+      "detail": "Registered tools: mcp_aql_read, mcp_aql_execute"
+    },
+    {
+      "name": "operation-input-schema",
+      "passed": true,
+      "detail": "Request matches schema."
+    },
+    {
+      "name": "operation-result-schema",
+      "passed": true,
+      "detail": "Response envelope matches schema."
+    },
+    {
+      "name": "introspection-response-schema",
+      "passed": true,
+      "detail": "Introspection response matches schema."
+    }
+  ]
+}

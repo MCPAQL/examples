@@ -1,0 +1,199 @@
+{
+  "generated_at": "2026-04-01T13:00:45.139Z",
+  "source_server_name": "Playwright",
+  "source_server_version": "0.0.41",
+  "source_capture_name": "playwright-mcp-local",
+  "warning_count": 30,
+  "operation_count": 21,
+  "operations": [
+    {
+      "source_tool_name": "browser_close",
+      "operation_name": "browser_close",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_resize",
+      "operation_name": "browser_resize",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_console_messages",
+      "operation_name": "browser_console_messages",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Description indicates the tool returns observed state without mutating the source."
+      ]
+    },
+    {
+      "source_tool_name": "browser_handle_dialog",
+      "operation_name": "browser_handle_dialog",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_evaluate",
+      "operation_name": "browser_evaluate",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_file_upload",
+      "operation_name": "browser_file_upload",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_fill_form",
+      "operation_name": "browser_fill_form",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_install",
+      "operation_name": "browser_install",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_press_key",
+      "operation_name": "browser_press_key",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_type",
+      "operation_name": "browser_type",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_navigate",
+      "operation_name": "browser_navigate",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_navigate_back",
+      "operation_name": "browser_navigate_back",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_network_requests",
+      "operation_name": "browser_network_requests",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Description indicates the tool returns observed state without mutating the source."
+      ]
+    },
+    {
+      "source_tool_name": "browser_take_screenshot",
+      "operation_name": "browser_take_screenshot",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_snapshot",
+      "operation_name": "browser_snapshot",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Description indicates the tool returns observed state without mutating the source."
+      ]
+    },
+    {
+      "source_tool_name": "browser_click",
+      "operation_name": "browser_click",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_drag",
+      "operation_name": "browser_drag",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_hover",
+      "operation_name": "browser_hover",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_select_option",
+      "operation_name": "browser_select_option",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "browser_tabs",
+      "operation_name": "browser_tabs",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description mixes list behavior with mutating tab actions."
+      ]
+    },
+    {
+      "source_tool_name": "browser_wait_for",
+      "operation_name": "browser_wait_for",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    }
+  ]
+}

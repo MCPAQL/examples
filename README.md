@@ -21,6 +21,7 @@ For **normative protocol specifications**, see the [spec repository](https://git
 | Example | Description | Source |
 |---------|-------------|--------|
 | [GitHub MCP Golden Path](generated/github-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | GitHub MCP server |
+| [Playwright MCP Golden Path](generated/playwright-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | Playwright MCP server |
 
 ## Structure
 

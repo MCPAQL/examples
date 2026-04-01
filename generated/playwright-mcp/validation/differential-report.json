@@ -1,0 +1,160 @@
+{
+  "summary": {
+    "source_operation_count": 21,
+    "adapter_operation_count": 22,
+    "missing_operations": [],
+    "extra_operations": [],
+    "notes": [
+      "adapter_operation_count includes 1 synthetic adapter operation(s): introspect."
+    ]
+  },
+  "operations": [
+    {
+      "operation": "browser_console_messages",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_network_requests",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_snapshot",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_close",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_resize",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_handle_dialog",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_evaluate",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_file_upload",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_fill_form",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_install",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_press_key",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_type",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_navigate",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_navigate_back",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_take_screenshot",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_click",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_drag",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_hover",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_select_option",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_tabs",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "browser_wait_for",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    }
+  ]
+}

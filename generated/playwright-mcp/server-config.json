@@ -1,0 +1,7 @@
+{
+  "name": "playwright-mcp-local",
+  "server_url": "http://localhost:8931/mcp",
+  "transport": {
+    "type": "streamable_http"
+  }
+}
