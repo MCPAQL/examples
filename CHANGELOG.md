@@ -21,3 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generated adapter quick-start documentation improvements
   - Clarified the current transport model: upstream source capture over `streamable_http`, generated adapters running locally over `stdio`
   - Added first-time-user quick-start guidance for the Playwright generated adapter, including client configuration examples
+
+### Changed
+
+- GitHub MCP golden-path public-readiness cleanup
+  - Normalized the committed GitHub example to use env-var auth guidance instead of `gh auth token`
+  - Refreshed saved capture, schema, adapter, and validation artifacts from the env-var-only auth path
