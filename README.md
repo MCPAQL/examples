@@ -63,4 +63,4 @@ Each example adapter is a Markdown file with YAML front matter following the [Ad
 - **Documentation**: CC BY 4.0
 - **Code/schemas/tests**: AGPL-3.0
 
-See [LICENSING](LICENSING.md) for details.
+See [LICENSE](LICENSE), [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md), [NOTICE.md](NOTICE.md), and [TRADEMARKS.md](TRADEMARKS.md) for details.

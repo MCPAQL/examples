@@ -1,5 +1,7 @@
 # Pending Work: Infrastructure Setup
 
+> Historical note: this document reflects an early planning snapshot from before the repository's current CI and docs infrastructure was added. Some items below are now completed or superseded.
+
 ## Summary
 
 Infrastructure setup for the examples repository - a collection of example MCP-AQL adapter implementations demonstrating various patterns and use cases.

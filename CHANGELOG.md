@@ -27,3 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub MCP golden-path public-readiness cleanup
   - Normalized the committed GitHub example to use env-var auth guidance instead of `gh auth token`
   - Refreshed saved capture, schema, adapter, and validation artifacts from the env-var-only auth path
+- Public release sync polish
+  - Fixed the root README licensing links to point at the repo's actual license and notice files
+  - Marked the pending infrastructure session note as historical context so it does not read like current repository state
