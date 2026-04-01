@@ -36,7 +36,7 @@ cd ../adapter-generator
 npm run build
 
 cd ../examples/generated/github-mcp
-export GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token)
+export GITHUB_PERSONAL_ACCESS_TOKEN=<your_github_token>
 
 node ../../../tools/dist/cli.js --config server-config.json --out capture
 node ../../../adapter-generator/dist/schema-cli.js --input capture/discovery-bundle.json --overrides schema-overrides.json --out schema

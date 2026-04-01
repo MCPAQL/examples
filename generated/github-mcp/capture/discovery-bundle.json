@@ -4,17 +4,17 @@
     "name": "github-mcp-remote",
     "server_url": "https://api.githubcopilot.com/mcp/",
     "transport": "streamable_http",
-    "captured_at": "2026-03-19T04:08:21.992Z",
+    "captured_at": "2026-04-01T16:27:22.139Z",
     "server": {
       "name": "github-mcp-server",
-      "version": "github-mcp-server/remote-212864f3b76a000b57f4f4f0435df686fc2bbc66",
+      "version": "github-mcp-server/remote-7a549a1d5bbb399e4bc76c1f12a60afb9f211227",
       "title": "GitHub MCP Server"
     },
     "auth": {
       "type": "bearer",
       "header": "Authorization",
       "prefix": "Bearer ",
-      "token_command": "gh auth token"
+      "token_env": "GITHUB_PERSONAL_ACCESS_TOKEN"
     },
     "capture_config_redacted": {
       "name": "github-mcp-remote",
@@ -24,7 +24,7 @@
       },
       "auth": {
         "type": "bearer",
-        "token_command": "<redacted>",
+        "token_env": "GITHUB_PERSONAL_ACCESS_TOKEN",
         "header": "Authorization",
         "prefix": "Bearer "
       }
@@ -1904,18 +1904,26 @@
             "theme": "dark"
           }
         ],
-        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. It accepts file contents or diffs and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
+        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. The files parameter accepts either a single string or an array of strings containing raw file contents or diff hunks, and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
         "inputSchema": {
           "type": "object",
           "properties": {
             "files": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths.",
-              "minItems": 1,
-              "maxItems": 100
+              "description": "A single string or an array of strings containing file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "maxItems": 100
+                }
+              ]
             },
             "owner": {
               "type": "string",
@@ -5185,7 +5193,7 @@
         "source_tool_name": "run_secret_scanning",
         "operation_name": "run_secret_scanning",
         "title": "Run Secret Scanning",
-        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. It accepts file contents or diffs and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
+        "description": "Scan files, content, or recent changes for secrets such as API keys, passwords, tokens, and credentials.\n\nThis tool is intended for targeted scans of specific files, snippets, or diffs provided directly as content. The files parameter accepts either a single string or an array of strings containing raw file contents or diff hunks, and returns detected secrets with their locations and related secret scanning metadata. Content must not be empty. For full repository scanning, other mechanisms are available.\n\nCaveats:\n\n- Only files within the codebase should be scanned. Files outside of the codebase should not be sent.\n- Files listed in .gitignore should be skipped.",
         "endpoint": "EXECUTE",
         "endpoint_confidence": "medium",
         "danger_level": "dangerous",
@@ -5197,9 +5205,9 @@
           {
             "name": "files",
             "original_name": "files",
-            "type": "array",
+            "type": "object",
             "required": true,
-            "description": "Array of file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths.",
+            "description": "A single string or an array of strings containing file contents, snippets, or diff hunks to scan for secrets. These must be raw contents, not repository file paths.",
             "source_path": "inputSchema.properties.files"
           },
           {
