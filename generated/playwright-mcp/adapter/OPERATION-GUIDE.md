@@ -54,10 +54,13 @@ Or inspect the wrapped result type:
 - The adapter is a CRUDE wrapper over a browser-automation MCP server, not a browser-specific DSL.
 - Read-only observational operations are intentionally grouped under `READ`.
 - Browser state changes and interaction steps are currently grouped conservatively under `EXECUTE`.
+- The absence of `CREATE`, `UPDATE`, and `DELETE` buckets reflects current classification, not a claim that the underlying Playwright tools never change state.
 - Parameter names exposed by the adapter are normalized to `snake_case`, but the runtime maps them back to the upstream Playwright names before proxying.
 
 ## Playwright-Specific Notes
 
 - This example was captured from Playwright MCP `0.0.41`.
-- The adapter assumes a reachable upstream server at `http://localhost:8931/mcp`.
+- The adapter defaults to an upstream server at `http://localhost:8931/mcp`.
+- You can override that per launch with `MCPAQL_TARGET_BASE_URL=http://your-host:8931/mcp node dist/server.js`.
 - The Playwright tool surface is stateful: many operations depend on prior navigation, tabs, refs, or page state established earlier in the same session.
+- The discovery bundle records the upstream MCP transport as `streamable_http`, while the generated adapter schema currently records the broader transport family as `http`.

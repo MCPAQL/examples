@@ -25,9 +25,9 @@ This adapter currently exposes a `CRUDE` endpoint surface only:
 
 In this documentation, `CRUDE` means `Create`, `Read`, `Update`, `Delete`, and `Execute`.
 
-For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. The source tool surface is dominated by read-only inspection plus browser-interaction workflows, so the first-pass adapter groups it into `READ` and `EXECUTE`.
+For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. That does not mean Playwright lacks state-changing actions. The source tool surface is dominated by read-only inspection plus browser-interaction workflows, so the first-pass adapter groups it into `READ` and `EXECUTE`.
 
-The upstream Playwright MCP URL is configurable in the generated runtime schema at `src/schema.json`.
+The upstream Playwright MCP URL is configurable per launch with `MCPAQL_TARGET_BASE_URL`, or by editing the generated runtime schema at `src/schema.json`.
 
 Additional companion files in this package:
 
@@ -45,6 +45,12 @@ Additional companion files in this package:
 npm install
 npm run build
 node dist/server.js
+```
+
+To point the adapter at a different upstream Playwright MCP server for a one-off run:
+
+```bash
+MCPAQL_TARGET_BASE_URL=http://your-host:8931/mcp node dist/server.js
 ```
 
 Example client config shape:

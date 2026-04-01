@@ -12,6 +12,8 @@ Expected artifacts:
 
 The generated outputs are intended to be reproducible from the committed config plus a reachable Playwright MCP server at `http://localhost:8931/mcp`.
 
+You can point the generated adapter at a different upstream Playwright MCP server without editing code by setting `MCPAQL_TARGET_BASE_URL` when you launch the adapter.
+
 ## Quick Start
 
 This example has two layers:
@@ -52,15 +54,17 @@ node dist/server.js
 - The generated schema currently exposes 3 `READ` operations and 18 `EXECUTE` operations.
 - The adapter compresses the upstream 21-tool Playwright surface into 2 CRUDE endpoint tools: `mcp_aql_read` and `mcp_aql_execute`, with 21 wrapped operations plus a synthetic `introspect` operation discoverable through the adapter.
 - In this documentation, `CRUDE` means `Create`, `Read`, `Update`, `Delete`, and `Execute`.
-- For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. The browser tool surface is mostly observational reads plus stateful interaction steps, so the first-pass adapter groups it into `READ` and `EXECUTE`.
+- For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. That does not mean Playwright has no state-changing actions. It means the current first-pass classifier treats browser interactions as workflow-style `EXECUTE` operations instead of resource-style CRUD mutations.
 - See [adapter/surface-summary.json](./adapter/surface-summary.json) for counts and rough context-size estimates, and [adapter/OPERATION-GUIDE.md](./adapter/OPERATION-GUIDE.md) for a human-oriented summary of the adapter surface.
 - The committed artifacts should be regenerated if the upstream Playwright MCP tool surface changes.
+- The adapter schema currently records the transport family as `http`, while the discovery bundle preserves the MCP transport subtype as `streamable_http`.
 
 ## Known Limitations
 
 - The generated adapter inherits the current first-pass classification heuristics, so action-oriented browser operations may remain conservatively mapped to `EXECUTE`.
-- This example assumes a locally reachable Playwright MCP server in HTTP mode.
-- The upstream URL is configurable through the generated schema at `schema/adapter-schema.json` and the bundled runtime copy at `adapter/src/schema.json`.
+- This example assumes a reachable Playwright MCP server in HTTP mode.
+- The easiest runtime override is `MCPAQL_TARGET_BASE_URL=http://your-host:8931/mcp node dist/server.js`.
+- The bundled default upstream URL still lives in `schema/adapter-schema.json` and the runtime copy at `adapter/src/schema.json`.
 
 ## Why HTTP First
 
@@ -90,6 +94,15 @@ node dist/server.js
 ```
 
 That starts the generated MCP-AQL adapter as a local `stdio` MCP server.
+
+To point the adapter at a different Playwright MCP server for a one-off run:
+
+```bash
+cd adapter
+npm install
+npm run build
+MCPAQL_TARGET_BASE_URL=http://your-host:8931/mcp node dist/server.js
+```
 
 ## Connecting an MCP Client
 
