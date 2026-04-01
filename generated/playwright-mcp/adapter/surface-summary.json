@@ -1,0 +1,19 @@
+{
+  "upstream_tool_count": 21,
+  "adapter_endpoint_tool_count": 2,
+  "adapter_wrapped_operation_count": 21,
+  "adapter_total_operation_count_including_introspect": 22,
+  "token_estimate_method": "rough_char_div_4",
+  "upstream_tool_surface": {
+    "chars": 1307,
+    "approx_tokens_char_div_4": 327
+  },
+  "adapter_registered_tool_surface": {
+    "chars": 704,
+    "approx_tokens_char_div_4": 176
+  },
+  "adapter_introspection_catalog": {
+    "chars": 3274,
+    "approx_tokens_char_div_4": 819
+  }
+}
