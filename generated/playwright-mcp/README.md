@@ -12,6 +12,26 @@ Expected artifacts:
 
 The generated outputs are intended to be reproducible from the committed config plus a reachable Playwright MCP server at `http://localhost:8931/mcp`.
 
+## Quick Start
+
+This example has two layers:
+
+1. the upstream Playwright MCP server, which this example currently expects over `streamable_http`
+2. the generated MCP-AQL adapter, which you run locally as a `stdio` MCP server
+
+If you just want to try the adapter locally, the shortest path is:
+
+1. start Playwright MCP over HTTP
+2. install the generated adapter dependencies
+3. build the generated adapter
+4. point your MCP client at the generated adapter's `dist/server.js`
+
+## Prerequisites
+
+- Node.js 20 or newer
+- Docker, if you want the easiest local HTTP setup for Playwright MCP
+- an MCP client that can launch a local `stdio` server
+
 ## Artifact Notes
 
 - The current saved capture reflects Playwright MCP `0.0.41` observed on `2026-04-01`, with 21 tools and 30 warnings.
@@ -32,6 +52,53 @@ If you are using Docker, start a local Playwright MCP HTTP endpoint with:
 ```bash
 docker run --rm --init -p 8931:8931 mcp/playwright:latest --headless --browser chromium --no-sandbox --host 0.0.0.0 --port 8931
 ```
+
+That exposes the upstream MCP server at `http://localhost:8931/mcp`, which matches [server-config.json](/Users/mick/Developer/Organizations/MCPAQL/examples/generated/playwright-mcp/server-config.json).
+
+## Installing and Running the Generated Adapter
+
+From this directory:
+
+```bash
+cd adapter
+npm install
+npm run build
+node dist/server.js
+```
+
+That starts the generated MCP-AQL adapter as a local `stdio` MCP server.
+
+## Connecting an MCP Client
+
+Point your MCP client at the generated adapter, not directly at the upstream HTTP server.
+
+Example client config shape:
+
+```json
+{
+  "mcpServers": {
+    "playwright-mcpaql": {
+      "command": "node",
+      "args": [
+        "/Users/mick/Developer/Organizations/MCPAQL/examples/generated/playwright-mcp/adapter/dist/server.js"
+      ]
+    }
+  }
+}
+```
+
+In that setup:
+
+- your MCP client speaks `stdio` to the generated adapter
+- the generated adapter speaks `streamable_http` to the upstream Playwright MCP server at `http://localhost:8931/mcp`
+
+## What This Example Supports Today
+
+- upstream source capture: `streamable_http`
+- generated adapter runtime: `stdio`
+- upstream auth for this Playwright example: `none`
+
+Source-side `stdio` capture is planned next, but it is not part of the current golden path yet.
 
 ## Regenerating
 

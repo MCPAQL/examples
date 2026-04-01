@@ -23,6 +23,17 @@ For **normative protocol specifications**, see the [spec repository](https://git
 | [GitHub MCP Golden Path](generated/github-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | GitHub MCP server |
 | [Playwright MCP Golden Path](generated/playwright-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | Playwright MCP server |
 
+## Current Transport Scope
+
+The current golden-path tooling supports upstream source MCP servers over `streamable_http`.
+
+The generated adapters themselves run as local MCP servers over `stdio`, so a typical demo flow today looks like:
+
+1. start or expose the upstream MCP server over HTTP
+2. generate or use the committed MCP-AQL adapter artifacts
+3. run the generated adapter locally as a `stdio` MCP server
+4. connect your MCP client to that generated adapter
+
 ## Structure
 
 Each example adapter is a Markdown file with YAML front matter following the [Adapter Element Type Specification](https://github.com/MCPAQL/spec/blob/develop/docs/adapter/element-type.md). The front matter contains all operation mappings, and the Markdown body provides human-readable documentation.

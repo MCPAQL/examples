@@ -18,3 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Playwright MCP golden-path generated example artifacts
   - Added `generated/playwright-mcp/` capture, schema, adapter, and validation outputs for the HTTP Playwright MCP pipeline
   - Added Docker-based startup, regeneration, and validation documentation for the generated example
+- Generated adapter quick-start documentation improvements
+  - Clarified the current transport model: upstream source capture over `streamable_http`, generated adapters running locally over `stdio`
+  - Added first-time-user quick-start guidance for the Playwright generated adapter, including client configuration examples
