@@ -15,3 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub MCP golden-path generated example artifacts
   - Added `generated/github-mcp/` capture, schema, adapter, and validation outputs for the first MCP-server-to-MCP-AQL pipeline
   - Added regeneration and validation documentation for the generated example
+- Playwright MCP golden-path generated example artifacts
+  - Added `generated/playwright-mcp/` capture, schema, adapter, and validation outputs for the HTTP Playwright MCP pipeline
+  - Added Docker-based startup, regeneration, and validation documentation for the generated example

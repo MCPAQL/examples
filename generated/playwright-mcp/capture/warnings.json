@@ -1,0 +1,221 @@
+[
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_close",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_resize",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description indicates the tool returns observed state without mutating the source.",
+    "tool": "browser_console_messages",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'onlyErrors' was normalized to 'only_errors'.",
+    "tool": "browser_console_messages",
+    "field": "onlyErrors",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_handle_dialog",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'promptText' was normalized to 'prompt_text'.",
+    "tool": "browser_handle_dialog",
+    "field": "promptText",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_evaluate",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_file_upload",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_fill_form",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_install",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_press_key",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_type",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_navigate",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_navigate_back",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description indicates the tool returns observed state without mutating the source.",
+    "tool": "browser_network_requests",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_take_screenshot",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'fullPage' was normalized to 'full_page'.",
+    "tool": "browser_take_screenshot",
+    "field": "fullPage",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description indicates the tool returns observed state without mutating the source.",
+    "tool": "browser_snapshot",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_click",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'doubleClick' was normalized to 'double_click'.",
+    "tool": "browser_click",
+    "field": "doubleClick",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_drag",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'startElement' was normalized to 'start_element'.",
+    "tool": "browser_drag",
+    "field": "startElement",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'startRef' was normalized to 'start_ref'.",
+    "tool": "browser_drag",
+    "field": "startRef",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'endElement' was normalized to 'end_element'.",
+    "tool": "browser_drag",
+    "field": "endElement",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'endRef' was normalized to 'end_ref'.",
+    "tool": "browser_drag",
+    "field": "endRef",
+    "heuristic": "snake_case_normalization"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_hover",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_select_option",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Description mixes list behavior with mutating tab actions.",
+    "tool": "browser_tabs",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "browser_wait_for",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "PARAM_NAME_NORMALIZED",
+    "severity": "info",
+    "message": "Parameter 'textGone' was normalized to 'text_gone'.",
+    "tool": "browser_wait_for",
+    "field": "textGone",
+    "heuristic": "snake_case_normalization"
+  }
+]
