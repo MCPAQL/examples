@@ -228,7 +228,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_resize",
@@ -237,7 +238,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_console_messages",
@@ -246,7 +248,10 @@
       "needs_review": true,
       "review_reasons": [
         "Description indicates the tool returns observed state without mutating the source."
-      ]
+      ],
+      "param_mappings": {
+        "only_errors": "onlyErrors"
+      }
     },
     {
       "source_tool_name": "browser_handle_dialog",
@@ -255,7 +260,10 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {
+        "prompt_text": "promptText"
+      }
     },
     {
       "source_tool_name": "browser_evaluate",
@@ -264,7 +272,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_file_upload",
@@ -273,7 +282,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_fill_form",
@@ -282,7 +292,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_install",
@@ -291,7 +302,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_press_key",
@@ -300,7 +312,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_type",
@@ -309,7 +322,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_navigate",
@@ -318,7 +332,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_navigate_back",
@@ -327,7 +342,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_network_requests",
@@ -336,7 +352,8 @@
       "needs_review": true,
       "review_reasons": [
         "Description indicates the tool returns observed state without mutating the source."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_take_screenshot",
@@ -345,7 +362,10 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {
+        "full_page": "fullPage"
+      }
     },
     {
       "source_tool_name": "browser_snapshot",
@@ -354,7 +374,8 @@
       "needs_review": true,
       "review_reasons": [
         "Description indicates the tool returns observed state without mutating the source."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_click",
@@ -363,7 +384,10 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {
+        "double_click": "doubleClick"
+      }
     },
     {
       "source_tool_name": "browser_drag",
@@ -372,7 +396,13 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {
+        "start_element": "startElement",
+        "start_ref": "startRef",
+        "end_element": "endElement",
+        "end_ref": "endRef"
+      }
     },
     {
       "source_tool_name": "browser_hover",
@@ -381,7 +411,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_select_option",
@@ -390,7 +421,8 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_tabs",
@@ -399,7 +431,8 @@
       "needs_review": true,
       "review_reasons": [
         "Description mixes list behavior with mutating tab actions."
-      ]
+      ],
+      "param_mappings": {}
     },
     {
       "source_tool_name": "browser_wait_for",
@@ -408,7 +441,10 @@
       "needs_review": true,
       "review_reasons": [
         "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
-      ]
+      ],
+      "param_mappings": {
+        "text_gone": "textGone"
+      }
     }
   ]
 }
