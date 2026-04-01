@@ -11,11 +11,32 @@ It is designed to sit between:
 - your MCP client, which launches this adapter locally
 - an upstream Playwright MCP server, which this generated adapter connects to over HTTP at `http://localhost:8931/mcp`
 
-See [../README.md](../README.md#starting-the-source-server) for the Docker command that starts the upstream Playwright MCP HTTP server.
+## Adapter Shape
+
+- Upstream Playwright MCP tools captured: `21`
+- Registered MCP-AQL endpoint tools: `2`
+- Wrapped upstream operations: `21`
+- Synthetic adapter operation: `1` (`introspect`)
+
+This adapter currently exposes a `CRUDE` endpoint surface only:
+
+- `READ`
+- `EXECUTE`
+
+In this documentation, `CRUDE` means `Create`, `Read`, `Update`, `Delete`, and `Execute`.
+
+For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. The source tool surface is dominated by read-only inspection plus browser-interaction workflows, so the first-pass adapter groups it into `READ` and `EXECUTE`.
+
+The upstream Playwright MCP URL is configurable in the generated runtime schema at `src/schema.json`.
+
+Additional companion files in this package:
+
+- [surface-summary.json](./surface-summary.json) - counts plus rough context-size estimates
+- [OPERATION-GUIDE.md](./OPERATION-GUIDE.md) - human-oriented operation and introspection summary
 
 ## Quick Start
 
-1. Start the upstream Playwright MCP server in HTTP mode.
+1. Start the upstream Playwright MCP server in HTTP mode (see [../README.md](../README.md#starting-the-source-server) for the Docker command).
 2. Install dependencies in this directory.
 3. Build the adapter.
 4. Point your MCP client at `dist/server.js`.
@@ -42,19 +63,6 @@ Replace the `args` path below with the absolute path to this repository on your 
   }
 }
 ```
-
-## Surface Summary
-
-- Upstream Playwright MCP tools captured: `21`
-- Registered adapter endpoint tools: `2`
-- Wrapped upstream operations: `21`
-- Synthetic adapter operation: `1` (`introspect`)
-- Endpoint shape: CRUDE only
-
-Additional companion files in this package:
-
-- [surface-summary.json](./surface-summary.json) - counts plus rough context-size estimates
-- [OPERATION-GUIDE.md](./OPERATION-GUIDE.md) - human-oriented operation and introspection summary
 
 ## Supported Endpoints
 

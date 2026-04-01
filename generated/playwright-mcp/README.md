@@ -26,6 +26,18 @@ If you just want to try the adapter locally, the shortest path is:
 3. build the generated adapter
 4. point your MCP client at the generated adapter's `dist/server.js`
 
+Copy-pasteable local demo path:
+
+```bash
+docker run --rm --init -p 8931:8931 mcp/playwright:latest --headless --browser chromium --no-sandbox --host 0.0.0.0 --port 8931
+
+# in a second terminal
+cd adapter
+npm install
+npm run build
+node dist/server.js
+```
+
 ## Prerequisites
 
 - Node.js 20 or newer
@@ -38,7 +50,9 @@ If you just want to try the adapter locally, the shortest path is:
 - This golden path is intentionally focused on the current HTTP capture path.
 - Playwright also supports `stdio`, but source-side `stdio` capture is planned as a follow-on broadening of the pipeline rather than folded into this example.
 - The generated schema currently exposes 3 `READ` operations and 18 `EXECUTE` operations.
-- The adapter compresses the upstream 21-tool Playwright surface into 2 CRUDE endpoint tools, with 21 wrapped operations plus a synthetic `introspect` operation discoverable through the adapter.
+- The adapter compresses the upstream 21-tool Playwright surface into 2 CRUDE endpoint tools: `mcp_aql_read` and `mcp_aql_execute`, with 21 wrapped operations plus a synthetic `introspect` operation discoverable through the adapter.
+- In this documentation, `CRUDE` means `Create`, `Read`, `Update`, `Delete`, and `Execute`.
+- For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. The browser tool surface is mostly observational reads plus stateful interaction steps, so the first-pass adapter groups it into `READ` and `EXECUTE`.
 - See [adapter/surface-summary.json](./adapter/surface-summary.json) for counts and rough context-size estimates, and [adapter/OPERATION-GUIDE.md](./adapter/OPERATION-GUIDE.md) for a human-oriented summary of the adapter surface.
 - The committed artifacts should be regenerated if the upstream Playwright MCP tool surface changes.
 
@@ -46,6 +60,13 @@ If you just want to try the adapter locally, the shortest path is:
 
 - The generated adapter inherits the current first-pass classification heuristics, so action-oriented browser operations may remain conservatively mapped to `EXECUTE`.
 - This example assumes a locally reachable Playwright MCP server in HTTP mode.
+- The upstream URL is configurable through the generated schema at `schema/adapter-schema.json` and the bundled runtime copy at `adapter/src/schema.json`.
+
+## Why HTTP First
+
+The generated adapter itself runs locally over `stdio`, but this example currently expects the upstream Playwright MCP server over `streamable_http`.
+
+That is the cleaner path right now because the upstream Playwright process can stay up independently while your local MCP host starts and stops the generated adapter process as needed.
 
 ## Starting the Source Server
 

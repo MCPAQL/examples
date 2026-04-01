@@ -34,6 +34,12 @@ The generated adapters themselves run as local MCP servers over `stdio`, so a ty
 3. run the generated adapter locally as a `stdio` MCP server
 4. connect your MCP client to that generated adapter
 
+Why this is cleaner right now:
+
+- the upstream HTTP server can stay up independently of your MCP client lifecycle
+- the local generated adapter can be started and stopped by your MCP host without also having to supervise the upstream source server
+- this is especially helpful for stateful MCP servers like Playwright, where restarting the upstream process may reset browser state
+
 ## Structure
 
 Each example adapter is a Markdown file with YAML front matter following the [Adapter Element Type Specification](https://github.com/MCPAQL/spec/blob/develop/docs/adapter/element-type.md). The front matter contains all operation mappings, and the Markdown body provides human-readable documentation.
