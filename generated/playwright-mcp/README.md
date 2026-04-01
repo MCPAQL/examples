@@ -18,12 +18,17 @@ The generated outputs are intended to be reproducible from the committed config 
 - This golden path is intentionally focused on the current HTTP capture path.
 - Playwright also supports `stdio`, but source-side `stdio` capture is planned as a follow-on broadening of the pipeline rather than folded into this example.
 - The generated schema currently exposes 3 `READ` operations and 18 `EXECUTE` operations.
+- The adapter compresses the upstream 21-tool Playwright surface into 2 CRUDE endpoint tools: `mcp_aql_read` and `mcp_aql_execute`.
+- In this documentation, `CRUDE` means `Create`, `Read`, `Update`, `Delete`, and `Execute`.
+- For the current Playwright capture there are no generated `CREATE`, `UPDATE`, or `DELETE` endpoint buckets. The browser tool surface is mostly observational reads plus stateful interaction steps, so the first-pass adapter groups it into `READ` and `EXECUTE`.
+- See [adapter/OPERATION-GUIDE.md](./adapter/OPERATION-GUIDE.md) and [adapter/surface-summary.json](./adapter/surface-summary.json) for a compact summary of the generated adapter surface.
 - The committed artifacts should be regenerated if the upstream Playwright MCP tool surface changes.
 
 ## Known Limitations
 
 - The generated adapter inherits the current first-pass classification heuristics, so action-oriented browser operations may remain conservatively mapped to `EXECUTE`.
 - This example assumes a locally reachable Playwright MCP server in HTTP mode.
+- The upstream URL is configurable through the generated schema at `schema/adapter-schema.json` and the bundled runtime copy at `adapter/src/schema.json`.
 
 ## Starting the Source Server
 
