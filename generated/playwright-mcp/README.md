@@ -38,6 +38,8 @@ If you just want to try the adapter locally, the shortest path is:
 - This golden path is intentionally focused on the current HTTP capture path.
 - Playwright also supports `stdio`, but source-side `stdio` capture is planned as a follow-on broadening of the pipeline rather than folded into this example.
 - The generated schema currently exposes 3 `READ` operations and 18 `EXECUTE` operations.
+- The adapter compresses the upstream 21-tool Playwright surface into 2 CRUDE endpoint tools, with 21 wrapped operations plus a synthetic `introspect` operation discoverable through the adapter.
+- See [adapter/surface-summary.json](./adapter/surface-summary.json) for counts and rough context-size estimates, and [adapter/OPERATION-GUIDE.md](./adapter/OPERATION-GUIDE.md) for a human-oriented summary of the adapter surface.
 - The committed artifacts should be regenerated if the upstream Playwright MCP tool surface changes.
 
 ## Known Limitations
@@ -53,7 +55,7 @@ If you are using Docker, start a local Playwright MCP HTTP endpoint with:
 docker run --rm --init -p 8931:8931 mcp/playwright:latest --headless --browser chromium --no-sandbox --host 0.0.0.0 --port 8931
 ```
 
-That exposes the upstream MCP server at `http://localhost:8931/mcp`, which matches [server-config.json](/Users/mick/Developer/Organizations/MCPAQL/examples/generated/playwright-mcp/server-config.json).
+That exposes the upstream MCP server at `http://localhost:8931/mcp`, which matches [server-config.json](./server-config.json).
 
 ## Installing and Running the Generated Adapter
 
@@ -74,13 +76,15 @@ Point your MCP client at the generated adapter, not directly at the upstream HTT
 
 Example client config shape:
 
+Replace the `args` path below with the absolute path to this repository on your machine.
+
 ```json
 {
   "mcpServers": {
     "playwright-mcpaql": {
       "command": "node",
       "args": [
-        "/Users/mick/Developer/Organizations/MCPAQL/examples/generated/playwright-mcp/adapter/dist/server.js"
+        "/absolute/path/to/generated/playwright-mcp/adapter/dist/server.js"
       ]
     }
   }
@@ -97,6 +101,8 @@ In that setup:
 - upstream source capture: `streamable_http`
 - generated adapter runtime: `stdio`
 - upstream auth for this Playwright example: `none`
+- adapter surface shape: CRUDE endpoint tools only
+- upstream 21 tools become 2 registered adapter endpoint tools (`mcp_aql_read`, `mcp_aql_execute`)
 
 Source-side `stdio` capture is planned next, but it is not part of the current golden path yet.
 

@@ -11,6 +11,8 @@ It is designed to sit between:
 - your MCP client, which launches this adapter locally
 - an upstream Playwright MCP server, which this generated adapter connects to over HTTP at `http://localhost:8931/mcp`
 
+See [../README.md](../README.md#starting-the-source-server) for the Docker command that starts the upstream Playwright MCP HTTP server.
+
 ## Quick Start
 
 1. Start the upstream Playwright MCP server in HTTP mode.
@@ -26,18 +28,33 @@ node dist/server.js
 
 Example client config shape:
 
+Replace the `args` path below with the absolute path to this repository on your machine.
+
 ```json
 {
   "mcpServers": {
     "playwright-mcpaql": {
       "command": "node",
       "args": [
-        "/Users/mick/Developer/Organizations/MCPAQL/examples/generated/playwright-mcp/adapter/dist/server.js"
+        "/absolute/path/to/generated/playwright-mcp/adapter/dist/server.js"
       ]
     }
   }
 }
 ```
+
+## Surface Summary
+
+- Upstream Playwright MCP tools captured: `21`
+- Registered adapter endpoint tools: `2`
+- Wrapped upstream operations: `21`
+- Synthetic adapter operation: `1` (`introspect`)
+- Endpoint shape: CRUDE only
+
+Additional companion files in this package:
+
+- [surface-summary.json](./surface-summary.json) - counts plus rough context-size estimates
+- [OPERATION-GUIDE.md](./OPERATION-GUIDE.md) - human-oriented operation and introspection summary
 
 ## Supported Endpoints
 
@@ -53,5 +70,5 @@ Run:
 ```bash
 npm install
 npm run build
-npm run start
+node dist/server.js
 ```
