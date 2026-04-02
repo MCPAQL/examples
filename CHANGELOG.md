@@ -25,8 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Link checking for public MCPAQL repos
-  - Narrowed the lychee GitHub exclusion so `spec` and `adapter-generator` links are checked now that those repositories are public
-  - Kept the `mcpaql-adapter` exclusion in place until that repository is public
+  - Removed the repo-wide GitHub exclusion from lychee now that `examples`, `spec`, `adapter-generator`, and `mcpaql-adapter` are all public
+  - Re-enabled CI link checking for the public cross-repo references used throughout the examples documentation
 - GitHub MCP golden-path public-readiness cleanup
   - Normalized the committed GitHub example to use env-var auth guidance instead of `gh auth token`
   - Refreshed saved capture, schema, adapter, and validation artifacts from the env-var-only auth path
