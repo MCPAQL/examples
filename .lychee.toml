@@ -26,8 +26,8 @@ exclude = [
     "^https?://mcpaql\\.org",
     "^https?://spec\\.modelcontextprotocol\\.io",
 
-    # MCPAQL GitHub repos (private, return 404 from CI)
-    "^https?://github\\.com/MCPAQL/",
+    # MCPAQL GitHub repos that are still private
+    "^https?://github\\.com/MCPAQL/mcpaql-adapter(?:[/?#].*)?$",
 
     # DollhouseMCP development repo (historical references, may be private)
     "^https?://github\\.com/DollhouseMCP/mcp-server-v2-refactor",
