@@ -1,8 +1,6 @@
 ADR
-AQL
 applescript
-JXA
-jxa
+AQL
 async
 camelCase
 cff
@@ -14,11 +12,14 @@ discriminated
 idempotent
 introspect
 introspection
+jxa
+JXA
 LLM
 MCP
 MCPAQL
 params
 schemas
+sdef
 semver
 snake_case
 unstar
