@@ -273,6 +273,8 @@ operations:
           description: "Name of the email account to check"
 ---
 
+# Apple Mail Adapter
+
 ## Overview
 
 This adapter provides MCP-AQL access to Apple Mail on macOS via the native AppleScript/JXA transport. It enables LLMs to manage email through the unified CRUDE interface without requiring any network connectivity or API keys.
@@ -402,5 +404,5 @@ All parameter values are sanitized via the native-applescript transport's saniti
 ## References
 
 - [MCP-AQL Specification](https://github.com/MCPAQL/spec)
-- [Native AppleScript Transport Plugin](https://github.com/MCPAQL/mcpaql-adapter/blob/develop/src/plugins/transport/native-applescript.ts)
+- [Native AppleScript Transport Plugin](https://github.com/MCPAQL/mcpaql-adapter) — see `src/plugins/transport/native-applescript.ts`
 - [Apple Mail Scripting Dictionary](file:///System/Applications/Mail.app/Contents/Resources/Mail.sdef)

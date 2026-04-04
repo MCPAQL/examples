@@ -1,6 +1,8 @@
 ADR
 AQL
 applescript
+JXA
+jxa
 async
 camelCase
 cff

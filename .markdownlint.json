@@ -71,7 +71,7 @@
   "MD040": false,
 
   "MD041": {
-    "front_matter_title": "^\\s*title\\s*[:=]"
+    "front_matter_title": "^\\s*(title|name)\\s*[:=]"
   },
 
   "MD046": {
