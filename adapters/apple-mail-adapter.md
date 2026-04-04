@@ -36,7 +36,7 @@ operations:
           type: string
           required: true
           description: "The subject of the message"
-        content:
+        body:
           type: string
           required: true
           description: "The body text of the message"
@@ -50,6 +50,9 @@ operations:
         cc_recipients:
           type: array
           description: "List of CC recipient email addresses"
+        bcc_recipients:
+          type: array
+          description: "List of BCC recipient email addresses"
         visible:
           type: boolean
           default: true
@@ -162,7 +165,7 @@ operations:
         message_id:
           type: integer
           required: true
-          description: "The message ID"
+          description: "The message ID (positional index within the mailbox; may change as messages are added or removed)"
         read_status:
           type: boolean
           required: true
@@ -183,7 +186,7 @@ operations:
         message_id:
           type: integer
           required: true
-          description: "The message ID"
+          description: "The message ID (positional index within the mailbox; may change as messages are added or removed)"
         flagged_status:
           type: boolean
           required: true
@@ -204,7 +207,7 @@ operations:
         message_id:
           type: integer
           required: true
-          description: "The message ID"
+          description: "The message ID (positional index within the mailbox; may change as messages are added or removed)"
         junk_status:
           type: boolean
           required: true
@@ -226,7 +229,7 @@ operations:
         message_id:
           type: integer
           required: true
-          description: "The message ID to delete"
+          description: "The message ID to delete (positional index within the mailbox; may change as messages are added or removed)"
 
   execute:
     - name: send_message
@@ -257,7 +260,7 @@ operations:
         message_id:
           type: integer
           required: true
-          description: "The message ID to move"
+          description: "The message ID to move (positional index within the mailbox; may change as messages are added or removed)"
 
     - name: check_for_new_mail
       maps_to: "native-applescript:command:checkForNewMail"

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Apple Mail adapter example (`adapters/apple-mail-adapter.md`)
   - First native-applescript transport adapter, demonstrating local macOS app automation via JXA
-  - Complete CRUDE operations: list accounts, read messages, search, mark read/flagged, delete, move, send
+  - Complete CRUDE operations: list accounts, read messages, search, mark read/flagged/junk, delete, move, send
   - No API keys or network connectivity required
 - GitHub API adapter example migrated from spec repository
   - `adapters/github-api-adapter.md` - Complete GitHub REST API v3 adapter
