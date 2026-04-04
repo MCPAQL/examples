@@ -1,4 +1,5 @@
 ADR
+applescript
 AQL
 async
 camelCase
@@ -11,11 +12,14 @@ discriminated
 idempotent
 introspect
 introspection
+jxa
+JXA
 LLM
 MCP
 MCPAQL
 params
 schemas
+sdef
 semver
 snake_case
 unstar
