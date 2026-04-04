@@ -62,7 +62,7 @@ operations:
 
     - name: get_account
       maps_to: "native-applescript:get_property:account.name"
-      description: "Get details of a specific email account"
+      description: "Get the name of a specific email account"
       params:
         account_name:
           type: string
@@ -110,11 +110,11 @@ operations:
         message_id:
           type: integer
           required: true
-          description: "The message ID"
+          description: "The message ID. Note: this is a positional index within the mailbox and may change as messages are added or removed"
 
     - name: search_messages
       maps_to: "native-applescript:command:search_messages"
-      description: "Search messages by subject text"
+      description: "Search messages by subject line (subject-only match; does not search body or other fields)"
       params:
         account_name:
           type: string
@@ -405,4 +405,4 @@ All parameter values are sanitized via the native-applescript transport's saniti
 
 - [MCP-AQL Specification](https://github.com/MCPAQL/spec)
 - [Native AppleScript Transport Plugin](https://github.com/MCPAQL/mcpaql-adapter) — see `src/plugins/transport/native-applescript.ts`
-- [Apple Mail Scripting Dictionary](file:///System/Applications/Mail.app/Contents/Resources/Mail.sdef)
+- Apple Mail Scripting Dictionary — located at `/Applications/Mail.app/Contents/Resources/Mail.sdef` (or `/System/Applications/Mail.app/Contents/Resources/Mail.sdef` on macOS 10.15+)
