@@ -1,0 +1,13 @@
+{
+  "name": "airpods-mcp-sidecar",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Sample consumer for the airpods-mcp adapter: gaze-driven X-mouse-style window focus, transparent dwell-indicator overlay, drift-mitigated head-tracking. Reads the live pose stream from the adapter's HUD WebSocket.",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "ws": "^8.20.0"
+  }
+}
