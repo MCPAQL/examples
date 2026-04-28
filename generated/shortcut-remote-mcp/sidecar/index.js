@@ -10,22 +10,38 @@
 // (or whatever shell the script is launched from). Grant it once and synthesis works.
 
 import WebSocket from "ws";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 const HUD_URL = process.env.SHORTCUT_REMOTE_HUD ?? "ws://127.0.0.1:47832/events";
 
 // ---------- Passthrough table ----------
-// Each key is "primary:<bit>" or "secondary:<bit>".
-// Action fires on the *press* edge (transition from not-held to held).
-// Mac key codes: https://eastmanreference.com/complete-list-of-applescript-key-codes
-const PASSTHROUGH = {
-  // K7 → SuperWhisper (Option + Command + 3)
-  "primary:6": { mac_code: 20, modifiers: ["option", "command"], label: "K7 → SuperWhisper (Opt+Cmd+3)" },
-  // K8 → Escape
-  "primary:7": { mac_code: 53, modifiers: [], label: "K8 → Escape" },
-};
+// Each key is "primary:<bit>" or "secondary:<bit>". Action fires on the *press*
+// edge (transition from not-held to held). Two action shapes are supported:
+//
+//   1) Keystroke synthesis via osascript (needs Accessibility permission):
+//        { mac_code, modifiers, label }
+//      e.g. "primary:6": { mac_code: 20, modifiers: ["option", "command"],
+//                          label: "K7 → Opt+Cmd+3" }
+//      Mac key codes: https://eastmanreference.com/complete-list-of-applescript-key-codes
+//
+//   2) Shell command:
+//        { command, args, label }
+//      e.g. "secondary:2": { command: "/bin/sh",
+//                            args: ["-c", "kill -USR1 $(cat /tmp/some.pid)"],
+//                            label: "K11 → trigger SIGUSR1 to some sidecar" }
+//
+// Default is empty — the device's firmware already synthesizes whatever keys
+// you bound through the XP-Pen software (e.g., K7/K8 send Opt+Cmd+3 / Escape via
+// interface 0 regardless of who holds interface 2), so don't pass those through
+// here or they'll fire twice. Add entries below only for buttons whose default
+// firmware mapping you want to override or complement.
+const PASSTHROUGH = {};
+
+function runCommand(action) {
+  spawn(action.command, action.args, { stdio: "ignore", detached: true }).unref();
+}
 
 function logEvent(msg) {
   const t = new Date().toISOString().slice(11, 23);
@@ -57,7 +73,8 @@ function handleEvent(ev) {
     const action = PASSTHROUGH[key];
     if (!action) continue;
     logEvent(`→ ${action.label}`);
-    synthesizeKey(action);
+    if (action.command) runCommand(action);
+    else synthesizeKey(action);
   }
 }
 
