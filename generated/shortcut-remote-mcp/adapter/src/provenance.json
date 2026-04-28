@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-04-26T16:30:00.000Z",
+  "discovery_method": "observational_hid_capture",
+  "discovery_artifacts": {
+    "raw_reports": "../capture/raw-reports.jsonl",
+    "discovery_bundle": "../capture/discovery-bundle.json",
+    "report_count": 235
+  },
+  "source_capture_name": "shortcut-remote-local",
+  "source_server_name": "Shortcut Remote",
+  "source_server_version": "0.0.0",
+  "warning_count": 3,
+  "operation_count": 6,
+  "operations": [
+    { "source_tool_name": "vendor_report_query", "operation_name": "list_devices", "endpoint": "READ", "needs_review": false, "review_reasons": [] },
+    { "source_tool_name": "vendor_report_query", "operation_name": "get_device_info", "endpoint": "READ", "needs_review": false, "review_reasons": [] },
+    { "source_tool_name": "vendor_report_query", "operation_name": "get_battery_status", "endpoint": "READ", "needs_review": false, "review_reasons": [] },
+    { "source_tool_name": "vendor_report_query", "operation_name": "get_button_state", "endpoint": "READ", "needs_review": false, "review_reasons": [] },
+    { "source_tool_name": "vendor_report_query", "operation_name": "wait_for_button_press", "endpoint": "READ", "needs_review": true, "review_reasons": ["semantic naming of buttons is observational; physical layout not yet labeled by user"] },
+    { "source_tool_name": "vendor_report_query", "operation_name": "get_recent_events", "endpoint": "READ", "needs_review": false, "review_reasons": [] }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "name": "shortcut-remote-adapter",
+  "type": "adapter",
+  "version": "0.1.0",
+  "description": "Generated MCP-AQL adapter for Hanvon Ugee Shortcut Remote (USB 0x28bd:0x0202). JIT-discovered via observational HID capture.",
+  "target": {
+    "base_url": "native-hid://0x28bd:0x0202",
+    "transport": "native-hid",
+    "protocol": "custom",
+    "serialization": "json",
+    "vendor_id": 10429,
+    "product_id": 514,
+    "interface_filter": { "min_usage_page": 65280 }
+  },
+  "operations": {
+    "read": [
+      {
+        "name": "list_devices",
+        "maps_to": "native-hid:enumerate",
+        "description": "List currently connected Shortcut Remote devices.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_device_info",
+        "maps_to": "native-hid:device_info",
+        "description": "Vendor/product info, manufacturer, serial, and inferred capabilities.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_battery_status",
+        "maps_to": "native-hid:report_decode:battery",
+        "description": "Latest battery percent and charging state from the 0xf2 heartbeat report.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_button_state",
+        "maps_to": "native-hid:report_decode:button_state",
+        "description": "Most recent decoded button bitmap — which buttons are currently held.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "wait_for_button_press",
+        "maps_to": "native-hid:event_wait:button_press",
+        "description": "Block until the next button press, then return which bit transitioned and the raw report.",
+        "params": {
+          "timeout_ms": { "type": "integer", "required": false, "default": 30000, "minimum": 100, "maximum": 600000, "description": "Max time to wait, ms." }
+        },
+        "danger_level": "safe",
+        "non_idempotent": false
+      },
+      {
+        "name": "get_recent_events",
+        "maps_to": "native-hid:event_log",
+        "description": "Recent button/wheel events from the in-memory ring buffer.",
+        "params": {
+          "limit": { "type": "integer", "required": false, "default": 50, "minimum": 1, "maximum": 1000 },
+          "since_ts": { "type": "integer", "required": false, "description": "Unix ms; only events at or after this time." }
+        },
+        "danger_level": "safe"
+      },
+      {
+        "name": "is_device_open",
+        "maps_to": "native-hid:handle_state",
+        "description": "Whether the adapter currently holds the vendor-page HID handle (true = keypad is LLM-only; false = XP-Pen daemon owns it).",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_hud_url",
+        "maps_to": "internal:hud",
+        "description": "Return the URL of the live HUD (HTTP+WebSocket dashboard) bound to 127.0.0.1. Open it in a browser tab for a low-latency visual of every event.",
+        "danger_level": "safe"
+      }
+    ],
+    "delete": [
+      {
+        "name": "release_device",
+        "maps_to": "native-hid:handle_close",
+        "description": "Release the vendor-page HID handle, returning the keypad to XP-Pen daemon control. Pending button-press waiters are aborted with timed_out=true. Any subsequent read op will lazy-reopen.",
+        "danger_level": "reversible"
+      }
+    ]
+  }
+}

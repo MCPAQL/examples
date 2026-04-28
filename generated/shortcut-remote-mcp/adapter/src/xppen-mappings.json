@@ -1,0 +1,747 @@
+{
+  "source": "~/.xppen/config.xml — <ACK05> (XP-Pen Shortcut Remote)",
+  "extracted_at": "2026-04-28T13:06:35.093Z",
+  "device": {
+    "internal_name": "ACK05",
+    "display_name": "Shortcut Remote",
+    "keys_per_layer": 11,
+    "ring_count": 1
+  },
+  "layers": {
+    "I": {
+      "enabled": true,
+      "layer_id": 1,
+      "keys": {
+        "K1": {
+          "k_index": 1,
+          "motid": 1,
+          "actid": 110,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K2": {
+          "k_index": 2,
+          "motid": 2,
+          "actid": 111,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K3": {
+          "k_index": 3,
+          "motid": 3,
+          "actid": 24,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Claude Desktop",
+          "human_shortcut": "Control+Option+Command+2",
+          "encoded_keys": "16777249:59+16777251:58+16777250:55+50:19",
+          "keystrokes": [
+            {
+              "qt": 16777249,
+              "mac": 59,
+              "name": "Ctrl",
+              "qt_name": "Control"
+            },
+            {
+              "qt": 16777251,
+              "mac": 58,
+              "name": "Option",
+              "qt_name": "Alt"
+            },
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 50,
+              "mac": 19,
+              "name": "2",
+              "qt_name": "2"
+            }
+          ]
+        },
+        "K4": {
+          "k_index": 4,
+          "motid": 4,
+          "actid": 201,
+          "show": true,
+          "customized": true,
+          "action_type": "2",
+          "label": "Option",
+          "human_shortcut": "2",
+          "encoded_keys": null,
+          "keystrokes": null
+        },
+        "K5": {
+          "k_index": 5,
+          "motid": 5,
+          "actid": 204,
+          "show": true,
+          "customized": true,
+          "action_type": "2",
+          "label": "Command",
+          "human_shortcut": "3",
+          "encoded_keys": null,
+          "keystrokes": null
+        },
+        "K6": {
+          "k_index": 6,
+          "motid": 6,
+          "actid": 3,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "ChatGPT",
+          "human_shortcut": "Option+Command+1",
+          "encoded_keys": "16777251:58+16777250:55+49:18",
+          "keystrokes": [
+            {
+              "qt": 16777251,
+              "mac": 58,
+              "name": "Option",
+              "qt_name": "Alt"
+            },
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 49,
+              "mac": 18,
+              "name": "1",
+              "qt_name": "1"
+            }
+          ]
+        },
+        "K7": {
+          "k_index": 7,
+          "motid": 7,
+          "actid": 5,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "SuperWhisper",
+          "human_shortcut": "Option+Command+3",
+          "encoded_keys": "16777251:58+16777250:55+51:20",
+          "keystrokes": [
+            {
+              "qt": 16777251,
+              "mac": 58,
+              "name": "Option",
+              "qt_name": "Alt"
+            },
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 51,
+              "mac": 20,
+              "name": "3",
+              "qt_name": "3"
+            }
+          ]
+        },
+        "K8": {
+          "k_index": 8,
+          "motid": 8,
+          "actid": 6,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Escape",
+          "human_shortcut": "⎋",
+          "encoded_keys": "16777216:53",
+          "keystrokes": [
+            {
+              "qt": 16777216,
+              "mac": 53,
+              "name": "Escape",
+              "qt_name": "Escape"
+            }
+          ]
+        },
+        "K9": {
+          "k_index": 9,
+          "motid": 9,
+          "actid": 4,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Tab",
+          "human_shortcut": "⇥",
+          "encoded_keys": "16777217:48",
+          "keystrokes": [
+            {
+              "qt": 16777217,
+              "mac": 48,
+              "name": "Tab",
+              "qt_name": "Tab"
+            }
+          ]
+        },
+        "K10": {
+          "k_index": 10,
+          "motid": 10,
+          "actid": 8,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Apple Dictation",
+          "human_shortcut": "",
+          "encoded_keys": "63289:71",
+          "keystrokes": [
+            {
+              "qt": 63289,
+              "mac": 71,
+              "name": "KP_Clear",
+              "qt_name": "Apple_Dictation_Fn"
+            }
+          ]
+        },
+        "K11": {
+          "k_index": 11,
+          "motid": 11,
+          "actid": 105,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        }
+      }
+    },
+    "II": {
+      "enabled": true,
+      "layer_id": 1,
+      "keys": {
+        "K1": {
+          "k_index": 1,
+          "motid": 1,
+          "actid": 110,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K2": {
+          "k_index": 2,
+          "motid": 2,
+          "actid": 111,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K3": {
+          "k_index": 3,
+          "motid": 3,
+          "actid": 24,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Command+Shift+R",
+          "human_shortcut": "Command+Shift+R",
+          "encoded_keys": "16777250:55+16777248:56+82:15",
+          "keystrokes": [
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 16777248,
+              "mac": 56,
+              "name": "Shift",
+              "qt_name": "Shift"
+            },
+            {
+              "qt": 82,
+              "mac": 15,
+              "name": "r",
+              "qt_name": "R"
+            }
+          ]
+        },
+        "K4": {
+          "k_index": 4,
+          "motid": 4,
+          "actid": 201,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Command+W",
+          "human_shortcut": "Command+W",
+          "encoded_keys": "16777250:55+87:13",
+          "keystrokes": [
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 87,
+              "mac": 13,
+              "name": "w",
+              "qt_name": "W"
+            }
+          ]
+        },
+        "K5": {
+          "k_index": 5,
+          "motid": 5,
+          "actid": 204,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K6": {
+          "k_index": 6,
+          "motid": 6,
+          "actid": 3,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K7": {
+          "k_index": 7,
+          "motid": 7,
+          "actid": 5,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K8": {
+          "k_index": 8,
+          "motid": 8,
+          "actid": 6,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K9": {
+          "k_index": 9,
+          "motid": 9,
+          "actid": 4,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K10": {
+          "k_index": 10,
+          "motid": 10,
+          "actid": 8,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K11": {
+          "k_index": 11,
+          "motid": 11,
+          "actid": 105,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        }
+      }
+    },
+    "III": {
+      "enabled": false,
+      "layer_id": 0,
+      "keys": {
+        "K1": {
+          "k_index": 1,
+          "motid": 1,
+          "actid": 110,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K2": {
+          "k_index": 2,
+          "motid": 2,
+          "actid": 111,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K3": {
+          "k_index": 3,
+          "motid": 3,
+          "actid": 24,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Command+Shift+R",
+          "human_shortcut": "Command+Shift+R",
+          "encoded_keys": "16777250:55+16777248:56+82:15",
+          "keystrokes": [
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 16777248,
+              "mac": 56,
+              "name": "Shift",
+              "qt_name": "Shift"
+            },
+            {
+              "qt": 82,
+              "mac": 15,
+              "name": "r",
+              "qt_name": "R"
+            }
+          ]
+        },
+        "K4": {
+          "k_index": 4,
+          "motid": 4,
+          "actid": 201,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K5": {
+          "k_index": 5,
+          "motid": 5,
+          "actid": 204,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K6": {
+          "k_index": 6,
+          "motid": 6,
+          "actid": 3,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K7": {
+          "k_index": 7,
+          "motid": 7,
+          "actid": 5,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Handy",
+          "human_shortcut": "Option+Command+4",
+          "encoded_keys": "16777251:58+16777250:55+52:21",
+          "keystrokes": [
+            {
+              "qt": 16777251,
+              "mac": 58,
+              "name": "Option",
+              "qt_name": "Alt"
+            },
+            {
+              "qt": 16777250,
+              "mac": 55,
+              "name": "Cmd",
+              "qt_name": "Meta"
+            },
+            {
+              "qt": 52,
+              "mac": 21,
+              "name": "4",
+              "qt_name": "4"
+            }
+          ]
+        },
+        "K8": {
+          "k_index": 8,
+          "motid": 8,
+          "actid": 6,
+          "show": true,
+          "customized": true,
+          "action_type": "1",
+          "label": "Escape",
+          "human_shortcut": "⎋",
+          "encoded_keys": "",
+          "keystrokes": null
+        },
+        "K9": {
+          "k_index": 9,
+          "motid": 9,
+          "actid": 4,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K10": {
+          "k_index": 10,
+          "motid": 10,
+          "actid": 8,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K11": {
+          "k_index": 11,
+          "motid": 11,
+          "actid": 105,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        }
+      }
+    },
+    "IV": {
+      "enabled": false,
+      "layer_id": 0,
+      "keys": {
+        "K1": {
+          "k_index": 1,
+          "motid": 1,
+          "actid": 110,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K2": {
+          "k_index": 2,
+          "motid": 2,
+          "actid": 111,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K3": {
+          "k_index": 3,
+          "motid": 3,
+          "actid": 24,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K4": {
+          "k_index": 4,
+          "motid": 4,
+          "actid": 201,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K5": {
+          "k_index": 5,
+          "motid": 5,
+          "actid": 204,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K6": {
+          "k_index": 6,
+          "motid": 6,
+          "actid": 3,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K7": {
+          "k_index": 7,
+          "motid": 7,
+          "actid": 5,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K8": {
+          "k_index": 8,
+          "motid": 8,
+          "actid": 6,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K9": {
+          "k_index": 9,
+          "motid": 9,
+          "actid": 4,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K10": {
+          "k_index": 10,
+          "motid": 10,
+          "actid": 8,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        },
+        "K11": {
+          "k_index": 11,
+          "motid": 11,
+          "actid": 105,
+          "show": true,
+          "customized": false,
+          "label": null,
+          "human_shortcut": null,
+          "encoded_keys": null,
+          "keystrokes": null,
+          "note": "uses built-in default action (definition lives in XP-Pen app binary, not in config)"
+        }
+      }
+    }
+  },
+  "ring_sections": {
+    "R": {
+      "ring_id": 0,
+      "wheels": {
+        "W1": {
+          "id": 0,
+          "payload": null
+        },
+        "W2": {
+          "id": 0,
+          "payload": null
+        },
+        "W3": {
+          "id": 0,
+          "payload": null
+        },
+        "W4": {
+          "id": 0,
+          "payload": null
+        }
+      }
+    }
+  },
+  "legend": {
+    "motid": "Physical position number XP-Pen assigns each key (stable across layers and devices in the family)",
+    "actid": "XP-Pen action ID — index into a built-in action table; the table is NOT in this config file",
+    "customized": "true = user-set keystroke (payload present); false = uses XP-Pen default for that Actid",
+    "encoded_keys": "Sequence of <Qt::Key>:<macOS_VK> pairs joined with '+' (modifiers first, terminal key last)"
+  }
+}

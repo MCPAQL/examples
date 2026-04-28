@@ -34,3 +34,5 @@ CLAUDE.md
 # Generated package build/install outputs
 generated/*/adapter/node_modules/
 generated/*/adapter/dist/
+generated/*/sidecar/node_modules/
+generated/*/tools/node_modules/
