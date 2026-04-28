@@ -1,0 +1,151 @@
+{
+  "name": "airpods-mcp",
+  "type": "adapter",
+  "version": "0.1.0",
+  "description": "MCP-AQL adapter for AirPods Pro head-tracking on macOS. Bottom layer is a Swift .app bundle wrapping CMHeadphoneMotionManager (.app required for TCC); top layer is this Node MCP server which speaks stdio MCP and rebroadcasts the pose stream as a HUD WebSocket.",
+  "target": {
+    "base_url": "tcp://127.0.0.1:47833",
+    "transport": "tcp+jsonl",
+    "protocol": "apple-framework-wrap",
+    "serialization": "json",
+    "framework": "CoreMotion.CMHeadphoneMotionManager",
+    "platform": "macOS 14+ (tested 15.7.4)",
+    "device_class": "headphones-with-imu",
+    "supported_devices": [
+      "AirPods Pro (1st & 2nd gen)",
+      "AirPods Max",
+      "AirPods 3rd gen",
+      "AirPods 4 with ANC"
+    ],
+    "sample_rate_hz": 25,
+    "axes": ["yaw", "pitch", "roll", "rotationRate.xyz", "quaternion.xyzw"],
+    "axis_convention": "CMHMM: positive yaw=head turned LEFT, positive pitch=head tilted UP",
+    "audio_session_required": true,
+    "audio_session_note": "Stream pauses silently when no audio is routed through AirPods. Run a continuous silent-WAV loop alongside the adapter."
+  },
+  "operations": {
+    "read": [
+      {
+        "name": "list_devices",
+        "maps_to": "tcp:source_status",
+        "description": "Status of the underlying motion source (whether the Swift .app is connected and streaming poses).",
+        "danger_level": "safe"
+      },
+      {
+        "name": "is_streaming",
+        "maps_to": "tcp:source_health",
+        "description": "Whether pose samples are currently arriving. Returns connected flag and ms since last sample. If audio session is inactive, this will report stale.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_pose",
+        "maps_to": "tcp:latest_sample",
+        "description": "Latest pose sample. Returns quaternion, euler (yaw/pitch/roll in radians), rotation rate, and capture timestamp.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "wait_for_pose",
+        "maps_to": "tcp:event_wait:pose",
+        "description": "Block until the next pose sample arrives, then return it. Useful for sample-aligned reads.",
+        "params": {
+          "timeout_ms": { "type": "integer", "required": false, "default": 5000, "minimum": 50, "maximum": 30000, "description": "Max time to wait, ms." }
+        },
+        "danger_level": "safe",
+        "non_idempotent": false
+      },
+      {
+        "name": "get_recent_poses",
+        "maps_to": "tcp:ring_buffer",
+        "description": "Last N pose samples from the in-memory ring buffer (default capacity 100).",
+        "params": {
+          "count": { "type": "integer", "required": false, "default": 25, "minimum": 1, "maximum": 100 }
+        },
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_calibration",
+        "maps_to": "fs:calibration_json",
+        "description": "Returns the persisted calibration capture (anchor points) plus the currently-applied yaw/pitch offsets. The offsets are what consumers should add to raw pose samples to align with the calibration's reference frame.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_hud_url",
+        "maps_to": "internal:hud",
+        "description": "Return the URL of the live HUD (HTTP + WebSocket). Open in a browser or connect via WS for a low-latency pose stream.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_provenance",
+        "maps_to": "internal:provenance",
+        "description": "Discovery and generation provenance for this adapter (how it was built, what it wraps).",
+        "danger_level": "safe"
+      },
+      {
+        "name": "is_sidecar_running",
+        "maps_to": "internal:check_sidecar_pid",
+        "description": "Check whether a sample sidecar is currently running (reads /tmp/airpods-sidecar.pid and signals 0 to the PID).",
+        "danger_level": "safe"
+      }
+    ],
+    "create": [
+      {
+        "name": "calibrate_point",
+        "maps_to": "tcp:capture+fs:calibration_json",
+        "description": "Capture the current head pose, average over a window, and add it to calibration as a named anchor (e.g. 'main_center', 'main_top_left'). For 10-point full calibration, call this 10 times with the appropriate ids.",
+        "params": {
+          "id": { "type": "string", "required": true, "description": "Anchor name. Convention: '<monitor>_<position>', e.g. 'main_center', 'left_top_right'." },
+          "samples": { "type": "integer", "required": false, "default": 25, "minimum": 5, "maximum": 200, "description": "Number of pose samples to median over." }
+        },
+        "danger_level": "reversible"
+      }
+    ],
+    "update": [
+      {
+        "name": "recenter",
+        "maps_to": "tcp:capture+fs:offsets_json",
+        "description": "Atomic recenter: capture current pose, compute offset against the calibration's main_center anchor, persist offsets, return the new offsets. Idempotent if user pose doesn't change between calls.",
+        "params": {
+          "samples": { "type": "integer", "required": false, "default": 20, "minimum": 5, "maximum": 200 },
+          "reference_id": { "type": "string", "required": false, "default": "main_center", "description": "Which calibration anchor to align current pose to." }
+        },
+        "danger_level": "reversible"
+      },
+      {
+        "name": "set_offset",
+        "maps_to": "fs:offsets_json",
+        "description": "Manually set yaw and pitch offsets. Replaces current offsets atomically.",
+        "params": {
+          "offsetYaw":   { "type": "number", "required": true, "description": "Radians to add to incoming raw yaw to align with calibration frame." },
+          "offsetPitch": { "type": "number", "required": true, "description": "Radians to add to incoming raw pitch to align with calibration frame." }
+        },
+        "danger_level": "reversible"
+      }
+    ],
+    "delete": [
+      {
+        "name": "clear_offsets",
+        "maps_to": "fs:offsets_json",
+        "description": "Zero the offsets file. Pose samples will then be returned in raw (uncorrected) form to consumers reading offsets-applied data.",
+        "danger_level": "reversible"
+      }
+    ],
+    "execute": [
+      {
+        "name": "start_sidecar",
+        "maps_to": "internal:spawn_sidecar",
+        "description": "Spawn the bundled sample sidecar (gaze-driven X-mouse focus + transparent dwell-indicator overlay). The sidecar consumes this adapter's HUD WebSocket. Idempotent — if a sidecar is already running, returns its PID without spawning another.",
+        "params": {
+          "blob_follow":  { "type": "boolean", "required": false, "default": true,  "description": "Enable the transparent dwell-indicator overlay window." },
+          "mouse_follow": { "type": "boolean", "required": false, "default": false, "description": "Also warp the OS mouse cursor to the gaze point (debug only; hijacks user mouse)." }
+        },
+        "danger_level": "reversible"
+      },
+      {
+        "name": "stop_sidecar",
+        "maps_to": "internal:kill_sidecar",
+        "description": "Terminate the sidecar referenced by /tmp/airpods-sidecar.pid (SIGTERM).",
+        "danger_level": "reversible"
+      }
+    ]
+  }
+}

@@ -10,7 +10,7 @@
 // (or whatever shell the script is launched from). Grant it once and synthesis works.
 
 import WebSocket from "ws";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
@@ -21,11 +21,22 @@ const HUD_URL = process.env.SHORTCUT_REMOTE_HUD ?? "ws://127.0.0.1:47832/events"
 // Action fires on the *press* edge (transition from not-held to held).
 // Mac key codes: https://eastmanreference.com/complete-list-of-applescript-key-codes
 const PASSTHROUGH = {
-  // K7 → SuperWhisper (Option + Command + 3)
-  "primary:6": { mac_code: 20, modifiers: ["option", "command"], label: "K7 → SuperWhisper (Opt+Cmd+3)" },
-  // K8 → Escape
-  "primary:7": { mac_code: 53, modifiers: [], label: "K8 → Escape" },
+  // K7 / K8 removed: device firmware sends Opt+Cmd+3 / Escape via interface 0 directly,
+  // so our osascript synthesis was double-triggering. Firmware handles them now.
+  // K11 (wheel-center) → SIGUSR1 to AirPods sidecar (starts calibration mode)
+  "secondary:2": {
+    command: "/bin/sh",
+    args: [
+      "-c",
+      "PID=$(cat /tmp/airpods-sidecar.pid 2>/dev/null); [ -n \"$PID\" ] && kill -USR1 $PID && echo \"signaled airpods sidecar $PID\" || echo \"no airpods sidecar pid file\"",
+    ],
+    label: "K11 → AirPods calibration mode (SIGUSR1)",
+  },
 };
+
+function runCommand(action) {
+  spawn(action.command, action.args, { stdio: "ignore", detached: true }).unref();
+}
 
 function logEvent(msg) {
   const t = new Date().toISOString().slice(11, 23);
@@ -57,7 +68,8 @@ function handleEvent(ev) {
     const action = PASSTHROUGH[key];
     if (!action) continue;
     logEvent(`→ ${action.label}`);
-    synthesizeKey(action);
+    if (action.command) runCommand(action);
+    else synthesizeKey(action);
   }
 }
 

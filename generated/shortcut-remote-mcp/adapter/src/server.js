@@ -393,6 +393,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 const transport = new StdioServerTransport();
 await server.connect(transport);
 
+// Optional: open the HID device at startup so HUD WebSocket events flow without
+// requiring an MCP call. Useful when running standalone for sidecar consumption.
+if (process.env.SHORTCUT_REMOTE_AUTO_OPEN === "1") {
+  try {
+    ensureOpened();
+    process.stderr.write(`[hid] auto-opened device at startup\n`);
+  } catch (err) {
+    process.stderr.write(`[hid] auto-open failed: ${err.message}\n`);
+  }
+}
+
 const cleanShutdown = () => {
   try { state.device?.close(); } catch {}
   process.exit(0);
