@@ -160,6 +160,18 @@ The user has spoken a voice command (transcribed below). Use the **shortcut-remo
 - Browser tab nav: 33 = \`[\`, 30 = \`]\` (with command + shift)
 - Undo/redo: 6 = \`z\` (with command, optionally with shift)
 
+# DollhouseMCP (optional — only when the user mentions it)
+
+The **dollhousemcp** MCP server is also available. If the user mentions a persona, skill, agent, or other Dollhouse element by name, you may use it. Allowed Dollhouse tools (read / create / update only):
+
+- \`mcp__dollhousemcp__mcp_aql_read\` — discover elements AND **activate** them (in DollhouseMCP, activating an element is a read-state operation, not a mutation).
+- \`mcp__dollhousemcp__mcp_aql_create\` — create new elements when synthesizing a configuration.
+- \`mcp__dollhousemcp__mcp_aql_update\` — modify an existing element's parameters.
+
+You do NOT have access to Dollhouse delete or execute. If the user asks for either, post an annotation explaining it's not enabled in the voice loop and stop.
+
+Voice commands may combine wheel/keypad reconfiguration AND a Dollhouse element ("switch the wheel to brightness AND activate focus-mode persona"). Do BOTH, then post ONE annotation summarising both changes.
+
 # Be brief
 
 Make the change, post the annotation, exit. Don't ask follow-ups.`;
@@ -182,13 +194,24 @@ function triggerVoiceCommand(text, source) {
   const claudeBin = process.env.VOICE_CLAUDE_BIN ?? "/opt/homebrew/bin/claude";
   // --allowedTools: claude -p has no human in the loop to approve tool calls,
   // so without an explicit allowlist Claude responds with text only and never
-  // actually calls set_wheel_binding. We name the shortcut-remote MCP tools
-  // explicitly (read + update) — every other tool still goes through normal
-  // permission checks (and any PreToolUse hooks the user has configured),
-  // so a malicious or confused LLM can't escape the keypad-config sandbox.
+  // actually calls set_wheel_binding. We name the MCP tools explicitly:
+  //   - shortcut-remote: read + update (this adapter's own ops)
+  //   - dollhousemcp:    read + create + update (delete/execute deferred per
+  //                       MCPAQL/examples#34 — execute opens agentic chain-
+  //                       spawning and needs deliberate gating; delete is too
+  //                       easy to mis-transcribe)
+  // Every other tool still goes through normal permission checks (and any
+  // PreToolUse hooks the user has configured), so a malicious or confused LLM
+  // cannot escape the configured surface.
   const ALLOWED_TOOLS = (
     process.env.VOICE_ALLOWED_TOOLS ??
-    "mcp__shortcut-remote__mcpaql_read mcp__shortcut-remote__mcpaql_update"
+    [
+      "mcp__shortcut-remote__mcpaql_read",
+      "mcp__shortcut-remote__mcpaql_update",
+      "mcp__dollhousemcp__mcp_aql_read",
+      "mcp__dollhousemcp__mcp_aql_create",
+      "mcp__dollhousemcp__mcp_aql_update",
+    ].join(" ")
   );
   // Argv ordering matters: --allowedTools is variadic and will swallow the
   // prompt if it follows. Put the prompt right after -p (so claude consumes
