@@ -69,6 +69,95 @@
         "maps_to": "internal:hud",
         "description": "Return the URL of the live HUD (HTTP+WebSocket dashboard) bound to 127.0.0.1. Open it in a browser tab for a low-latency visual of every event.",
         "danger_level": "safe"
+      },
+      {
+        "name": "get_current_layer",
+        "maps_to": "internal:layer_state",
+        "description": "Return the adapter's current layer (1..4). Layer is the adapter's authoritative semantic state, advanced by K2, and broadcast on the WS as `layer_change` events.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_wheel_value",
+        "maps_to": "internal:wheel_state",
+        "description": "Return the adapter's current wheel value (signed integer counter). Advances on CW ticks, retreats on CCW ticks. By default the adapter does not synthesize keystrokes for the wheel; if a binding has been set via set_wheel_binding, ticks also fire those keystrokes.",
+        "danger_level": "safe"
+      },
+      {
+        "name": "get_wheel_binding",
+        "maps_to": "internal:wheel_state",
+        "description": "Return the wheel's current keystroke binding (null = pure AI input, no synthesis). When set, CW/CCW ticks fire the bound keystroke in addition to broadcasting wheel_state.",
+        "danger_level": "safe"
+      }
+    ],
+    "update": [
+      {
+        "name": "set_current_layer",
+        "maps_to": "internal:layer_state",
+        "description": "Set the adapter's current layer to a specific value (1..4). Triggers a `layer_change` broadcast just like a K2 press would.",
+        "params": {
+          "layer": { "type": "integer", "required": true, "minimum": 1, "maximum": 4, "description": "Layer to switch to (1-indexed; matches XP-Pen's I/II/III/IV labels)." },
+          "source": { "type": "string", "required": false, "description": "Optional caller identifier surfaced in the broadcast event." }
+        },
+        "danger_level": "reversible",
+        "non_idempotent": false
+      },
+      {
+        "name": "set_wheel_value",
+        "maps_to": "internal:wheel_state",
+        "description": "Set the adapter's wheel value to a specific number. Broadcasts a `wheel_state` event. Useful for clamping, jumping to a preset, or initializing the knob position from the LLM.",
+        "params": {
+          "value": { "type": "number", "required": true, "description": "New wheel value." },
+          "source": { "type": "string", "required": false }
+        },
+        "danger_level": "reversible",
+        "non_idempotent": false
+      },
+      {
+        "name": "reset_wheel_value",
+        "maps_to": "internal:wheel_state",
+        "description": "Reset the wheel value to 0 and broadcast `wheel_state`. Equivalent to set_wheel_value with value=0.",
+        "params": {
+          "source": { "type": "string", "required": false }
+        },
+        "danger_level": "reversible",
+        "non_idempotent": false
+      },
+      {
+        "name": "post_annotation",
+        "maps_to": "internal:hud_overlay",
+        "description": "Broadcast a free-form annotation payload as an `annotation` event for the HUD overlay. Used by MCP clients (LLMs) to display real-time semantic interpretation of wheel/K11 input. Recommended payload shape: { text: string, fields?: object, style?: 'info'|'warn'|'error' }. Pass payload=null to clear the overlay.",
+        "params": {
+          "payload": { "type": "object", "required": false, "description": "Annotation payload (any JSON-serializable structure). Null/omitted = clear." },
+          "source": { "type": "string", "required": false }
+        },
+        "danger_level": "safe",
+        "non_idempotent": true
+      },
+      {
+        "name": "submit_voice_command",
+        "maps_to": "internal:voice_pipeline",
+        "description": "Submit a transcribed voice command. Adapter spawns `claude -p` with a smart system prompt; Claude calls back via this same MCP server to reconfigure (set_wheel_binding, etc.). Live progress broadcast as voice_command_received / annotation / wheel_binding_change events.",
+        "params": {
+          "text": { "type": "string", "required": true, "description": "Transcribed user speech." },
+          "source": { "type": "string", "required": false }
+        },
+        "danger_level": "reversible",
+        "non_idempotent": true
+      },
+      {
+        "name": "set_wheel_binding",
+        "maps_to": "internal:wheel_state",
+        "description": "Bind (or clear) the wheel to a keystroke. When set, CW ticks fire binding.cw, CCW ticks fire binding.ccw — both also continue to emit wheel_state events for AI observation. Pass binding=null to clear and return to pure AI mode. Mac key codes: see https://eastmanreference.com/complete-list-of-applescript-key-codes — common: 24=`=`, 27=`-`, 18-26=digits.",
+        "params": {
+          "binding": {
+            "type": "object",
+            "required": false,
+            "description": "Null to clear, or { cw?: { mac_code, modifiers?, label? }, ccw?: { mac_code, modifiers?, label? }, label?: string }. Modifiers are osascript names: 'command', 'option', 'control', 'shift'."
+          },
+          "source": { "type": "string", "required": false }
+        },
+        "danger_level": "reversible",
+        "non_idempotent": false
       }
     ],
     "delete": [
