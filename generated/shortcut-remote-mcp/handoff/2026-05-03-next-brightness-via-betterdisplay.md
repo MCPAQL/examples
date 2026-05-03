@@ -46,14 +46,14 @@ The user has multiple displays. Verify which behaviour they want; default to mou
 
 ### Step 2 — set the wheel binding via MCP
 
-Use the existing `set_wheel_binding` op with the `command` action shape:
+Use the existing `set_wheel_binding` op with the `command` action shape. The `command` field needs an absolute path at runtime — substitute the real path to your local checkout (e.g. `~/Developer/Organizations/MCPAQL/examples/generated/shortcut-remote-mcp/tools/wheel-brightness-step.sh` on a typical setup). The placeholder `$REPO_ROOT` is shorthand here, not an env var the adapter expands:
 
 ```js
 {
   "binding": {
     "label": "Brightness ±5% (BetterDisplay)",
-    "cw":  { "command": "/Users/mick/Developer/Organizations/MCPAQL/examples/generated/shortcut-remote-mcp/tools/wheel-brightness-step.sh", "args": ["up"],   "label": "Brightness +5%" },
-    "ccw": { "command": "/Users/mick/Developer/Organizations/MCPAQL/examples/generated/shortcut-remote-mcp/tools/wheel-brightness-step.sh", "args": ["down"], "label": "Brightness -5%" }
+    "cw":  { "command": "$REPO_ROOT/tools/wheel-brightness-step.sh", "args": ["up"],   "label": "Brightness +5%" },
+    "ccw": { "command": "$REPO_ROOT/tools/wheel-brightness-step.sh", "args": ["down"], "label": "Brightness -5%" }
   },
   "source": "manual" // or "voice-handoff" if using the voice loop
 }

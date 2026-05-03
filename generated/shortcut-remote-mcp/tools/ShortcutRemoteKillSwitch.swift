@@ -40,7 +40,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let root = Bundle.main.object(forInfoDictionaryKey: "ShortcutRemoteMCPRoot") as? String {
             return root
         }
-        return "/Users/mick/Developer/Organizations/MCPAQL/examples/generated/shortcut-remote-mcp"
+        // Fallback to a conventional checkout path under the current user's home.
+        // Build with `tools/build-kill-switch-app.sh` to inject the actual path
+        // via the `ShortcutRemoteMCPRoot` Info.plist key.
+        return (NSHomeDirectory() as NSString)
+            .appendingPathComponent("Developer/Organizations/MCPAQL/examples/generated/shortcut-remote-mcp")
     }
 
     private func runScript(_ arguments: [String]) -> (Int32, String) {

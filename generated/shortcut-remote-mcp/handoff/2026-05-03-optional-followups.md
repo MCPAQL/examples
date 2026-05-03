@@ -13,7 +13,7 @@ Today's session made substantial uncommitted changes on `feature/shortcut-remote
 **Architecture** (one-process consolidation)
 - Sidecar (`sidecar/index.js`) retired — keystroke synthesis + shell dispatch + Open-HUD now live in `adapter/src/server.js`. Sidecar source kept in repo as historical reference; not wired.
 - Sidecar launchd plist booted out and renamed `~/Library/LaunchAgents/org.mcpaql.shortcut-remote-sidecar.plist.retired-2026-05-02`.
-- Menu-bar Kill Switch app (`/Users/mick/Applications/Shortcut Remote Kill Switch.app`) functionally replaced by HUD's Server panel; still on disk, not running, can be deleted.
+- Menu-bar Kill Switch app (`~/Applications/Shortcut Remote Kill Switch.app`) functionally replaced by HUD's Server panel; still on disk, not running, can be deleted.
 
 **MCP transport**
 - stdio → streamable HTTP (stateful sessions, `randomUUID` per session). Multiple Claude Code sessions can connect concurrently.
