@@ -22,6 +22,9 @@
     --key-border: #353842;
     --key-text: #e6e8ee;
     --layer-active: #4dd0e1;
+    --layer-key: #4d8fe1;       /* K1/K2 — layer-action */
+    --pinned-key: #c08bff;      /* K7/K8 — pinned across all layers */
+    --no-binding: #4a4d57;
   }
   * { box-sizing: border-box; }
   body {
@@ -119,18 +122,146 @@
     color: var(--key-text);
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     text-align: center;
-    min-height: 56px;
+    /* Fixed height so layout doesn't jitter when binding text differs across
+       layers. 92px fits a 2-line label + shortcut comfortably. */
+    height: 92px;
     transition: background 0.05s, border-color 0.05s, transform 0.08s;
     user-select: none;
     overflow: hidden;
   }
-  .key .kname { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
-  .key .klabel { font-size: 10px; color: var(--dim); margin-top: 2px; line-height: 1.15; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .key .kshortcut { font-size: 9px; color: var(--accent); margin-top: 2px; font-family: ui-monospace, monospace; }
+  .key.k7 { /* K7 spans two columns (XP-Pen graphic), give it more breathing room */ }
+  .key .kname { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--dim); }
+  .key .klabel {
+    font-size: 12px;
+    color: var(--key-text);
+    margin-top: 4px;
+    line-height: 1.18;
+    font-weight: 600;
+    width: 100%;
+    /* Wrap long labels to up to 2 lines; clip beyond. Word-break on long
+       single tokens so things like "SuperWhisper" don't escape the cell. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .key .kshortcut {
+    font-size: 9px;
+    color: var(--accent);
+    margin-top: 3px;
+    font-family: ui-monospace, monospace;
+    opacity: 0.85;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .key.held { background: rgba(102,255,153,0.18); border-color: var(--press); transform: scale(1.05); }
   .key.fading { background: rgba(102,255,153,0.06); border-color: rgba(102,255,153,0.25); }
-  .key.unmapped { opacity: 0.6; }
-  .key.unmapped .kname::after { content: " ·"; color: var(--dim); }
+  .key.no-binding .klabel { color: var(--no-binding); font-weight: 400; font-style: italic; }
+  .key.no-binding .kshortcut { display: none; }
+
+  /* Layer-action keys (K1/K2): always show "Prev / Next Layer", not the per-layer binding. */
+  .key.layer-action { background: rgba(77,143,225,0.10); border-color: rgba(77,143,225,0.5); }
+  .key.layer-action .klabel { color: var(--layer-key); }
+  .key.layer-action .kname { color: var(--layer-key); opacity: 0.7; }
+
+  /* Pinned keys (K1/K7/K8/K11): hardwired across all layers. */
+  .key.pinned, .wheel-center.pinned { background: rgba(192,139,255,0.08); border-color: rgba(192,139,255,0.5); }
+  .key.pinned .klabel, .wheel-center.pinned .klabel { color: var(--pinned-key); }
+  .key.pinned .kname, .wheel-center.pinned .kname { color: var(--pinned-key); opacity: 0.7; }
+  .key.pinned::after, .key.layer-action::after {
+    content: ""; position: absolute; top: 4px; right: 6px;
+    width: 5px; height: 5px; border-radius: 50%;
+  }
+  .key.pinned::after { background: var(--pinned-key); }
+  .key.layer-action::after { background: var(--layer-key); }
+  .key { position: relative; }
+
+  /* ---------- Wheel binding label ---------- */
+  .ai-dial-binding {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: rgba(0,0,0,0.18);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .ai-dial-binding.bound { border-color: rgba(192,139,255,0.5); background: rgba(192,139,255,0.06); }
+  .ai-dial-binding .binding-tag { color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; font-size: 10px; margin-right: 8px; }
+  .ai-dial-binding .binding-value { color: var(--text); }
+  .ai-dial-binding.bound .binding-value { color: var(--pinned-key); font-weight: 600; }
+  .ai-dial-binding code { font-size: 11px; color: var(--accent); }
+
+  /* ---------- AI dial panel (wheel value + annotation overlay) ---------- */
+  .ai-dial {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .ai-dial-num {
+    font-family: ui-monospace, monospace;
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--pinned-key);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    min-width: 80px;
+    text-align: center;
+    padding: 12px 14px;
+    border: 1px solid rgba(192,139,255,0.4);
+    border-radius: 10px;
+    background: rgba(192,139,255,0.06);
+    transition: transform 0.12s, background 0.2s, border-color 0.2s;
+  }
+  .ai-dial-num.flash { background: rgba(192,139,255,0.25); border-color: var(--pinned-key); transform: scale(1.05); }
+  .ai-dial-meta { font-size: 11px; color: var(--dim); margin-top: 6px; }
+  .ai-dial-meta .label { letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .ai-overlay {
+    border: 1px dashed rgba(192,139,255,0.3);
+    border-radius: 8px;
+    padding: 10px 12px;
+    min-height: 44px;
+    background: rgba(0,0,0,0.18);
+  }
+  .ai-overlay.empty { color: var(--dim); font-style: italic; font-size: 12px; }
+  .ai-overlay.style-info  { border-color: rgba(77,208,225,0.5); }
+  .ai-overlay.style-warn  { border-color: rgba(255,216,107,0.5); background: rgba(255,216,107,0.05); }
+  .ai-overlay.style-error { border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.05); }
+  .ai-overlay .text { font-size: 13px; font-weight: 600; color: var(--text); }
+  .ai-overlay .fields { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin-top: 6px; font-size: 11px; }
+  .ai-overlay .fields .k { color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .ai-overlay .fields .v { color: var(--text); font-family: ui-monospace, monospace; }
+  .ai-overlay .source { font-size: 10px; color: var(--dim); margin-top: 4px; opacity: 0.7; }
+  #log .entry.wheel_state { border-left-color: var(--pinned-key); color: var(--pinned-key); }
+  #log .entry.annotation { border-left-color: var(--pinned-key); color: var(--pinned-key); font-style: italic; }
+  #log .entry.voice_command_received { border-left-color: var(--accent); color: var(--accent); font-weight: 600; }
+  #log .entry.voice_command_done { border-left-color: var(--accent); color: var(--accent); }
+  #log .entry.wheel_binding_change { border-left-color: var(--pinned-key); }
+  #log .entry.command_request { border-left-color: var(--layer-key); color: var(--layer-key); }
+
+  /* ---------- Voice test input (in AI Dial panel) ---------- */
+  .voice-form { display: flex; gap: 8px; margin-top: 14px; }
+  .voice-input {
+    flex: 1; min-width: 0;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .voice-input:focus { outline: none; border-color: var(--accent); }
+  .voice-input:disabled { opacity: 0.5; }
+  .voice-meta { font-size: 10px; color: var(--dim); margin-top: 6px; line-height: 1.4; }
+  .voice-meta code { color: var(--accent); }
 
   /* Specific layout per the XP-Pen graphic with rotation 90°. */
   .key.k8  { grid-column: 1; grid-row: 1; }
@@ -144,20 +275,41 @@
   .key.k10 { grid-column: 1; grid-row: 4; }
   .key.k7  { grid-column: 2 / span 2; grid-row: 4; }
 
-  /* ---------- Layer toggle ---------- */
+  /* ---------- Layer indicator (giant) and pills ---------- */
+  .layer-banner {
+    margin: 0 auto 16px auto;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(77,208,225,0.08) 0%, rgba(77,208,225,0.02) 100%);
+    border: 1px solid rgba(77,208,225,0.25);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .layer-banner.flash {
+    background: rgba(77,208,225,0.25);
+    border-color: var(--layer-active);
+    transform: scale(1.02);
+  }
+  .layer-banner .label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+  .layer-banner .num { font-size: 32px; font-weight: 800; color: var(--layer-active); letter-spacing: 0.12em; line-height: 1.1; font-family: ui-monospace, monospace; }
+  .layer-banner .source { font-size: 10px; color: var(--dim); margin-top: 2px; min-height: 14px; }
+
   .layer-row { display: flex; gap: 8px; margin: 14px auto 0 auto; justify-content: center; }
   .layer-btn {
     background: var(--key-bg);
     border: 1px solid var(--key-border);
     color: var(--key-text);
     border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 11px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
     font-family: ui-monospace, monospace;
     cursor: pointer;
-    transition: all 0.1s;
+    transition: all 0.15s;
+    min-width: 44px;
   }
-  .layer-btn.active { border-color: var(--layer-active); color: var(--layer-active); background: rgba(77,208,225,0.10); }
+  .layer-btn:hover:not(.disabled) { border-color: var(--layer-active); }
+  .layer-btn.active { border-color: var(--layer-active); color: var(--layer-active); background: rgba(77,208,225,0.18); box-shadow: 0 0 0 2px rgba(77,208,225,0.15); }
   .layer-btn.disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* ---------- Wheel + battery panels ---------- */
@@ -181,6 +333,28 @@
   .battery.low .fill { background: #ff9966; }
   .meta { color: var(--dim); font-size: 12px; }
 
+  /* ---------- Server-control panel ---------- */
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .ctrl-btn {
+    background: var(--key-bg);
+    border: 1px solid var(--key-border);
+    color: var(--key-text);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: inherit;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); }
+  .ctrl-btn.danger { border-color: rgba(255,107,107,0.4); color: var(--error); }
+  .ctrl-btn.danger:hover { background: rgba(255,107,107,0.12); border-color: var(--error); }
+  .ctrl-btn.warn { border-color: rgba(255,216,107,0.5); color: var(--wheel-cw); }
+  .ctrl-btn.warn:hover { background: rgba(255,216,107,0.10); }
+  .ctrl-btn:disabled { opacity: 0.5; cursor: wait; }
+  .ctrl-status { font-size: 11px; color: var(--dim); margin-top: 8px; min-height: 16px; }
+
   /* ---------- Event log ---------- */
   #log { max-height: 360px; overflow-y: auto; font-family: ui-monospace, SFMono-Regular, "SF Mono", monospace; font-size: 12px; }
   #log .entry {
@@ -198,6 +372,7 @@
   #log .entry.wheel { border-left-color: var(--wheel-cw); }
   #log .entry.wheel.ccw { border-left-color: var(--wheel-ccw); }
   #log .entry.battery { border-left-color: var(--accent); color: var(--dim); }
+  #log .entry.layer_change { border-left-color: var(--layer-active); color: var(--layer-active); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -215,7 +390,12 @@
 <div class="layout">
   <div>
     <div class="panel">
-      <h2>Keypad (Layer <span id="active-layer">I</span>)</h2>
+      <h2>Keypad</h2>
+      <div class="layer-banner" id="layer-banner">
+        <div class="label">Active Layer</div>
+        <div class="num"><span id="active-layer">I</span></div>
+        <div class="source" id="layer-source">click a layer below or press K1 / K2 on the device</div>
+      </div>
       <div class="keypad">
         <div class="keypad-label">XP·pen</div>
         <div class="wheel-area">
@@ -249,7 +429,25 @@
     </div>
 
     <div class="panel">
-      <h2>Wheel</h2>
+      <h2>AI Dial — Wheel + K11</h2>
+      <div class="ai-dial-binding" id="wheel-binding">
+        <span class="binding-tag">Wheel binding:</span>
+        <span class="binding-value" id="wheel-binding-value">AI input — no keystroke synthesis (LLMs read via <code>get_wheel_value</code>)</span>
+      </div>
+      <div class="ai-dial">
+        <div>
+          <div class="ai-dial-num" id="wheel-value">0</div>
+          <div class="ai-dial-meta"><span class="label">wheel value</span> · CW = +1, CCW = -1</div>
+        </div>
+        <div class="ai-overlay empty" id="ai-overlay">
+          no annotation — MCP clients post LLM interpretations via <code>post_annotation</code>.
+        </div>
+      </div>
+      <form id="voice-form" class="voice-form">
+        <input type="text" id="voice-input" class="voice-input" placeholder='speak / type a command — e.g. "set the wheel to volume up and down"' autocomplete="off" />
+        <button type="submit" class="ctrl-btn" id="voice-submit">send</button>
+      </form>
+      <div class="voice-meta">POSTs to <code>/voice-command</code> · adapter spawns <code>claude -p</code> · live changes broadcast to this HUD</div>
       <div class="wheel-counters">
         <div class="wheel-counter" id="wheel-cw"><div class="dir">CW</div><div class="count">0</div></div>
         <div class="wheel-counter" id="wheel-ccw"><div class="dir">CCW</div><div class="count">0</div></div>
@@ -263,6 +461,19 @@
         <div class="bar"><div class="fill" style="width:0%"></div></div>
         <div class="meta"><span id="battery-pct">—</span> · <span id="battery-charge">—</span></div>
       </div>
+    </div>
+
+    <div class="panel">
+      <h2>Server</h2>
+      <div class="controls">
+        <button class="ctrl-btn"        id="ctrl-restart">↻ Restart</button>
+        <button class="ctrl-btn warn"   id="ctrl-stop">■ Stop (this session)</button>
+        <button class="ctrl-btn danger" id="ctrl-disable">⚠ Stop &amp; disable</button>
+      </div>
+      <div class="controls" style="margin-top: 8px;">
+        <button class="ctrl-btn" id="ctrl-notify">🔔 Enable focus notifications</button>
+      </div>
+      <div class="ctrl-status" id="ctrl-status">— hover Disable for the re-enable command —</div>
     </div>
   </div>
 
@@ -330,28 +541,128 @@
     }
   }
 
+  // Special keys whose meaning never changes with layer.
+  //   K1: opens the HUD (handled by the sidecar via `/usr/bin/open`).
+  //   K2: advances the layer (handled by the adapter; broadcasts layer_change).
+  //   K7/K8: hardwired SuperWhisper / Escape on every layer.
+  //   K11: AI commit — pinned across layers. The wheel + K11 are reserved as
+  //        an AI input surface; semantics are set by MCP clients (no keystroke).
+  const SPECIAL_KEYS = {
+    K1:  { kind: "pinned",       label: "Open HUD",     shortcut: "this page" },
+    K2:  { kind: "layer-action", label: "▶ Next Layer", shortcut: "advance" },
+    K7:  { kind: "pinned",       label: "SuperWhisper", shortcut: "Opt+Cmd+3" },
+    K8:  { kind: "pinned",       label: "Escape",       shortcut: "Esc" },
+    K11: { kind: "pinned",       label: "Voice command", shortcut: "superwhisper://" },
+  };
+
+  function applyKeyVisual(el, opts) {
+    if (!el) return;
+    const labelEl = el.querySelector(".klabel");
+    const shortcutEl = el.querySelector(".kshortcut");
+    el.classList.remove("layer-action", "pinned", "no-binding");
+    if (opts.kind) el.classList.add(opts.kind);
+    if (opts.empty) el.classList.add("no-binding");
+    if (labelEl) labelEl.textContent = opts.label ?? "";
+    if (shortcutEl) shortcutEl.textContent = opts.shortcut ?? "";
+  }
+
   function renderLayer(layer) {
     activeLayer = layer;
     $("active-layer").textContent = layer;
     document.querySelectorAll(".layer-btn").forEach((b) => b.classList.toggle("active", b.dataset.layer === layer));
+    // Special keys always render the same way regardless of layer.
+    for (const [kname, spec] of Object.entries(SPECIAL_KEYS)) {
+      applyKeyVisual(document.querySelector(`[data-k="${kname}"]`), spec);
+    }
     if (!mappings) return;
     const layerData = mappings.layers[layer];
     if (!layerData) return;
+    // Render the per-layer keys (everything except the special ones above).
     for (let i = 1; i <= 11; i++) {
-      const el = document.querySelector(`[data-k="K${i}"]`);
+      const kname = "K" + i;
+      if (SPECIAL_KEYS[kname]) continue;
+      const el = document.querySelector(`[data-k="${kname}"]`);
       if (!el) continue;
-      const m = layerData.keys["K" + i];
-      const labelEl = el.querySelector(".klabel");
-      const shortcutEl = el.querySelector(".kshortcut");
-      if (!m) continue;
+      const m = layerData.keys[kname];
+      if (!m || (!m.customized && !m.keystrokes)) {
+        applyKeyVisual(el, { empty: true, label: "no binding" });
+        continue;
+      }
       if (m.customized && m.label) {
-        labelEl.textContent = m.label;
-        shortcutEl.textContent = m.human_shortcut || "";
+        applyKeyVisual(el, { label: m.label, shortcut: m.human_shortcut || "" });
+      } else if (m.keystrokes && m.keystrokes.length) {
+        applyKeyVisual(el, { label: m.human_shortcut || `(Actid ${m.actid})`, shortcut: "" });
       } else {
-        labelEl.textContent = `(default Actid ${m.actid})`;
-        shortcutEl.textContent = "";
+        applyKeyVisual(el, { empty: true, label: "no binding" });
       }
     }
+  }
+
+  function flashLayerBanner(source) {
+    const banner = $("layer-banner");
+    const sourceEl = $("layer-source");
+    if (sourceEl && source) sourceEl.textContent = `← ${source}`;
+    if (!banner) return;
+    banner.classList.remove("flash");
+    void banner.offsetWidth;
+    banner.classList.add("flash");
+    setTimeout(() => banner.classList.remove("flash"), 700);
+  }
+
+  function renderWheelValue(value, source) {
+    const el = $("wheel-value");
+    if (!el) return;
+    el.textContent = String(value);
+    if (source !== "snapshot") {
+      el.classList.remove("flash");
+      void el.offsetWidth;
+      el.classList.add("flash");
+      setTimeout(() => el.classList.remove("flash"), 250);
+    }
+  }
+
+  function renderAnnotation(payload, source) {
+    const el = $("ai-overlay");
+    if (!el) return;
+    el.classList.remove("empty", "style-info", "style-warn", "style-error");
+    if (!payload) {
+      el.classList.add("empty");
+      el.innerHTML = "no annotation — wheel + K11 are reserved for AI semantics. MCP clients can post overlays via <code>post_annotation</code>.";
+      return;
+    }
+    if (payload.style) el.classList.add("style-" + payload.style);
+    let html = "";
+    if (payload.text) html += `<div class="text">${escapeHtml(payload.text)}</div>`;
+    if (payload.fields && typeof payload.fields === "object") {
+      html += `<div class="fields">`;
+      for (const [k, v] of Object.entries(payload.fields)) {
+        html += `<span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(String(v))}</span>`;
+      }
+      html += `</div>`;
+    }
+    if (source) html += `<div class="source">via ${escapeHtml(source)}</div>`;
+    if (!html) html = `<div class="text">${escapeHtml(JSON.stringify(payload))}</div>`;
+    el.innerHTML = html;
+  }
+
+  function renderWheelBinding(binding) {
+    const wrap = $("wheel-binding");
+    const value = $("wheel-binding-value");
+    if (!wrap || !value) return;
+    if (!binding) {
+      wrap.classList.remove("bound");
+      value.innerHTML = "AI input — no keystroke synthesis (LLMs read via <code>get_wheel_value</code>)";
+      return;
+    }
+    wrap.classList.add("bound");
+    const cw = binding.cw ? (binding.cw.label ?? `mac ${binding.cw.mac_code}`) : "(none)";
+    const ccw = binding.ccw ? (binding.ccw.label ?? `mac ${binding.ccw.mac_code}`) : "(none)";
+    const head = binding.label ? escapeHtml(binding.label) + " — " : "";
+    value.innerHTML = `${head}↻ ${escapeHtml(cw)} · ↺ ${escapeHtml(ccw)}`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
   function renderLayerButtons() {
@@ -425,6 +736,22 @@
       summary = "wheel " + (ev.wheel_direction || "?");
     } else if (ev.kind === "battery") {
       summary = `${ev.battery_percent}% ${ev.charging ? "(charging)" : ""}`;
+    } else if (ev.kind === "layer_change") {
+      const label = LAYER_LABEL_BY_NUM[ev.layer] ?? ev.layer;
+      summary = `→ Layer ${label}` + (ev.source && ev.source !== "snapshot" ? ` (via ${ev.source})` : ev.source === "snapshot" ? " (initial)" : "");
+    } else if (ev.kind === "wheel_state") {
+      summary = `wheel = ${ev.value}` + (ev.source && ev.source !== "device" ? ` (via ${ev.source})` : "");
+    } else if (ev.kind === "annotation") {
+      const t = ev.payload?.text ?? (ev.payload === null ? "(cleared)" : "(payload)");
+      summary = `annotation: ${t}` + (ev.source ? ` ← ${ev.source}` : "");
+    } else if (ev.kind === "wheel_binding_change") {
+      summary = ev.binding ? `wheel binding set: ${ev.binding.label ?? "custom"}` : "wheel binding cleared (AI mode)";
+    } else if (ev.kind === "command_request") {
+      summary = `command request ← ${ev.source ?? "?"}`;
+    } else if (ev.kind === "voice_command_received") {
+      summary = `voice: "${ev.text?.slice(0, 60) ?? ""}"` + (ev.source ? ` ← ${ev.source}` : "");
+    } else if (ev.kind === "voice_command_done") {
+      summary = `voice → claude exit ${ev.exit_code}` + (ev.response ? `: "${ev.response.slice(0, 60)}"` : "");
     } else summary = ev.kind || "event";
     entry.innerHTML = `<span>${ts}</span><span>${ev.kind}</span><span>${summary}</span><span style="color:var(--dim)">${ev.raw_hex || ""}</span>`;
     log.prepend(entry);
@@ -438,6 +765,8 @@
     $("wheel-net").textContent = "net = " + (cwCount - ccwCount);
   }
 
+  const LAYER_LABEL_BY_NUM = { 1: "I", 2: "II", 3: "III", 4: "IV" };
+
   function applyEvent(ev) {
     eventCount++;
     if (ev.kind === "button_press") {
@@ -446,6 +775,63 @@
     } else if (ev.kind === "button_release") {
       for (const b of ev.released_primary_bits || []) setHeld(elForKind("primary", b), false);
       for (const b of ev.released_secondary_bits || []) setHeld(elForKind("secondary", b), false);
+    } else if (ev.kind === "layer_change") {
+      const label = LAYER_LABEL_BY_NUM[ev.layer];
+      if (label) {
+        renderLayer(label);
+        if (ev.source && ev.source !== "snapshot") flashLayerBanner(ev.source);
+      }
+    } else if (ev.kind === "wheel_state") {
+      renderWheelValue(ev.value, ev.source);
+    } else if (ev.kind === "annotation") {
+      renderAnnotation(ev.payload, ev.source);
+    } else if (ev.kind === "wheel_binding_change") {
+      renderWheelBinding(ev.binding);
+    } else if (ev.kind === "voice_command_received") {
+      const input = $("voice-input"); if (input) { input.disabled = true; input.placeholder = "(asking Claude…)"; }
+      const btn = $("voice-submit"); if (btn) btn.disabled = true;
+    } else if (ev.kind === "voice_command_done") {
+      const input = $("voice-input"); if (input) { input.disabled = false; input.value = ""; input.placeholder = 'speak / type a command — e.g. "set the wheel to volume up and down"'; }
+      const btn = $("voice-submit"); if (btn) btn.disabled = false;
+    } else if (ev.kind === "command_request") {
+      // K11 pressed — adapter has fired the SuperWhisper voice-command hotkey.
+      // SuperWhisper should now be recording; on completion its Custom Mode
+      // AppleScript will POST the transcript to /voice-command, which spawns
+      // claude -p to interpret and reconfigure.
+      renderAnnotation({
+        text: "Listening — speak your command",
+        fields: { trigger: "superwhisper://mode?key=custom + record", next: "transcript posts to /voice-command → claude -p reconfigures" },
+        style: "info",
+      }, ev.source);
+    } else if (ev.kind === "hud_focus") {
+      // K1 pressed and this tab is the open HUD.
+      //   - Visible: reload immediately for fresh state + visible signal.
+      //   - Hidden: try a system notification with a click-to-focus action.
+      //     Reload is deferred to visibilitychange so the in-page JS context
+      //     (and the notification's onclick handler) survives until the user
+      //     interacts with one of them.
+      if (document.visibilityState === "visible") {
+        try { window.focus(); } catch {}
+        location.reload();
+        return;
+      }
+      pendingReloadOnVisible = true;
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          const n = new Notification("Shortcut Remote — HUD", {
+            body: "K1 pressed. Click to bring the HUD forward.",
+            tag: "shortcut-remote-hud-focus",
+            renotify: true,
+          });
+          n.onclick = () => {
+            try { window.focus(); } catch {}
+            n.close();
+            pendingReloadOnVisible = false;
+            location.reload();
+          };
+        } catch (err) { /* notification creation can fail under some browser settings; we'll still reload on return */ }
+      }
+      return;
     } else if (ev.kind === "wheel") {
       if (ev.wheel_direction === "cw") cwCount++;
       else if (ev.wheel_direction === "ccw") ccwCount++;
@@ -461,6 +847,89 @@
     appendLog(ev);
     updateStats();
   }
+
+  // ---------- Server control buttons ----------
+  async function postControl(path, confirmMsg) {
+    if (confirmMsg && !window.confirm(confirmMsg)) return;
+    const status = $("ctrl-status");
+    const buttons = document.querySelectorAll(".ctrl-btn");
+    buttons.forEach((b) => b.disabled = true);
+    status.textContent = `→ ${path} …`;
+    try {
+      const r = await fetch(path, { method: "POST" });
+      const body = await r.json().catch(() => ({}));
+      status.textContent = body.note || `${path} ok`;
+    } catch (err) {
+      // Expected for restart/stop/disable — connection dies as the process exits.
+      status.textContent = "request sent (connection dropped, expected for stop/restart/disable)";
+    }
+    setTimeout(() => buttons.forEach((b) => b.disabled = false), 3000);
+  }
+  document.getElementById("ctrl-restart")?.addEventListener("click", () => postControl("/control/restart"));
+  document.getElementById("ctrl-stop")?.addEventListener("click", () => postControl("/control/stop", "Stop the adapter for this session?\n\nIt will start again at next login."));
+  document.getElementById("ctrl-disable")?.addEventListener("click", () => postControl("/control/disable", "Stop AND disable the adapter?\n\nIt will NOT auto-restart at login until you re-enable it from terminal."));
+
+  // ---------- Browser-notification opt-in (used when K1 is pressed and this
+  // tab is in the background — system notification surfaces a click target
+  // that focuses the tab and reloads, instead of a silent background reload). ----------
+  const notifyBtn = document.getElementById("ctrl-notify");
+  function refreshNotifyButton() {
+    if (!notifyBtn) return;
+    if (!("Notification" in window)) {
+      notifyBtn.textContent = "🔕 Notifications unsupported";
+      notifyBtn.disabled = true;
+      return;
+    }
+    const p = Notification.permission;
+    if (p === "granted") {
+      notifyBtn.textContent = "🔔 Focus notifications: on";
+      notifyBtn.disabled = true;
+    } else if (p === "denied") {
+      notifyBtn.textContent = "🔕 Notifications denied (change in browser settings)";
+      notifyBtn.disabled = true;
+    } else {
+      notifyBtn.textContent = "🔔 Enable focus notifications";
+      notifyBtn.disabled = false;
+    }
+  }
+  notifyBtn?.addEventListener("click", async () => {
+    if (!("Notification" in window)) return;
+    try { await Notification.requestPermission(); } catch {}
+    refreshNotifyButton();
+  });
+  refreshNotifyButton();
+
+  // Voice command form: POST to /voice-command and let the adapter handle the rest.
+  document.getElementById("voice-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const input = $("voice-input");
+    const text = (input?.value ?? "").trim();
+    if (!text) return;
+    try {
+      const r = await fetch("/voice-command", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!r.ok) {
+        const body = await r.json().catch(() => ({}));
+        renderAnnotation({ text: `Voice rejected: ${body.error ?? r.status}`, style: "warn" }, "voice-form");
+      }
+    } catch (err) {
+      renderAnnotation({ text: `Voice POST failed: ${err.message}`, style: "error" }, "voice-form");
+    }
+  });
+
+  // Reload-on-return: if K1 was pressed while this tab was hidden, queue a
+  // reload that fires when the tab becomes visible again. This keeps state
+  // fresh after the user clicks back without disrupting other tabs.
+  let pendingReloadOnVisible = false;
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && pendingReloadOnVisible) {
+      pendingReloadOnVisible = false;
+      location.reload();
+    }
+  });
 
   let ws;
   function connect() {
