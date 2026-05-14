@@ -46,9 +46,14 @@ ADAPTER_PID=$(read_pid "$ADAPTER_PID_FILE")
 if is_alive "$ADAPTER_PID"; then
   echo "adapter: already running (pid $ADAPTER_PID)"
 else
-  ( cd "$HERE/adapter" && nohup node src/server.js > /tmp/airpods-adapter.log 2>&1 < /dev/null & echo $! > /tmp/airpods-adapter.pid )
+  # Subshell scopes the cd; exec replaces the subshell with node so $! in the
+  # parent (and thus disown) targets the node process, not the subshell.
+  # Backgrounding here (not inside the subshell) matches the keeper and sidecar
+  # blocks above/below.
+  ( cd "$HERE/adapter" && exec nohup node src/server.js > /tmp/airpods-adapter.log 2>&1 < /dev/null ) &
+  ADAPTER_PID=$!
   disown
-  ADAPTER_PID=$(cat "$ADAPTER_PID_FILE")
+  echo "$ADAPTER_PID" > "$ADAPTER_PID_FILE"
   echo "adapter: started (pid $ADAPTER_PID)"
 fi
 
