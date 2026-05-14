@@ -13,37 +13,45 @@ const HUD_URL = process.env.AIRPODS_HUD_URL || 'ws://127.0.0.1:47834/events';
 const DWELL_MS = parseInt(process.env.DWELL_MS || '500', 10);
 const MARGIN_RAD = parseFloat(process.env.MARGIN_RAD || '0.05'); // ~2.9°
 const COOLDOWN_MS = parseInt(process.env.COOLDOWN_MS || '750', 10);
-const CAL_PATH = path.resolve(__dirname, '..', 'calibration.json');
-const FOCUS_BIN = path.resolve(__dirname, 'focus-on-display');
+const CAL_PATH = process.env.AIRPODS_CAL_PATH || path.resolve(__dirname, '..', 'calibration.json');
 const SPEAK_BIN = path.resolve(__dirname, 'speak-pan');
 const CURSOR_BIN = path.resolve(__dirname, 'move-cursor');
 const WAP_BIN = path.resolve(__dirname, 'window-at-point');
-const ACTIVATE_BIN = path.resolve(__dirname, 'activate-pid');
 const BLOB_BIN = path.resolve(__dirname, 'dwell-blob');
 const BLOB_FOLLOW = process.env.BLOB_FOLLOW === '1';
 const BLOB_HZ = parseInt(process.env.BLOB_HZ || '15', 10);
-const SIDE_OF = { main: 'R', left: 'L' };
 const MOUSE_FOLLOW = process.env.MOUSE_FOLLOW === '1';
 const CURSOR_HZ = parseInt(process.env.CURSOR_HZ || '15', 10);
 const SMOOTH_ALPHA = parseFloat(process.env.SMOOTH_ALPHA || '0.25');
 const APP_QUERY_HZ = parseInt(process.env.APP_QUERY_HZ || '8', 10);
 
-const OFFSETS_PATH = '/tmp/airpods-offsets.json';
+const OFFSETS_PATH = process.env.AIRPODS_OFFSETS_PATH || '/tmp/airpods-offsets.json';
 let offsetYaw = 0, offsetPitch = 0;
 function loadOffsets() {
   try {
     const o = JSON.parse(fs.readFileSync(OFFSETS_PATH, 'utf8'));
     offsetYaw = Number(o.offsetYaw) || 0;
     offsetPitch = Number(o.offsetPitch) || 0;
+    // Reset the smoothed pose: alpha is gated by motionFactor and approaches 0
+    // when the head is still, so without this an external recenter only takes
+    // effect after the user moves enough to "pump" the filter.
+    smoothedYaw = null;
+    smoothedPitch = null;
     console.log(`offsets loaded: yaw=${offsetYaw.toFixed(3)} pitch=${offsetPitch.toFixed(3)}`);
   } catch {
     offsetYaw = 0; offsetPitch = 0;
   }
 }
-loadOffsets();
-fs.watchFile(OFFSETS_PATH, { interval: 1000 }, () => loadOffsets());
 
-const cal = JSON.parse(fs.readFileSync(CAL_PATH, 'utf8'));
+let cal;
+try {
+  cal = JSON.parse(fs.readFileSync(CAL_PATH, 'utf8'));
+} catch (e) {
+  console.error(`ERROR: cannot read calibration at ${CAL_PATH}`);
+  console.error('Run: node calibrate/calibrate.js  (from the airpods-mcp/ directory)');
+  console.error(`(set AIRPODS_CAL_PATH to override the default location)`);
+  process.exit(1);
+}
 const byId = Object.fromEntries(cal.points.map(p => [p.id, p.summary]));
 
 function bbox(prefix) {
@@ -111,6 +119,11 @@ let cursorProc = null;
 let smoothedYaw = null, smoothedPitch = null;
 let lastCursorWriteAt = 0;
 const CURSOR_INTERVAL_MS = Math.round(1000 / CURSOR_HZ);
+
+// Now that smoothedYaw/Pitch are declared, perform the initial offset load
+// and start watching the offsets file for external updates (e.g., recenter).
+loadOffsets();
+fs.watchFile(OFFSETS_PATH, { interval: 1000 }, () => loadOffsets());
 
 function startCursorDaemon() {
   if (!MOUSE_FOLLOW) return;
@@ -225,10 +238,6 @@ function classify(yaw, pitch) {
 }
 
 let candidate = null;          // current monitor candidate ('main' / 'left' / null)
-let candidateSince = 0;
-let activeTarget = null;       // last fired monitor (kept for pan side)
-let lastFocusAt = 0;
-let busyFocus = false;
 
 // Window-level dwell tracking: track on (pid, wnum) so different windows of same app are transitions
 let appCandidatePid = null;
@@ -295,30 +304,6 @@ function onAppLookup(line) {
     blobFaded = false;
     blobLastMovedAt = Date.now();
   }
-}
-
-function focus(monitor) {
-  if (busyFocus) return;
-  busyFocus = true;
-  const child = spawn(FOCUS_BIN, [monitor], { stdio: ['ignore', 'pipe', 'pipe'] });
-  let out = '', err = '';
-  child.stdout.on('data', d => out += d);
-  child.stderr.on('data', d => err += d);
-  child.on('exit', code => {
-    busyFocus = false;
-    const stamp = new Date().toISOString().split('T')[1].replace('Z', '');
-    if (code === 0 && out) {
-      process.stdout.write(`[${stamp}] ${out.trim()}\n`);
-      const m = out.match(/^focused:\s+(.+?)\s+\(/);
-      const appName = m ? m[1] : null;
-      if (appName) {
-        const side = SIDE_OF[monitor] || 'C';
-        spawn(SPEAK_BIN, [side, appName], { stdio: 'ignore', detached: true }).unref();
-      }
-    } else if (err) {
-      process.stdout.write(`[${stamp}] focus err: ${err.trim()}\n`);
-    }
-  });
 }
 
 const STILL_REF_RAD_S = parseFloat(process.env.STILL_REF_RAD_S || '0.05'); // below this → fully still

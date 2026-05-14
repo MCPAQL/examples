@@ -68,10 +68,13 @@ mcpaql_read { operation: "introspect", params: { query: "operations" } }
 | read | `get_calibration` | Persisted anchors + current offsets |
 | read | `get_hud_url` | Live HUD URL (HTTP + WebSocket) |
 | read | `get_provenance` | Adapter metadata, framework reference, TCC requirements |
+| read | `is_sidecar_running` | Whether the bundled sidecar is currently alive (via PID file + signal 0) |
 | create | `calibrate_point` | Capture current pose, save as named anchor |
 | update | `recenter` | Atomic capture + offset against `main_center` |
 | update | `set_offset` | Manual yaw/pitch offset override |
 | delete | `clear_offsets` | Zero offsets |
+| execute | `start_sidecar` | Spawn the bundled gaze-driven sidecar (idempotent) |
+| execute | `stop_sidecar` | Terminate the sidecar referenced by its PID file |
 
 Pose units: radians. Convention: positive yaw = head turned **left**, positive pitch = head tilted **up** (CMHMM convention).
 

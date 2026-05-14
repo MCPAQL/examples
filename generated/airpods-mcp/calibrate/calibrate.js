@@ -106,6 +106,11 @@ async function capturePoint(p, index, total) {
   process.stdout.write('\n=== AirPods Head-Tracking Calibration ===\n');
   process.stdout.write(`Will capture ${POINTS.length} points (${SETTLE_SECONDS}s settle + ~1s capture each).\n`);
   process.stdout.write('Sit in your normal working position. Wear AirPods. Look only with your head, not your eyes.\n');
+  process.stdout.write('\n');
+  process.stdout.write('NOTE: This script assumes a specific dual-monitor layout —\n');
+  process.stdout.write('      portrait secondary on the LEFT, 4K landscape main on the RIGHT.\n');
+  process.stdout.write('      Edit the POINTS array at the top of this file if your layout differs.\n');
+  process.stdout.write('\n');
   await speak(`AirPods head tracking calibration. Ten points, five per screen. Beginning in three seconds.`);
   await sleep(1500);
 

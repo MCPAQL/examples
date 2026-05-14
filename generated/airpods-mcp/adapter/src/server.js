@@ -165,7 +165,11 @@ httpServer.listen(HUD_PORT, "127.0.0.1", () => {
 function hudBroadcast(msg) {
   if (!wsClients.size) return;
   const json = JSON.stringify(msg);
-  for (const ws of wsClients) { try { ws.send(json); } catch {} }
+  // Drop clients on synchronous send failure (TCP RST without a clean close
+  // event won't reach ws.on("error"), so without this they leak forever).
+  for (const ws of wsClients) {
+    try { ws.send(json); } catch { wsClients.delete(ws); }
+  }
 }
 
 // ---------- Helpers ----------

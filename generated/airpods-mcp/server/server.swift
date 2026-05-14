@@ -5,12 +5,22 @@ import Network
 let PORT: UInt16 = 47833
 let logPath = "/tmp/airpods-mcp-server.log"
 FileManager.default.createFile(atPath: logPath, contents: nil)
-let logHandle = FileHandle(forWritingAtPath: logPath)!
+let logHandle: FileHandle = {
+    guard let h = FileHandle(forWritingAtPath: logPath) else {
+        FileHandle.standardError.write(
+            "FATAL: cannot open \(logPath) for writing\n".data(using: .utf8) ?? Data()
+        )
+        exit(3)
+    }
+    return h
+}()
 
 func log(_ s: String) {
     let stamp = ISO8601DateFormatter().string(from: Date())
     let line = "[\(stamp)] \(s)\n"
-    logHandle.write(line.data(using: .utf8)!)
+    if let data = line.data(using: .utf8) {
+        logHandle.write(data)
+    }
 }
 
 let clientsLock = NSLock()
@@ -26,9 +36,13 @@ func broadcast(_ json: String) {
     }
 }
 
-func encodeJSON(_ obj: [String: Any]) -> String {
-    let data = try! JSONSerialization.data(withJSONObject: obj, options: [.sortedKeys])
-    return String(data: data, encoding: .utf8)!
+// Returns nil if the object contains NaN/Inf floats (which JSONSerialization
+// rejects) or any other JSON-invalid value. Callers must skip the sample.
+func encodeJSON(_ obj: [String: Any]) -> String? {
+    guard JSONSerialization.isValidJSONObject(obj),
+          let data = try? JSONSerialization.data(withJSONObject: obj, options: [.sortedKeys]),
+          let s = String(data: data, encoding: .utf8) else { return nil }
+    return s
 }
 
 let manager = CMHeadphoneMotionManager()
@@ -40,15 +54,39 @@ guard manager.isDeviceMotionAvailable else {
 
 log("Headphone motion available; binding TCP \(PORT)…")
 
+// Bind to loopback only: the raw pose stream is unauthenticated, so anything
+// listening here must never be reachable from the LAN. requiredInterfaceType
+// makes Network.framework reject non-loopback connections at accept time.
+let listenerParams = NWParameters.tcp
+listenerParams.requiredInterfaceType = .loopback
+
 let listener: NWListener
 do {
-    listener = try NWListener(using: .tcp, on: NWEndpoint.Port(rawValue: PORT)!)
+    listener = try NWListener(using: listenerParams, on: NWEndpoint.Port(rawValue: PORT)!)
 } catch {
     log("FATAL: cannot bind \(PORT): \(error)")
     exit(2)
 }
 
+// Reject any client whose remote endpoint isn't loopback. The raw pose stream
+// is unauthenticated, so it must never be accepted from the LAN even if the
+// listener somehow ends up bound to a non-loopback interface.
+func isLoopback(_ endpoint: NWEndpoint) -> Bool {
+    guard case let .hostPort(host: host, port: _) = endpoint else { return false }
+    switch host {
+    case .ipv4(let addr): return addr.rawValue == Data([127, 0, 0, 1])
+    case .ipv6(let addr): return addr == .loopback
+    case .name(let name, _): return name == "localhost"
+    @unknown default: return false
+    }
+}
+
 listener.newConnectionHandler = { conn in
+    if !isLoopback(conn.endpoint) {
+        log("rejecting non-loopback connection from \(conn.endpoint)")
+        conn.cancel()
+        return
+    }
     log("client connected")
     conn.stateUpdateHandler = { state in
         switch state {
@@ -56,13 +94,14 @@ listener.newConnectionHandler = { conn in
             clientsLock.lock()
             clients.append(conn)
             clientsLock.unlock()
-            let hello = encodeJSON([
+            if let hello = encodeJSON([
                 "type": "hello",
                 "server": "airpods-mcp",
                 "version": "0.1.0",
                 "rate_hint_hz": 25,
-            ])
-            conn.send(content: (hello + "\n").data(using: .utf8)!, completion: .contentProcessed { _ in })
+            ]), let helloData = (hello + "\n").data(using: .utf8) {
+                conn.send(content: helloData, completion: .contentProcessed { _ in })
+            }
         case .failed, .cancelled:
             clientsLock.lock()
             clients.removeAll { $0 === conn }
@@ -90,7 +129,7 @@ manager.startDeviceMotionUpdates(to: queue) { motion, error in
     guard let m = motion else { return }
     sampleCount += 1
     let q = m.attitude.quaternion
-    let payload = encodeJSON([
+    guard let payload = encodeJSON([
         "type": "pose",
         "n": sampleCount,
         "t": Date().timeIntervalSince1970,
@@ -99,7 +138,11 @@ manager.startDeviceMotionUpdates(to: queue) { motion, error in
         "roll":  m.attitude.roll,
         "yaw":   m.attitude.yaw,
         "rotRate": [m.rotationRate.x, m.rotationRate.y, m.rotationRate.z],
-    ])
+    ]) else {
+        // Pose contained NaN/Inf (transient hardware/initialization edge).
+        // Skip this sample rather than crashing the motion source.
+        return
+    }
     broadcast(payload)
 }
 
