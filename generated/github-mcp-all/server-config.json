@@ -1,0 +1,16 @@
+{
+  "name": "github-mcp-remote-all",
+  "server_url": "https://api.githubcopilot.com/mcp/",
+  "transport": {
+    "type": "streamable_http"
+  },
+  "auth": {
+    "type": "bearer",
+    "token_env": "GITHUB_PERSONAL_ACCESS_TOKEN",
+    "header": "Authorization",
+    "prefix": "Bearer "
+  },
+  "headers": {
+    "X-MCP-Toolsets": "all"
+  }
+}
