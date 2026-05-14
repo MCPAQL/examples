@@ -90,8 +90,8 @@ Pose units: radians. Convention: positive yaw = head turned **left**, positive p
 
 ```sh
 cd server
-swiftc server.swift -o airpods-mcp-server.app/Contents/MacOS/airpods-mcp-server
 mkdir -p airpods-mcp-server.app/Contents/MacOS
+swiftc server.swift -o airpods-mcp-server.app/Contents/MacOS/airpods-mcp-server
 cp Info.plist airpods-mcp-server.app/Contents/Info.plist
 codesign --force --sign - --identifier org.mcpaql.airpods-mcp airpods-mcp-server.app
 ```
@@ -110,11 +110,13 @@ swiftc activate-pid.swift     -o activate-pid
 swiftc focus-on-display.swift -o focus-on-display
 ```
 
-### Install adapter dependencies (one-time)
+### Install Node dependencies (one-time)
+
+The adapter and the sidecar are separate packages; each needs its own install.
 
 ```sh
-cd adapter
-npm install
+( cd adapter && npm install )
+( cd sidecar && npm install )
 ```
 
 ### Run everything
