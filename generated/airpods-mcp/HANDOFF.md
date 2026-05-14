@@ -114,7 +114,7 @@ Built `adapter/` with stdio MCP + CRUDE schema + HUD HTTP/WS at port 47834. Node
 
 **Files added**: `adapter/package.json`, `adapter/src/{server.js, schema.json, provenance.json}`. Modeled on the keypad adapter's shape.
 
-Remaining work: switch the sidecar to consume the adapter's HUD WebSocket (ws://127.0.0.1:47834/events) instead of talking directly to the Swift source on TCP 47833. Both work today; the WebSocket route is the architecturally clean path. Small refactor, not blocking.
+~~Remaining work: switch the sidecar to consume the adapter's HUD WebSocket...~~ — **DONE.** `sidecar/index.js` now consumes pose data exclusively via the adapter's HUD WebSocket (`connectHud()` at the bottom of the file). The only remaining direct-TCP consumer is `calibrate/calibrate.js`, which is appropriate for a one-shot tool.
 
 ### 2. Per-app context awareness in the sidecar
 

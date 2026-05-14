@@ -27,7 +27,7 @@ let clientsLock = NSLock()
 var clients: [NWConnection] = []
 
 func broadcast(_ json: String) {
-    let payload = (json + "\n").data(using: .utf8)!
+    guard let payload = (json + "\n").data(using: .utf8) else { return }
     clientsLock.lock()
     let snapshot = clients
     clientsLock.unlock()
@@ -55,8 +55,12 @@ guard manager.isDeviceMotionAvailable else {
 log("Headphone motion available; binding TCP \(PORT)…")
 
 // Bind to loopback only: the raw pose stream is unauthenticated, so anything
-// listening here must never be reachable from the LAN. requiredInterfaceType
-// makes Network.framework reject non-loopback connections at accept time.
+// listening here must never be reachable from the LAN. Defense in depth:
+//   - requiredInterfaceType (belt) constrains the interface the listener
+//     binds to.
+//   - isLoopback() in newConnectionHandler (suspenders) is the accept-time
+//     security boundary — it rejects any connection whose remote endpoint
+//     isn't loopback even if the bind somehow allowed it.
 let listenerParams = NWParameters.tcp
 listenerParams.requiredInterfaceType = .loopback
 

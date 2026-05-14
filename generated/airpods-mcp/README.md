@@ -224,7 +224,7 @@ airpods-mcp/
 
 **Working** — verified end-to-end on macOS 15.7.4 with AirPods Pro and a 4K landscape + portrait dual-monitor setup.
 
-Adapter layer was built after the sidecar/source layers. Currently the sidecar still talks directly to the motion source's TCP stream rather than going through the adapter's HUD WebSocket. Both work. Future cleanup: switch sidecar to consume from `ws://127.0.0.1:47834/events` so all consumers go through the adapter.
+Adapter layer was built after the sidecar/source layers. The sidecar consumes the adapter's HUD WebSocket (`ws://127.0.0.1:47834/events`) — the three-layer architecture is complete end-to-end. The only remaining direct TCP consumer of port 47833 is `calibrate/calibrate.js`, which is appropriate: calibration is a one-shot tool that runs alongside the stack rather than a runtime consumer.
 
 See `HANDOFF.md` for session-continuity context, the full lessons file, and what's still open.
 
