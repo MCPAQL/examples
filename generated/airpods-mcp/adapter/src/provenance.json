@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-04-28T22:00:00.000Z",
+  "discovery_method": "apple_framework_wrap",
+  "discovery_method_note": "Unlike JIT-discovered adapters (e.g. shortcut-remote-mcp, which observes raw HID reports to build its protocol decode), this adapter wraps a documented Apple framework (CoreMotion.CMHeadphoneMotionManager). Pose data shape is given by Apple; no protocol reverse-engineering was needed. The adapter's job is to make the framework accessible behind a CRUDE MCPAQL surface and to handle the macOS-specific TCC plumbing (.app bundle, NSMotionUsageDescription, ad-hoc sign, launch via LaunchServices) plus the audio-session-keep-alive constraint that AirPods motion data requires.",
+  "source_framework": "CoreMotion.CMHeadphoneMotionManager",
+  "source_platform": "macOS 14+ (Sonoma and later)",
+  "source_documentation": "https://developer.apple.com/documentation/coremotion/cmheadphonemotionmanager",
+  "warning_count": 0,
+  "operation_count": 15,
+  "operations": [
+    { "source": "framework", "operation_name": "list_devices",       "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "framework", "operation_name": "is_streaming",       "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "framework", "operation_name": "get_pose",           "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "framework", "operation_name": "wait_for_pose",      "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "framework", "operation_name": "get_recent_poses",   "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "get_calibration",    "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "get_hud_url",        "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "get_provenance",     "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "is_sidecar_running", "endpoint": "READ",    "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "calibrate_point",    "endpoint": "CREATE",  "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "recenter",           "endpoint": "UPDATE",  "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "set_offset",         "endpoint": "UPDATE",  "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "clear_offsets",      "endpoint": "DELETE",  "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "start_sidecar",      "endpoint": "EXECUTE", "needs_review": false, "review_reasons": [] },
+    { "source": "adapter",   "operation_name": "stop_sidecar",       "endpoint": "EXECUTE", "needs_review": false, "review_reasons": [] }
+  ],
+  "tcc_requirements": {
+    "NSMotionUsageDescription": "required",
+    "bundle_required": true,
+    "bundle_must_be_launched_via": "/usr/bin/open",
+    "code_signature": "ad-hoc minimum",
+    "additional_permissions_for_consumers": [
+      "Accessibility (only if a consumer wants to use AX_RAISE for window-level focus actions)"
+    ]
+  },
+  "runtime_constraints": {
+    "audio_session_must_be_active": true,
+    "mitigation": "Run a continuous silent-WAV loop alongside this adapter. Without it, CMHeadphoneMotionManager pauses delivery silently when no audio is routed."
+  }
+}

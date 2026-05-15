@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>org.mcpaql.airpods-mcp</string>
+    <key>CFBundleName</key>
+    <string>airpods-mcp</string>
+    <key>CFBundleExecutable</key>
+    <string>airpods-mcp-server</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSMotionUsageDescription</key>
+    <string>Streams AirPods head-tracking orientation data to local MCPAQL adapters for gaze-driven window focus and other context-aware interactions.</string>
+</dict>
+</plist>
