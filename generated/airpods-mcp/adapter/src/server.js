@@ -193,9 +193,17 @@ async function captureSamples(n) {
   const samples = [];
   while (samples.length < n) {
     const sample = await new Promise((res) => {
-      const t = setTimeout(() => res(null), 5000);
-      const w = { resolve: (m) => { clearTimeout(t); res(m); } };
-      state.poseWaiters.push(w);
+      // On timeout, splice THIS waiter out of state.poseWaiters. Without it,
+      // a timed-out waiter lingers until a future pose flushes the whole
+      // array — repeated calibrate_point/recenter calls against a paused
+      // source leak waiters and make the next pose do unbounded cleanup.
+      // Mirrors the proven wait_for_pose idiom (_t tag + findIndex/splice).
+      const t = setTimeout(() => {
+        const idx = state.poseWaiters.findIndex((x) => x._t === t);
+        if (idx >= 0) state.poseWaiters.splice(idx, 1);
+        res(null);
+      }, 5000);
+      state.poseWaiters.push({ _t: t, resolve: (m) => { clearTimeout(t); res(m); } });
     });
     if (!sample) break;
     samples.push(sample);

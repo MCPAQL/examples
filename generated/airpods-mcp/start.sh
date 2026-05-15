@@ -12,6 +12,14 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 
+# start.sh orchestrates BOTH the adapter and the sidecar. The adapter honors
+# AIRPODS_HUD_PORT; the sidecar reads AIRPODS_HUD_URL (different var name). If
+# a custom port is set we must (a) health-check the real port and (b) derive
+# AIRPODS_HUD_URL for the sidecar — otherwise the sidecar falls back to
+# :47834 and spins disconnected. Mirrors the adapter's start_sidecar bridging.
+HUD_PORT="${AIRPODS_HUD_PORT:-47834}"
+export AIRPODS_HUD_URL="${AIRPODS_HUD_URL:-ws://127.0.0.1:${HUD_PORT}/events}"
+
 read_pid() { local f=$1; [[ -f "$f" ]] && cat "$f" 2>/dev/null || true; }
 # Alive AND actually the expected component. Identity-blind liveness is unsafe
 # for idempotency: if a stale PID file's PID was recycled by an unrelated
@@ -72,14 +80,14 @@ else
   echo "adapter: started (pid $ADAPTER_PID)"
 fi
 
-# Wait for adapter HUD to be reachable
+# Wait for adapter HUD to be reachable (on the configured port, not a literal)
 for i in {1..20}; do
-  if curl -fsS http://127.0.0.1:47834/health > /dev/null 2>&1; then break; fi
+  if curl -fsS "http://127.0.0.1:${HUD_PORT}/health" > /dev/null 2>&1; then break; fi
   sleep 0.2
 done
 # If the adapter never came up, the sidecar will still "start" but then spin in
 # a reconnect loop against a dead HUD. Point the user at the real error.
-if ! curl -fsS http://127.0.0.1:47834/health > /dev/null 2>&1; then
+if ! curl -fsS "http://127.0.0.1:${HUD_PORT}/health" > /dev/null 2>&1; then
   echo "WARNING: adapter did not become healthy in ~4s — check /tmp/airpods-adapter.log"
 fi
 

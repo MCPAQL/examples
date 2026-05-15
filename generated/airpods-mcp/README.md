@@ -140,7 +140,11 @@ node calibrate/calibrate.js
 echo $! > /tmp/airpods-adapter.pid
 disown
 
-# 5. Start the sidecar (X-mouse focus + dwell blob)
+# 5. Start the sidecar (X-mouse focus + dwell blob).
+# If you set a custom AIRPODS_HUD_PORT for the adapter, the sidecar needs the
+# matching AIRPODS_HUD_URL (different var name) or it falls back to :47834 and
+# spins disconnected. start.sh derives this for you; the manual path must too:
+export AIRPODS_HUD_URL="${AIRPODS_HUD_URL:-ws://127.0.0.1:${AIRPODS_HUD_PORT:-47834}/events}"
 BLOB_FOLLOW=1 nohup node sidecar/index.js > /tmp/airpods-sidecar.log 2>&1 < /dev/null &
 echo $! > /tmp/airpods-sidecar.pid
 disown
