@@ -89,7 +89,31 @@ Pose units: radians. Convention: positive yaw = head turned **left**, positive p
 - Xcode command-line tools (for `swiftc`)
 - Node 20+
 
-### Build motion source (one-time)
+### Option A — download prebuilt binaries
+
+Prebuilt, ad-hoc-signed **Apple Silicon (arm64), macOS 14+** binaries are
+attached to each release:
+
+**https://github.com/MCPAQL/examples/releases/latest**
+
+- `airpods-mcp-server.app.zip` — the motion-source `.app`
+- `airpods-mcp-sidecar-binaries.tar.gz` — `window-at-point`, `dwell-blob`, `move-cursor`, `speak-pan`
+- `SHA256SUMS` — verify with `shasum -a 256 -c SHA256SUMS`
+
+They are quarantined on download (ad-hoc signed, not notarized — this is a
+showcase artifact). Clear it before first run:
+
+```sh
+xattr -dr com.apple.quarantine airpods-mcp-server.app
+xattr -dr com.apple.quarantine window-at-point dwell-blob move-cursor speak-pan
+```
+
+Node deps still need install (Option B step "Install Node dependencies").
+Intel Macs: build from source (Option B).
+
+### Option B — build from source
+
+#### Build motion source (one-time)
 
 ```sh
 cd server
@@ -99,9 +123,7 @@ cp Info.plist airpods-mcp-server.app/Contents/Info.plist
 codesign --force --sign - --identifier org.mcpaql.airpods-mcp airpods-mcp-server.app
 ```
 
-(Or use the prebuilt `airpods-mcp-server.app/` if it's already in the repo.)
-
-### Build sidecar Swift helpers (one-time)
+#### Build sidecar Swift helpers (one-time)
 
 ```sh
 cd sidecar
@@ -111,7 +133,7 @@ swiftc move-cursor.swift      -o move-cursor
 swiftc speak-pan.swift        -o speak-pan       -framework AVFoundation
 ```
 
-### Install Node dependencies (one-time)
+#### Install Node dependencies (one-time)
 
 The adapter and the sidecar are separate packages; each needs its own install.
 
