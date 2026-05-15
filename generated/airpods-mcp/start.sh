@@ -62,6 +62,11 @@ for i in {1..20}; do
   if curl -fsS http://127.0.0.1:47834/health > /dev/null 2>&1; then break; fi
   sleep 0.2
 done
+# If the adapter never came up, the sidecar will still "start" but then spin in
+# a reconnect loop against a dead HUD. Point the user at the real error.
+if ! curl -fsS http://127.0.0.1:47834/health > /dev/null 2>&1; then
+  echo "WARNING: adapter did not become healthy in ~4s — check /tmp/airpods-adapter.log"
+fi
 
 # 4. Sidecar
 SIDECAR_PID_FILE=/tmp/airpods-sidecar.pid

@@ -440,7 +440,15 @@ function onPose(rawYawIn, rawPitchIn, rotRate) {
 
   // Throttle window-at-point queries; only when gaze is in a calibrated region
   if (!target) {
-    appCandidatePid = null; // gaze off-screen: no target
+    // Gaze off-screen: clear the FULL candidate. Clearing only the pid leaves
+    // appCandidateWnum stale, so onAppLookup's `wnum !== appCandidateWnum`
+    // guard skips re-init when the user looks back at the same window before
+    // dwell completed — focus could then never fire on that window again.
+    appCandidatePid = null;
+    appCandidateName = null;
+    appCandidateWnum = null;
+    appCandidateMonitor = null;
+    appCandidateSince = 0;
     return;
   }
   const queryIntervalMs = Math.round(1000 / APP_QUERY_HZ);
