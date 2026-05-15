@@ -66,9 +66,7 @@ examples/generated/airpods-mcp/
 │   ├── window-at-point.swift           ← stdin daemon: query app/window at point + AX_RAISE focus
 │   ├── dwell-blob.swift                ← Transparent NSWindow overlay; "alpha" + "fade" stdin commands
 │   ├── move-cursor.swift               ← Optional cursor warp (MOUSE_FOLLOW=1)
-│   ├── activate-pid.swift              ← (Legacy) one-shot app-pid activator; superseded by AX_RAISE
 │   ├── speak-pan.swift                 ← Spatial-audio cue (left/right pan) using AVAudioPlayer
-│   ├── focus-on-display.swift          ← (Legacy) monitor-level activator; superseded by window-at-point
 │   └── window-at-point, dwell-blob, … ← Built binaries
 ├── calibrate/
 │   ├── calibrate.js                    ← One-shot 10-point calibration capture (audio-cued)

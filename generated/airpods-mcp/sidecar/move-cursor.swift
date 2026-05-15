@@ -7,7 +7,7 @@ import Foundation
 
 var displays = [CGDirectDisplayID](repeating: 0, count: 8)
 var count: UInt32 = 0
-CGGetActiveDisplayList(8, &displays, &count)
+if CGGetActiveDisplayList(8, &displays, &count) != .success { count = 0 }
 let mainID = CGMainDisplayID()
 let otherID: CGDirectDisplayID = (0..<Int(count)).map { displays[$0] }.first { $0 != mainID } ?? mainID
 

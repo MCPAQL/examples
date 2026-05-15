@@ -109,8 +109,6 @@ swiftc window-at-point.swift  -o window-at-point
 swiftc dwell-blob.swift       -o dwell-blob
 swiftc move-cursor.swift      -o move-cursor
 swiftc speak-pan.swift        -o speak-pan       -framework AVFoundation
-swiftc activate-pid.swift     -o activate-pid
-swiftc focus-on-display.swift -o focus-on-display
 ```
 
 ### Install Node dependencies (one-time)
@@ -218,9 +216,7 @@ airpods-mcp/
 │   ├── window-at-point.swift      ← AX-raise + window query daemon
 │   ├── dwell-blob.swift           ← Transparent overlay window
 │   ├── move-cursor.swift          ← Cursor-warp daemon (optional)
-│   ├── speak-pan.swift            ← Spatial-audio cue helper
-│   ├── activate-pid.swift         ← (legacy) app-level activator
-│   └── focus-on-display.swift     ← (legacy) monitor-level activator
+│   └── speak-pan.swift            ← Spatial-audio cue helper
 ├── calibrate/
 │   ├── calibrate.js               ← One-shot 10-point calibration capture
 │   ├── recenter.js                ← Verbose recenter (development tool)

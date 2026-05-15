@@ -24,7 +24,7 @@ app.setActivationPolicy(.accessory)
 
 var displays = [CGDirectDisplayID](repeating: 0, count: 8)
 var n: UInt32 = 0
-CGGetActiveDisplayList(8, &displays, &n)
+if CGGetActiveDisplayList(8, &displays, &n) != .success { n = 0 }
 let mainID = CGMainDisplayID()
 let otherID: CGDirectDisplayID = (0..<Int(n)).map { displays[$0] }.first { $0 != mainID } ?? mainID
 
@@ -77,7 +77,12 @@ DispatchQueue.global().async {
         let cgX = b.origin.x + cu * b.width
         let cgY = b.origin.y + cv * b.height
         DispatchQueue.main.async {
-            let primary = NSScreen.screens.first { $0.frame.origin == .zero } ?? NSScreen.main!
+            // NSScreen.main is nil when no window is key (locked screen,
+            // headless). This runs on every pose update, so a force-unwrap
+            // would crash the blob daemon mid-session. Fall back, and if there
+            // is genuinely no screen, skip this position update (no crash).
+            guard let primary = NSScreen.screens.first(where: { $0.frame.origin == .zero })
+                                ?? NSScreen.screens.first else { return }
             let primaryH = primary.frame.height
             let cocoaY = primaryH - cgY
             window.setFrameOrigin(NSPoint(x: cgX - SIZE/2, y: cocoaY - SIZE/2))

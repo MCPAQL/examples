@@ -9,7 +9,18 @@ import Foundation
 
 let out = FileHandle.standardOutput
 let err = FileHandle.standardError
-func emit(_ s: String) { out.write((s + "\n").data(using: .utf8)!) }
+func emit(_ s: String) {
+    if let d = (s + "\n").data(using: .utf8) { out.write(d) }
+}
+
+// kCGWindowBounds is a CFDictionary of CFNumbers, NOT [String: CGFloat] —
+// `as? [String: CGFloat]` always fails and silently skips every window.
+// CGRect(dictionaryRepresentation:) is the documented inverse for exactly
+// this dictionary shape.
+func cgWindowBounds(_ w: [String: Any]) -> CGRect? {
+    guard let dict = w[kCGWindowBounds as String] as? NSDictionary else { return nil }
+    return CGRect(dictionaryRepresentation: dict)
+}
 
 var displays = [CGDirectDisplayID](repeating: 0, count: 8)
 var nDisp: UInt32 = 0
@@ -35,12 +46,9 @@ func windowAt(_ p: CGPoint) -> [String: Any]? {
     guard let windows = CGWindowListCopyWindowInfo(opts, kCGNullWindowID) as? [[String: Any]] else { return nil }
     for w in windows {
         guard
-            let bounds = w[kCGWindowBounds as String] as? [String: CGFloat],
-            let layer = w[kCGWindowLayer as String] as? Int,
-            layer == 0
+            let layer = w[kCGWindowLayer as String] as? Int, layer == 0,
+            let r = cgWindowBounds(w)
         else { continue }
-        let r = CGRect(x: bounds["X"] ?? 0, y: bounds["Y"] ?? 0,
-                       width: bounds["Width"] ?? 0, height: bounds["Height"] ?? 0)
         if r.width < 80 || r.height < 60 { continue }
         if r.contains(p) {
             guard
@@ -66,7 +74,9 @@ func raiseAXWindow(pid: pid_t, cgFrame: CGRect) -> Bool {
         var sizeRef: CFTypeRef?
         AXUIElementCopyAttributeValue(ax, kAXPositionAttribute as CFString, &posRef)
         AXUIElementCopyAttributeValue(ax, kAXSizeAttribute as CFString, &sizeRef)
-        guard let pr = posRef, let sr = sizeRef else { continue }
+        guard let pr = posRef, let sr = sizeRef,
+              CFGetTypeID(pr) == AXValueGetTypeID(), CFGetTypeID(sr) == AXValueGetTypeID()
+        else { continue }
         var pos = CGPoint.zero, size = CGSize.zero
         AXValueGetValue(pr as! AXValue, .cgPoint, &pos)
         AXValueGetValue(sr as! AXValue, .cgSize, &size)
@@ -97,11 +107,9 @@ while let line = readLine() {
         guard
             let w = windowAt(p),
             let pid = w[kCGWindowOwnerPID as String] as? pid_t,
-            let bounds = w[kCGWindowBounds as String] as? [String: CGFloat],
+            let frame = cgWindowBounds(w),
             let app = NSRunningApplication(processIdentifier: pid)
         else { emit("err: no window at point"); continue }
-        let frame = CGRect(x: bounds["X"] ?? 0, y: bounds["Y"] ?? 0,
-                           width: bounds["Width"] ?? 0, height: bounds["Height"] ?? 0)
         let raised = raiseAXWindow(pid: pid, cgFrame: frame)
         // raiseAXWindow already set the app frontmost via the AX attribute
         // (the working macOS 14+ focus path). Only if the AX raise failed

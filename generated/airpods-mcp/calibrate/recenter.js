@@ -8,14 +8,27 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
-const HOST = '127.0.0.1';
-const PORT = 47833;
-const CAL_PATH = path.resolve(__dirname, '..', 'calibration.json');
-const OFFSETS_PATH = '/tmp/airpods-offsets.json';
+const HOST = process.env.AIRPODS_SOURCE_HOST || '127.0.0.1';
+const PORT = Number(process.env.AIRPODS_SOURCE_PORT) || 47833;
+const CAL_PATH = process.env.AIRPODS_CALIBRATION_PATH || process.env.AIRPODS_CAL_PATH
+  || path.resolve(__dirname, '..', 'calibration.json');
+const OFFSETS_PATH = process.env.AIRPODS_OFFSETS_PATH || '/tmp/airpods-offsets.json';
 const SAMPLES = 25;
+const CAPTURE_TIMEOUT_MS = 8000;
 
-const cal = JSON.parse(fs.readFileSync(CAL_PATH, 'utf8'));
-const calMainCenter = cal.points.find(p => p.id === 'main_center').summary;
+let cal;
+try {
+  cal = JSON.parse(fs.readFileSync(CAL_PATH, 'utf8'));
+} catch {
+  console.error(`ERROR: cannot read calibration at ${CAL_PATH} — run: node calibrate/calibrate.js`);
+  process.exit(1);
+}
+const _mc = cal.points && cal.points.find(p => p.id === 'main_center');
+if (!_mc || !_mc.summary) {
+  console.error("ERROR: calibration has no 'main_center' anchor — re-run calibrate.js");
+  process.exit(1);
+}
+const calMainCenter = _mc.summary;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const speak = text => new Promise(resolve => {
@@ -44,7 +57,10 @@ function median(arr) {
   process.stdout.write('Capturing now — hold still…       \n');
 
   const sock = net.connect(PORT, HOST);
-  sock.on('error', e => { console.error('TCP error:', e.message); process.exit(1); });
+  let done = false;
+  const abort = (msg) => { if (!done) { done = true; sock.destroy(); console.error(msg); process.exit(1); } };
+  sock.on('error', e => abort(`TCP error: ${e.message}`));
+  sock.on('close', () => { if (!done) abort('motion source closed before capture completed'); });
 
   let buf = '';
   const samples = [];
@@ -57,13 +73,21 @@ function median(arr) {
       if (!line) continue;
       try {
         const m = JSON.parse(line);
-        if (m.type === 'pose' && samples.length < SAMPLES) samples.push(m);
+        if (m.type === 'pose' && Number.isFinite(m.yaw) && Number.isFinite(m.pitch) && samples.length < SAMPLES) {
+          samples.push(m);
+        }
       } catch {}
     }
   });
 
-  while (samples.length < SAMPLES) await sleep(50);
-  sock.end();
+  const deadline = Date.now() + CAPTURE_TIMEOUT_MS;
+  while (samples.length < SAMPLES && !done) {
+    if (Date.now() > deadline) abort(`Timed out waiting for pose (${samples.length}/${SAMPLES}) — is the motion source running?`);
+    await sleep(50);
+  }
+  if (done) return;
+  done = true;
+  sock.destroy();
 
   const curYaw   = median(samples.map(s => s.yaw));
   const curPitch = median(samples.map(s => s.pitch));
@@ -74,12 +98,17 @@ function median(arr) {
   console.log(`calibration mid : yaw=${calMainCenter.yaw.median.toFixed(3)}  pitch=${calMainCenter.pitch.median.toFixed(3)}`);
   console.log(`offset to apply : yaw=${offsetYaw.toFixed(3)}  pitch=${offsetPitch.toFixed(3)}`);
 
-  fs.writeFileSync(OFFSETS_PATH, JSON.stringify({
-    offsetYaw, offsetPitch,
-    capturedAt: new Date().toISOString(),
-    capturedPose: { yaw: curYaw, pitch: curPitch },
-    referencePose: { yaw: calMainCenter.yaw.median, pitch: calMainCenter.pitch.median },
-  }, null, 2));
+  try {
+    fs.writeFileSync(OFFSETS_PATH, JSON.stringify({
+      offsetYaw, offsetPitch,
+      capturedAt: new Date().toISOString(),
+      capturedPose: { yaw: curYaw, pitch: curPitch },
+      referencePose: { yaw: calMainCenter.yaw.median, pitch: calMainCenter.pitch.median },
+    }, null, 2));
+  } catch (e) {
+    console.error(`ERROR: cannot write ${OFFSETS_PATH}: ${e.message}`);
+    process.exit(1);
+  }
 
   await speak('Recenter complete.');
   console.log(`✓ Wrote ${OFFSETS_PATH}. Sidecar will adopt within 1 second.`);

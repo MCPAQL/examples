@@ -24,11 +24,15 @@ function speak(text) {
   });
 }
 
-const HOST = '127.0.0.1';
-const PORT = 47833;
+// Honor the same overrides the adapter/sidecar use, so a relocated motion
+// source or calibration path doesn't silently capture against the wrong place.
+const HOST = process.env.AIRPODS_SOURCE_HOST || '127.0.0.1';
+const PORT = Number(process.env.AIRPODS_SOURCE_PORT) || 47833;
 const SAMPLES_PER_POINT = 25;
 const SETTLE_SECONDS = 4;
-const OUT_PATH = path.resolve(__dirname, '..', 'calibration.json');
+const CAPTURE_TIMEOUT_MS = 15000;
+const OUT_PATH = process.env.AIRPODS_CALIBRATION_PATH || process.env.AIRPODS_CAL_PATH
+  || path.resolve(__dirname, '..', 'calibration.json');
 
 const POINTS = [
   // Screen layout per Mick: portrait (secondary) on LEFT, landscape 4K (main) on RIGHT.
@@ -63,7 +67,16 @@ function summarize(samples) {
 }
 
 const sock = net.connect(PORT, HOST, () => process.stdout.write(`Connected to airpods-mcp ${HOST}:${PORT}\n`));
-sock.on('error', e => { console.error('Connection error:', e.message); process.exit(1); });
+let aborted = false;
+function abort(msg) {
+  if (aborted) return;
+  aborted = true;
+  sock.destroy();
+  console.error(msg);
+  process.exit(1);
+}
+sock.on('error', e => abort(`Connection error: ${e.message}`));
+sock.on('close', () => { if (!aborted) abort('motion source closed before calibration completed'); });
 
 let buffer = '';
 let collecting = false;
@@ -76,7 +89,10 @@ sock.on('data', chunk => {
     buffer = buffer.slice(nl + 1);
     if (!line) continue;
     let msg; try { msg = JSON.parse(line); } catch { continue; }
-    if (msg.type === 'pose' && collecting) captureBuf.push(msg);
+    if (msg.type === 'pose' && collecting
+        && Number.isFinite(msg.yaw) && Number.isFinite(msg.pitch) && Number.isFinite(msg.roll)) {
+      captureBuf.push(msg);
+    }
   }
 });
 
@@ -94,7 +110,11 @@ async function capturePoint(p, index, total) {
   process.stdout.write(`  Capturing now — hold still…              \n`);
   captureBuf = [];
   collecting = true;
-  while (captureBuf.length < SAMPLES_PER_POINT) await sleep(50);
+  const deadline = Date.now() + CAPTURE_TIMEOUT_MS;
+  while (captureBuf.length < SAMPLES_PER_POINT && !aborted) {
+    if (Date.now() > deadline) abort(`Timed out capturing '${p.id}' (${captureBuf.length}/${SAMPLES_PER_POINT} samples) — is the motion source streaming?`);
+    await sleep(50);
+  }
   collecting = false;
   const got = captureBuf.slice(0, SAMPLES_PER_POINT);
   const summary = summarize(got);
@@ -123,10 +143,19 @@ async function capturePoint(p, index, total) {
     layout_note: 'portrait (secondary) on LEFT, landscape 4K (main) on RIGHT',
     points: results,
   };
-  fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2));
+  try {
+    fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2));
+  } catch (e) {
+    // All 10 points were captured — don't lose the work to a silent throw.
+    console.error(`\nERROR: cannot write ${OUT_PATH}: ${e.message}`);
+    console.error('Captured data (copy/save manually):');
+    console.error(JSON.stringify(out));
+    sock.destroy();
+    process.exit(1);
+  }
   play(DONE);
   await speak('Calibration complete.');
   process.stdout.write(`\n✓ Wrote ${OUT_PATH}\n`);
-  sock.end();
+  sock.destroy();
   process.exit(0);
 })();
