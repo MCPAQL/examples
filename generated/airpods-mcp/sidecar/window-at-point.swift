@@ -77,6 +77,13 @@ func raiseAXWindow(pid: pid_t, cgFrame: CGRect) -> Bool {
     }
     guard let win = bestMatch else { return false }
     AXUIElementPerformAction(win, kAXRaiseAction as CFString)
+    // Transfer KEYBOARD focus to the owning app, not just visually raise the
+    // window. On macOS 14+ NSRunningApplication.activate(.activateIgnoringOtherApps)
+    // is deprecated and has NO effect, so the legacy approach silently fails on
+    // the platform this README targets. Setting the AX frontmost attribute on
+    // the application element is the non-deprecated path that actually moves
+    // cross-app keyboard focus. This tool is an intentional focus-stealer.
+    AXUIElementSetAttributeValue(appElem, kAXFrontmostAttribute as CFString, kCFBooleanTrue)
     return true
 }
 
@@ -96,7 +103,11 @@ while let line = readLine() {
         let frame = CGRect(x: bounds["X"] ?? 0, y: bounds["Y"] ?? 0,
                            width: bounds["Width"] ?? 0, height: bounds["Height"] ?? 0)
         let raised = raiseAXWindow(pid: pid, cgFrame: frame)
-        app.activate(options: [])
+        // raiseAXWindow already set the app frontmost via the AX attribute
+        // (the working macOS 14+ focus path). Only if the AX raise failed
+        // entirely (e.g. Accessibility not granted) fall back to a plain
+        // activate() — modern, non-deprecated, best-effort.
+        if !raised { app.activate(options: []) }
         let name = (app.localizedName ?? "?").replacingOccurrences(of: "|", with: "_")
         emit("focused pid=\(pid) name=\(name) ax-raised=\(raised)")
     } else {
