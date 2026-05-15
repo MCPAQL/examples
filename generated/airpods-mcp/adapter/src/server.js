@@ -373,12 +373,16 @@ function isPidAlive(pid) {
 // Identity check, mirroring stop.sh: a stale SIDECAR_PID_FILE whose PID the OS
 // recycled to an unrelated process would otherwise be reported as "running"
 // and SIGTERM'd by stop_sidecar. Confirm the live PID is actually the sidecar
-// before treating it as ours. Fail-safe: if ps can't confirm, it isn't ours.
+// before treating it as ours. Match against SIDECAR_PATH (the exact path this
+// adapter spawns, honoring the AIRPODS_SIDECAR_PATH override) rather than a
+// fixed "sidecar/index.js" substring — otherwise a custom-path sidecar would
+// be reported not-running and orphaned by stop_sidecar. Fail-safe: if ps
+// can't confirm, it isn't ours.
 function isSidecarPid(pid) {
   if (!pid || !isPidAlive(pid)) return false;
   try {
     const cmd = execFileSync("ps", ["-p", String(pid), "-o", "command="], { encoding: "utf8" });
-    return cmd.includes("sidecar/index.js");
+    return cmd.includes(SIDECAR_PATH);
   } catch { return false; }
 }
 
