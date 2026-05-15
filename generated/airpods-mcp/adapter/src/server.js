@@ -151,7 +151,19 @@ const httpServer = http.createServer((req, res) => {
     res.writeHead(404).end();
   }
 });
-const wss = new WebSocketServer({ server: httpServer, path: "/events" });
+const wss = new WebSocketServer({
+  server: httpServer,
+  path: "/events",
+  // The HUD WS streams live head-pose telemetry. Binding the HTTP server to
+  // 127.0.0.1 stops LAN hosts but NOT browsers: any web page the user visits
+  // can open ws://127.0.0.1:<port>/events from JS and read head-tracking data.
+  // The only legitimate consumer is the Node sidecar, which (like every
+  // non-browser ws client) sends no Origin header; browsers ALWAYS send one.
+  // The served HUD page is informational text only and never opens this
+  // socket, so there is no legitimate browser client to allow. Reject any
+  // Origin-bearing upgrade.
+  verifyClient: (info) => !info.origin,
+});
 wss.on("connection", (ws) => {
   wsClients.add(ws);
   ws.on("close", () => wsClients.delete(ws));
