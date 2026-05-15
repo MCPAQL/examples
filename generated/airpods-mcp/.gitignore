@@ -2,9 +2,7 @@
 node_modules/
 
 # Compiled Swift binaries (extensionless executables alongside .swift sources)
-sidecar/activate-pid
 sidecar/dwell-blob
-sidecar/focus-on-display
 sidecar/move-cursor
 sidecar/speak-pan
 sidecar/window-at-point

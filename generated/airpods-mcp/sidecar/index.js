@@ -356,13 +356,24 @@ function finishCalibration() {
   offsetPitch = ref.pitch.median - pitchMed;
   smoothedYaw = null;
   smoothedPitch = null;
-  fs.writeFileSync(OFFSETS_PATH, JSON.stringify({
-    offsetYaw, offsetPitch,
-    capturedAt: new Date().toISOString(),
-    capturedPose: { yaw: yawMed, pitch: pitchMed },
-    referencePose: { yaw: ref.yaw.median, pitch: ref.pitch.median },
-    samples: calibrationSamples.length,
-  }, null, 2));
+  // Runs inside a setTimeout callback — an unhandled throw here has no
+  // surrounding try/catch and would crash the long-running sidecar. The
+  // in-memory offsets above are already applied, so a failed persist
+  // degrades gracefully (correct until restart). The sibling calibrate/
+  // recenter tools guard this same write; finishCalibration must too.
+  try {
+    fs.writeFileSync(OFFSETS_PATH, JSON.stringify({
+      offsetYaw, offsetPitch,
+      capturedAt: new Date().toISOString(),
+      capturedPose: { yaw: yawMed, pitch: pitchMed },
+      referencePose: { yaw: ref.yaw.median, pitch: ref.pitch.median },
+      samples: calibrationSamples.length,
+    }, null, 2));
+  } catch (e) {
+    console.error(`[calibration] cannot write ${OFFSETS_PATH}: ${e.message} (offsets applied in-memory; not persisted)`);
+    spawn('afplay', ['/System/Library/Sounds/Basso.aiff'], { stdio: 'ignore', detached: true }).unref();
+    return;
+  }
   console.log(`[${new Date().toISOString()}] calibration done: yaw=${offsetYaw.toFixed(3)} pitch=${offsetPitch.toFixed(3)} (n=${calibrationSamples.length})`);
   spawn('afplay', ['/System/Library/Sounds/Glass.aiff'], { stdio: 'ignore', detached: true }).unref();
   spawn(SPEAK_BIN, ['C', 'Centered.'], { stdio: 'ignore', detached: true }).unref();
