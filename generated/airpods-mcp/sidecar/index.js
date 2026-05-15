@@ -287,9 +287,14 @@ function onAppLookup(line) {
   if (!appCandidatePid) return;
   if ((now - appCandidateSince) < DWELL_MS) return;
   if ((now - lastFiredAt) < COOLDOWN_MS) return;
-  lastFiredAt = now;
   const wasNewApp = (appCandidatePid !== lastFiredPid);
   const wasNewWindow = (appCandidateWnum !== lastFiredWnum);
+  // Only fire on a real transition. Without this, a window held under gaze
+  // re-fires AX-raise + a log line every COOLDOWN_MS. The off-screen reset
+  // clears lastFiredPid/Wnum too, so a look-away-and-return to the SAME
+  // window still counts as a transition and re-fires correctly.
+  if (!wasNewApp && !wasNewWindow) return;
+  lastFiredAt = now;
   lastFiredPid = appCandidatePid;
   lastFiredWnum = appCandidateWnum;
   // Send focus command via daemon (uses AX-raise to target the specific window)
@@ -449,6 +454,10 @@ function onPose(rawYawIn, rawPitchIn, rotRate) {
     appCandidateWnum = null;
     appCandidateMonitor = null;
     appCandidateSince = 0;
+    // Also clear the last-fired pair so a return glance to the SAME window
+    // counts as a transition (wasNewApp/wasNewWindow true) and re-fires focus.
+    lastFiredPid = null;
+    lastFiredWnum = null;
     return;
   }
   const queryIntervalMs = Math.round(1000 / APP_QUERY_HZ);
