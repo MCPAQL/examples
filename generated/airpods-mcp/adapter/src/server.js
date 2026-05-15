@@ -305,6 +305,17 @@ const handlers = {
     const env = { ...process.env };
     if (params.blob_follow !== false) env.BLOB_FOLLOW = "1";
     if (params.mouse_follow) env.MOUSE_FOLLOW = "1";
+    // The adapter and sidecar use DIFFERENT env var names for the same
+    // settings: adapter reads AIRPODS_HUD_PORT / AIRPODS_CALIBRATION_PATH,
+    // sidecar reads AIRPODS_HUD_URL / AIRPODS_CAL_PATH. Cloning process.env
+    // alone does not bridge that — an adapter started with a custom HUD port
+    // or calibration path would spawn a sidecar that defaults to
+    // ws://127.0.0.1:47834 and ../calibration.json (wrong HUD / stale cal).
+    // Derive the sidecar vars from THIS adapter's active settings, but let an
+    // explicitly-set value win. (AIRPODS_OFFSETS_PATH is shared verbatim by
+    // both, so it already propagates via the env clone.)
+    if (!env.AIRPODS_HUD_URL) env.AIRPODS_HUD_URL = `ws://127.0.0.1:${HUD_PORT}/events`;
+    if (!env.AIRPODS_CAL_PATH) env.AIRPODS_CAL_PATH = CAL_PATH;
     const out = fs.openSync(SIDECAR_LOG_PATH, "a");
     const err = fs.openSync(SIDECAR_LOG_PATH, "a");
     const proc = spawn("node", [SIDECAR_PATH], {
