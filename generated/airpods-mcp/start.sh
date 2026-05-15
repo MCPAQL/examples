@@ -24,7 +24,10 @@ else
   if [[ ! -f /tmp/silent.wav ]]; then
     python3 -c "import struct;sr=44100;d=b'\x00'*(sr*2);open('/tmp/silent.wav','wb').write(b'RIFF'+struct.pack('<I',36+len(d))+b'WAVE'+b'fmt '+struct.pack('<IHHIIHH',16,1,1,sr,sr*2,2,16)+b'data'+struct.pack('<I',len(d))+d)"
   fi
-  ( while true; do afplay -v 0.001 /tmp/silent.wav; done ) > /dev/null 2>&1 &
+  # bash -c (not a bare subshell): the tracked PID is then a process whose
+  # `ps -o command=` contains "/tmp/silent.wav", so stop.sh can verify
+  # identity before killing and won't SIGTERM a recycled PID.
+  bash -c 'while true; do afplay -v 0.001 /tmp/silent.wav; done' > /dev/null 2>&1 &
   KEEPER_PID=$!
   disown
   echo "$KEEPER_PID" > "$KEEPER_PID_FILE"

@@ -127,7 +127,7 @@ The adapter and the sidecar are separate packages; each needs its own install.
 ```sh
 # 1. Start motion-source audio keeper (silent WAV loop — required, see "Pitfalls")
 python3 -c "import struct;sr=44100;d=b'\x00'*(sr*2);open('/tmp/silent.wav','wb').write(b'RIFF'+struct.pack('<I',36+len(d))+b'WAVE'+b'fmt '+struct.pack('<IHHIIHH',16,1,1,sr,sr*2,2,16)+b'data'+struct.pack('<I',len(d))+d)"
-( while true; do afplay -v 0.001 /tmp/silent.wav; done ) > /dev/null 2>&1 &
+bash -c 'while true; do afplay -v 0.001 /tmp/silent.wav; done' > /dev/null 2>&1 &
 echo $! > /tmp/airpods-keeper.pid
 disown
 
