@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- AirPods MCP-AQL adapter example (`generated/airpods-mcp/`)
+  - Three-layer reference implementation: Swift `.app` motion source (`CMHeadphoneMotionManager`), Node MCP-AQL adapter (CRUDE surface + live WebSocket HUD), and a sample sidecar that does gaze-driven X-mouse-style window focus
+  - 10-anchor calibration capture, drift mitigation (motion-gated 1-Euro smoothing + capped leaky integrator + manual recenter), region classification with hysteresis to kill boundary flicker
+  - Cross-adapter integration documented: SIGUSR1 or `mcpaql_update.recenter` from any hardware input (e.g., the shortcut-remote-mcp keypad)
+  - Demonstrates the MCP-AQL pattern applied to a non-HID sensor source via a documented Apple framework
 - Apple Mail adapter example (`adapters/apple-mail-adapter.md`)
   - First native-applescript transport adapter, demonstrating local macOS app automation via JXA
   - Complete CRUDE operations: list accounts, read messages, search, mark read/flagged/junk, delete, move, send

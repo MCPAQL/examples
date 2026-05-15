@@ -1,0 +1,17 @@
+{
+  "name": "@mcpaql/generated-airpods",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "MCP-AQL adapter for AirPods Pro head-tracking on macOS. Wraps Apple's CMHeadphoneMotionManager via a TCP-bridged Swift .app source (TCC requirement); exposes a CRUDE protocol surface and a live HUD WebSocket.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "ws": "^8.20.0"
+  }
+}
