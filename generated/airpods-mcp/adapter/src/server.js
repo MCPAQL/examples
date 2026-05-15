@@ -323,10 +323,15 @@ const handlers = {
     if (!pid || !isPidAlive(pid)) return { running: false, message: "no sidecar running" };
     if (!isSidecarPid(pid)) {
       // PID is live but not our sidecar — stale PID file, recycled PID.
-      // Fail-safe: do not SIGTERM an unrelated process.
+      // Fail-safe: do not SIGTERM an unrelated process. Drop the stale file
+      // so future calls don't keep tripping over it (mirrors stop.sh, which
+      // rm's the file in every path).
+      try { fs.unlinkSync(SIDECAR_PID_FILE); } catch {}
       return { running: false, message: `pid ${pid} is not the sidecar (stale/reused PID) — not killing`, pid };
     }
     try { process.kill(pid, "SIGTERM"); } catch (e) { return { running: false, error: String(e) }; }
+    // Mirror stop.sh: clean up the PID file after a successful stop.
+    try { fs.unlinkSync(SIDECAR_PID_FILE); } catch {}
     return { running: false, was_pid: pid };
   },
 };

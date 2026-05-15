@@ -12,13 +12,25 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 
-is_alive() { local p=$1; [[ -n "$p" ]] && kill -0 "$p" 2>/dev/null; }
 read_pid() { local f=$1; [[ -f "$f" ]] && cat "$f" 2>/dev/null || true; }
+# Alive AND actually the expected component. Identity-blind liveness is unsafe
+# for idempotency: if a stale PID file's PID was recycled by an unrelated
+# process, a liveness-only check would report the component "already running"
+# and skip spawning it — the component then never starts. Mirrors stop.sh's
+# identity check and the adapter's isSidecarPid(). Fail-safe: if ps can't
+# confirm identity, treat as not-running so the real component is (re)spawned.
+is_alive_as() {
+  local p=$1 pattern=$2
+  [[ -n "$p" ]] && kill -0 "$p" 2>/dev/null || return 1
+  local cmd
+  cmd=$(ps -p "$p" -o command= 2>/dev/null || echo "")
+  [[ "$cmd" == *"$pattern"* ]]
+}
 
 # 1. Audio keeper
 KEEPER_PID_FILE=/tmp/airpods-keeper.pid
 KEEPER_PID=$(read_pid "$KEEPER_PID_FILE")
-if is_alive "$KEEPER_PID"; then
+if is_alive_as "$KEEPER_PID" "/tmp/silent.wav"; then
   echo "audio keeper: already running (pid $KEEPER_PID)"
 else
   if [[ ! -f /tmp/silent.wav ]]; then
@@ -46,7 +58,7 @@ fi
 # 3. Adapter
 ADAPTER_PID_FILE=/tmp/airpods-adapter.pid
 ADAPTER_PID=$(read_pid "$ADAPTER_PID_FILE")
-if is_alive "$ADAPTER_PID"; then
+if is_alive_as "$ADAPTER_PID" "src/server.js"; then
   echo "adapter: already running (pid $ADAPTER_PID)"
 else
   # Subshell scopes the cd; exec replaces the subshell with node so $! in the
@@ -74,7 +86,7 @@ fi
 # 4. Sidecar
 SIDECAR_PID_FILE=/tmp/airpods-sidecar.pid
 SIDECAR_PID=$(read_pid "$SIDECAR_PID_FILE")
-if is_alive "$SIDECAR_PID"; then
+if is_alive_as "$SIDECAR_PID" "sidecar/index.js"; then
   echo "sidecar: already running (pid $SIDECAR_PID)"
 else
   BLOB_FOLLOW=1 nohup node "$HERE/sidecar/index.js" > /tmp/airpods-sidecar.log 2>&1 < /dev/null &
