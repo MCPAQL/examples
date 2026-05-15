@@ -12,7 +12,7 @@
 import net from "node:net";
 import http from "node:http";
 import fs from "node:fs";
-import { spawn } from "node:child_process";
+import { spawn, execFileSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -291,12 +291,12 @@ const handlers = {
 
   is_sidecar_running: async () => {
     const pid = readSidecarPid();
-    return { running: pid !== null && isPidAlive(pid), pid };
+    return { running: isSidecarPid(pid), pid };
   },
 
   start_sidecar: async (params = {}) => {
     const existing = readSidecarPid();
-    if (existing && isPidAlive(existing)) {
+    if (isSidecarPid(existing)) {
       return { running: true, pid: existing, source: "existing", log_path: SIDECAR_LOG_PATH };
     }
     if (!fs.existsSync(SIDECAR_PATH)) {
@@ -321,6 +321,11 @@ const handlers = {
   stop_sidecar: async () => {
     const pid = readSidecarPid();
     if (!pid || !isPidAlive(pid)) return { running: false, message: "no sidecar running" };
+    if (!isSidecarPid(pid)) {
+      // PID is live but not our sidecar — stale PID file, recycled PID.
+      // Fail-safe: do not SIGTERM an unrelated process.
+      return { running: false, message: `pid ${pid} is not the sidecar (stale/reused PID) — not killing`, pid };
+    }
     try { process.kill(pid, "SIGTERM"); } catch (e) { return { running: false, error: String(e) }; }
     return { running: false, was_pid: pid };
   },
@@ -336,6 +341,17 @@ function readSidecarPid() {
 function isPidAlive(pid) {
   if (!pid) return false;
   try { process.kill(pid, 0); return true; } catch { return false; }
+}
+// Identity check, mirroring stop.sh: a stale SIDECAR_PID_FILE whose PID the OS
+// recycled to an unrelated process would otherwise be reported as "running"
+// and SIGTERM'd by stop_sidecar. Confirm the live PID is actually the sidecar
+// before treating it as ours. Fail-safe: if ps can't confirm, it isn't ours.
+function isSidecarPid(pid) {
+  if (!pid || !isPidAlive(pid)) return false;
+  try {
+    const cmd = execFileSync("ps", ["-p", String(pid), "-o", "command="], { encoding: "utf8" });
+    return cmd.includes("sidecar/index.js");
+  } catch { return false; }
 }
 
 // ---------- MCP plumbing ----------
