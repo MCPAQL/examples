@@ -135,13 +135,21 @@ open server/airpods-mcp-server.app
 # 3. (First time only) Capture 10-point calibration with audio cues
 node calibrate/calibrate.js
 
-# 4. Start the MCP-AQL adapter
-( cd adapter && nohup node src/server.js > /tmp/airpods-adapter.log 2>&1 & disown )
+# 4. Start the MCP-AQL adapter (write the PID file like start.sh does)
+( cd adapter && exec nohup node src/server.js > /tmp/airpods-adapter.log 2>&1 < /dev/null ) &
+echo $! > /tmp/airpods-adapter.pid
+disown
 
 # 5. Start the sidecar (X-mouse focus + dwell blob)
-BLOB_FOLLOW=1 nohup node sidecar/index.js > /tmp/airpods-sidecar.log 2>&1 &
+BLOB_FOLLOW=1 nohup node sidecar/index.js > /tmp/airpods-sidecar.log 2>&1 < /dev/null &
+echo $! > /tmp/airpods-sidecar.pid
 disown
 ```
+
+The PID files are not optional bookkeeping: `stop.sh`, the adapter's
+`is_sidecar_running` / `stop_sidecar` operations, the `kill -USR1` recenter
+below, and the keypad passthrough all read them. `start.sh` writes them for
+you — these manual steps must too.
 
 After step 5, head-pose-to-window-focus is live. Open the HUD at `http://127.0.0.1:47834/` to see live pose data and adapter status. Call `mcpaql_update.recenter` (or `kill -USR1 $(cat /tmp/airpods-sidecar.pid)` from any source) when you want to realign.
 
