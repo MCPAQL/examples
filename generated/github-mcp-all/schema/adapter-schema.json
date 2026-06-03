@@ -1553,32 +1553,6 @@
         "non_idempotent": false
       },
       {
-        "name": "mark_all_notifications_read",
-        "maps_to": "tool:mark_all_notifications_read",
-        "description": "Mark all notifications as read",
-        "params": {
-          "last_read_at": {
-            "type": "string",
-            "description": "Describes the last point that notifications were checked (optional). Default: Now"
-          },
-          "owner": {
-            "type": "string",
-            "description": "Optional repository owner. If provided with repo, only notifications for this repository are marked as read."
-          },
-          "repo": {
-            "type": "string",
-            "description": "Optional repository name. If provided with owner, only notifications for this repository are marked as read."
-          }
-        },
-        "response": {
-          "type": "object",
-          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
-        },
-        "danger_level": "safe",
-        "requires_confirmation": false,
-        "non_idempotent": false
-      },
-      {
         "name": "pull_request_read",
         "maps_to": "tool:pull_request_read",
         "description": "Get information on a specific pull request in GitHub repository.",
@@ -3223,6 +3197,32 @@
         "danger_level": "reversible",
         "requires_confirmation": false,
         "non_idempotent": false
+      },
+      {
+        "name": "mark_all_notifications_read",
+        "maps_to": "tool:mark_all_notifications_read",
+        "description": "Mark all notifications as read",
+        "params": {
+          "last_read_at": {
+            "type": "string",
+            "description": "Describes the last point that notifications were checked (optional). Default: Now"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Optional repository owner. If provided with repo, only notifications for this repository are marked as read."
+          },
+          "repo": {
+            "type": "string",
+            "description": "Optional repository name. If provided with owner, only notifications for this repository are marked as read."
+          }
+        },
+        "response": {
+          "type": "object",
+          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
+        },
+        "danger_level": "destructive",
+        "requires_confirmation": true,
+        "non_idempotent": true
       },
       {
         "name": "sub_issue_write",

@@ -79,27 +79,33 @@ export async function setupFixtures(opts: {
   const s2 = await gh(["api", `/repos/${opts.owner}/${testRepo}/issues`, "-X", "POST", "-f", "title=Sub (mcpaql)"]);
   f.subIssueIdMcpaql = JSON.parse(s2.stdout).id;
 
-  // Create paired branches (separate from create_branch test which will create different branch names)
-  // Actually: we want the harness's create_branch test to be the thing that creates these branches.
-  // For PR creation we need branches first. So we create initial seed branches via gh, distinct from
-  // what create_branch will test. The PR test will then use the create_branch results.
-  // SIMPLER: create the branches here so PR fixtures exist, and have create_branch use suffix "-2".
+  // Create paired PR fixture branches and separate branches for the create_pull_request
+  // operation. Each branch gets a file commit so GitHub sees a real diff from base.
   console.log(`[setup] creating branches for PR fixtures...`);
   // Get default branch SHA
   const refs = await gh(["api", `/repos/${opts.owner}/${testRepo}/git/refs/heads/main`]);
   const sha = JSON.parse(refs.stdout).object.sha;
-  for (const branch of ["pr-branch-official", "pr-branch-mcpaql"]) {
+  const seededBranches = [
+    { branch: "pr-branch-official", file: "pr-branch-official.txt" },
+    { branch: "pr-branch-mcpaql", file: "pr-branch-mcpaql.txt" },
+    { branch: "create-pr-branch-official", file: "create-pr-branch-official.txt" },
+    { branch: "create-pr-branch-mcpaql", file: "create-pr-branch-mcpaql.txt" },
+  ];
+  for (const { branch, file } of seededBranches) {
     await gh([
       "api", `/repos/${opts.owner}/${testRepo}/git/refs`, "-X", "POST",
       "-f", `ref=refs/heads/${branch}`, "-f", `sha=${sha}`,
     ]);
-    // Touch a file on each branch so PR has a diff
     const content = Buffer.from(`Hello from ${branch}\n`).toString("base64");
     await gh([
-      "api", `/repos/${opts.owner}/${testRepo}/contents/${branch}.txt`, "-X", "PUT",
+      "api", `/repos/${opts.owner}/${testRepo}/contents/${file}`, "-X", "PUT",
       "-f", `message=seed ${branch}`, "-f", `content=${content}`, "-f", `branch=${branch}`,
     ]);
   }
+  f.createPrBranchOfficial = "create-pr-branch-official";
+  f.createPrBranchMcpaql = "create-pr-branch-mcpaql";
+  f.prFileOfficial = "pr-branch-official.txt";
+  f.prFileMcpaql = "pr-branch-mcpaql.txt";
 
   console.log(`[setup] creating PRs...`);
   const pr1 = await gh([
@@ -114,6 +120,14 @@ export async function setupFixtures(opts: {
     "-f", "body=PR for mcpaql-channel paired tests",
   ]);
   f.prNumMcpaql = JSON.parse(pr2.stdout).number;
+
+  console.log(`[setup] creating pending reviews for add_comment_to_pending_review...`);
+  try {
+    await gh(["api", `/repos/${opts.owner}/${testRepo}/pulls/${f.prNumOfficial}/reviews`, "-X", "POST",
+      "-f", "body=Pending review fixture (official)"]);
+    await gh(["api", `/repos/${opts.owner}/${testRepo}/pulls/${f.prNumMcpaql}/reviews`, "-X", "POST",
+      "-f", "body=Pending review fixture (mcpaql)"]);
+  } catch (e) { console.warn(`  pending review creation failed: ${(e as Error).message.slice(0, 80)}`); }
 
   // ─── Extended setup for 89-op coverage ───
 
@@ -135,11 +149,11 @@ export async function setupFixtures(opts: {
   console.log(`[setup] creating paired gists...`);
   try {
     const g1 = await gh(["api", "/gists", "-X", "POST",
-      "-f", "description=parity test (official)", "-F", "public=false",
+      "-f", `description=MCPAQL parity ${testRepo} fixture (official)`, "-F", "public=false",
       "-f", "files[parity-official.txt][content]=parity test gist via official channel"]);
     f.gistIdOfficial = JSON.parse(g1.stdout).id;
     const g2 = await gh(["api", "/gists", "-X", "POST",
-      "-f", "description=parity test (mcpaql)", "-F", "public=false",
+      "-f", `description=MCPAQL parity ${testRepo} fixture (mcpaql)`, "-F", "public=false",
       "-f", "files[parity-mcpaql.txt][content]=parity test gist via mcpaql channel"]);
     f.gistIdMcpaql = JSON.parse(g2.stdout).id;
     console.log(`  gists: ${f.gistIdOfficial}, ${f.gistIdMcpaql}`);
@@ -206,6 +220,25 @@ export async function teardownFixtures(f: Fixtures): Promise<void> {
     } catch (e) {
       console.warn(`[teardown] gist ${id} delete failed:`, (e as Error).message.slice(0, 80));
     }
+  }
+
+  try {
+    const listed = await gh(["api", "/gists?per_page=100"]);
+    const gists = JSON.parse(listed.stdout);
+    const prefix = `MCPAQL parity ${f.testRepo} `;
+    if (Array.isArray(gists)) {
+      for (const gist of gists) {
+        if (!gist?.id || typeof gist.description !== "string" || !gist.description.startsWith(prefix)) continue;
+        try {
+          await gh(["api", `/gists/${gist.id}`, "-X", "DELETE"]);
+          console.log(`[teardown] deleted gist (swept): ${gist.id}`);
+        } catch (e) {
+          console.warn(`[teardown] gist ${gist.id} sweep delete failed:`, (e as Error).message.slice(0, 80));
+        }
+      }
+    }
+  } catch (e) {
+    console.warn(`[teardown] gist sweep failed:`, (e as Error).message.slice(0, 80));
   }
 
   console.log(`[teardown] deleting ${f.owner}/${f.testRepo}...`);

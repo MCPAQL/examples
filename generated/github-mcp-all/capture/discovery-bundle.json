@@ -9796,11 +9796,13 @@
         "operation_name": "mark_all_notifications_read",
         "title": "Mark all notifications as read",
         "description": "Mark all notifications as read",
-        "endpoint": "READ",
+        "endpoint": "UPDATE",
         "endpoint_confidence": "high",
-        "danger_level": "safe",
-        "needs_review": false,
-        "review_reasons": [],
+        "danger_level": "destructive",
+        "needs_review": true,
+        "review_reasons": [
+          "Marks authenticated-user notifications as read; mutates notification state."
+        ],
         "params": [
           {
             "name": "last_read_at",
@@ -9843,8 +9845,8 @@
           "inference_sources": {
             "operation_name": "direct_source_metadata",
             "description": "direct_source_metadata",
-            "endpoint": "heuristic_classification",
-            "danger_level": "heuristic_classification",
+            "endpoint": "manual_review_override",
+            "danger_level": "manual_review_override",
             "maps_to": "deterministic_normalization"
           }
         }

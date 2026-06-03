@@ -1151,9 +1151,11 @@
     {
       "source_tool_name": "mark_all_notifications_read",
       "operation_name": "mark_all_notifications_read",
-      "endpoint": "READ",
-      "needs_review": false,
-      "review_reasons": [],
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Marks authenticated-user notifications as read; mutates notification state."
+      ],
       "param_mappings": {
         "last_read_at": "lastReadAt"
       }

@@ -24,6 +24,8 @@ export interface Fixtures {
   // Branches (paired)
   branchOfficial?: string;
   branchMcpaql?: string;
+  createPrBranchOfficial?: string;
+  createPrBranchMcpaql?: string;
 
   // Default branch on testRepo
   defaultBranch: string;
@@ -35,6 +37,8 @@ export interface Fixtures {
   // PRs (paired)
   prNumOfficial?: number;
   prNumMcpaql?: number;
+  prFileOfficial?: string;
+  prFileMcpaql?: string;
 
   // Comment IDs collected during run
   issueCommentIdOfficial?: number;
@@ -208,7 +212,7 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
   {
     name: "get_copilot_job_status",
     category: "COPILOT",
-    args: () => ({ owner: "mickdarling", repo: "mcpaql-parity-test-fake", session_id: "fake" }),
+    args: () => ({ owner: "mickdarling", repo: "mcpaql-parity-test-fake", id: "fake" }),
     note: "Returns 404 with no Copilot job; we expect symmetric error.",
   },
 
@@ -236,7 +240,7 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
       owner: f.owner,
       repo: f.testRepo,
       title: `Parity test PR (${v})`,
-      head: v === "official" ? f.branchOfficial! : f.branchMcpaql!,
+      head: v === "official" ? f.createPrBranchOfficial! : f.createPrBranchMcpaql!,
       base: f.defaultBranch,
       body: `Created by parity harness via ${v} channel.`,
     }),
@@ -260,12 +264,12 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
         owner: f.owner,
         repo: f.testRepo,
         pull_number: num,
-        path: TEST_FILE_PATH,
+        path: v === "official" ? f.prFileOfficial! : f.prFileMcpaql!,
         body: `pending review comment via ${v}`,
-        subject_type: "file",
+        subject_type: "FILE",
       };
     },
-    note: "Requires create method in pull_request_review_write to have created a pending review first.",
+    note: "Setup creates one pending review per paired PR so this exercises comment creation instead of missing-review validation.",
   },
   {
     name: "add_reply_to_pull_request_comment",
@@ -343,11 +347,12 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
       const num = v === "official" ? f.prNumOfficial : f.prNumMcpaql;
       if (!num) return null;
       return {
-        method: "create",
+        method: "submit_pending",
         owner: f.owner,
         repo: f.testRepo,
         pull_number: num,
-        body: `pending review via ${v}`,
+        body: `submitted pending review via ${v}`,
+        event: "COMMENT",
       };
     },
   },
@@ -373,7 +378,7 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
     args: (f, v) => {
       const num = v === "official" ? f.issueNumOfficial : f.issueNumMcpaql;
       if (!num) return null;
-      return { owner: f.owner, repo: f.testRepo, issueNumber: num };
+      return { owner: f.owner, repo: f.testRepo, issue_number: num };
     },
   },
 
@@ -429,7 +434,11 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
   {
     name: "run_secret_scanning",
     category: "TEST_REPO_READ",
-    args: (f) => ({ owner: f.owner, repo: f.testRepo }),
+    args: (f) => ({
+      owner: f.owner,
+      repo: f.testRepo,
+      files: ["const parityHarnessFixture = 'no secrets here';\n"],
+    }),
     note: "Public repos get free secret scanning; expect symmetric empty result.",
   },
   {
@@ -449,7 +458,7 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
     args: (f, v) => {
       const num = v === "official" ? f.prNumOfficial : f.prNumMcpaql;
       if (!num) return null;
-      return { owner: f.owner, repo: f.testRepo, pullNumber: num };
+      return { owner: f.owner, repo: f.testRepo, pull_number: num };
     },
   },
 
@@ -464,7 +473,7 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
     args: (f, v) => ({
       filename: `parity-${v}.txt`,
       content: `parity test gist via ${v} channel`,
-      description: `parity test (${v})`,
+      description: `MCPAQL parity ${f.testRepo} create_gist (${v})`,
       public: false,
     }),
   },
@@ -685,7 +694,7 @@ export const OPERATIONS: Array<OperationSpec<Fixtures>> = [
   {
     name: "projects_list",
     category: "PUBLIC_READ",
-    args: (f) => ({ method: "list", owner: f.owner }),
+    args: (f) => ({ method: "list_projects", owner: f.owner, owner_type: "user", per_page: 10 }),
     note: "Lists caller's projects; returns whatever's there (may be empty).",
   },
   {
