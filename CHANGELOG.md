@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- GitHub MCP all-toolset case study artifacts
+  - Added the full 89-operation GitHub MCP generated adapter capture under `generated/github-mcp-all/`
+  - Added the GitHub MCP parity harness and case study writeups with reproducibility commands and measured results
 - Apple Mail adapter example (`adapters/apple-mail-adapter.md`)
   - First native-applescript transport adapter, demonstrating local macOS app automation via JXA
   - Complete CRUDE operations: list accounts, read messages, search, mark read/flagged/junk, delete, move, send
