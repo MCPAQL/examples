@@ -6,7 +6,7 @@ tags: [case-study, github, parity, measurement]
 status: draft
 ---
 
-# GitHub MCP — Measuring the Cost of Doing It the Long Way
+## GitHub MCP — Measuring the Cost of Doing It the Long Way
 
 The GitHub MCP server is one of the most-used MCP integrations in the wild. When you connect to it, it ships your client a JSON-Schema definition of **every tool it exposes** — currently 89 tools across 18 toolsets — on every session. That's **271,152 bytes** of `tools/list` payload, or roughly **67,000 tokens** of context budget consumed before your agent has done anything useful.
 
@@ -22,7 +22,7 @@ The result: **4,591 bytes**. The same surface area. Behaviorally equivalent unde
 | `tools/list` wire size | **271,152 bytes** | **4,591 bytes** | **−98.3%** |
 | Token cost (≈4 chars/token) | ~67,800 | ~1,148 | **~66,700 saved/session** |
 | Per-operation schemas at startup | All 89, eagerly serialized | None — fetched on demand via `introspect` | Pay only for what you use |
-| Tools/list size scales with upstream growth | Linearly | Flat — 5-tool surface regardless of underlying op count |
+| Startup payload scales with upstream growth | Linearly | Flat — 5-tool surface regardless of underlying op count | Avoids eager schema growth |
 | Runtime equivalence (dual-called against the same upstream) | baseline | **57 IDENTICAL+STRUCTURAL / 12 SYMMETRIC-ERROR / 17 SKIPPED / 2 EXPECTED-DIFF / 1 test-design edge case** | 0 unprovoked adapter failures |
 
 ## What we tested and how
