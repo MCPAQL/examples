@@ -152,9 +152,9 @@ The harness in `parity-harness/` connects to **both** servers simultaneously, ex
 
 Full per-op detail: `parity-harness/parity-may14.json`.
 
-### Results — April adapter (6-week-old default-toolset adapter, unregenerated)
+### Results — April adapter (6-week-old default-toolset adapter, not regenerated)
 
-Running the same harness against the unregenerated April adapter against today's upstream produced **identical totals**:
+Running the same harness against the April adapter without regenerating it against today's upstream produced **identical totals**:
 
 ```
 class                  april    may14
