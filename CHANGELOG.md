@@ -8,6 +8,12 @@ This is a rolling examples collection and uses date-based versioning
 
 ## [Unreleased]
 
+### Added
+
+- GitHub MCP all-toolset case study artifacts
+  - Added the full 89-operation GitHub MCP generated adapter capture under `generated/github-mcp-all/`
+  - Added the GitHub MCP parity harness and case study writeups with reproducibility commands and measured results
+
 ## [2026.05.15] - 2026-05-15
 
 ### Added

@@ -1,0 +1,814 @@
+{
+  "generated_at": "2026-05-14T21:12:36.043Z",
+  "source_server_name": "github-mcp-server",
+  "source_server_version": "github-mcp-server/remote-a43dd7841da60c439fd18259773f8e62aca09316",
+  "source_capture_name": "github-mcp-remote-all",
+  "warning_count": 77,
+  "operation_count": 89,
+  "operations": [
+    {
+      "source_tool_name": "actions_get",
+      "operation_name": "actions_get",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "actions_list",
+      "operation_name": "actions_list",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "actions_run_trigger",
+      "operation_name": "actions_run_trigger",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "add_comment_to_pending_review",
+      "operation_name": "add_comment_to_pending_review",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "pull_number": "pullNumber",
+        "start_line": "startLine",
+        "start_side": "startSide",
+        "subject_type": "subjectType"
+      }
+    },
+    {
+      "source_tool_name": "add_issue_comment",
+      "operation_name": "add_issue_comment",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "add_reply_to_pull_request_comment",
+      "operation_name": "add_reply_to_pull_request_comment",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "comment_id": "commentId",
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "assign_copilot_to_issue",
+      "operation_name": "assign_copilot_to_issue",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Assignment semantics treated as UPDATE on an existing resource."
+      ]
+    },
+    {
+      "source_tool_name": "check_dependency_vulnerabilities",
+      "operation_name": "check_dependency_vulnerabilities",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "create_branch",
+      "operation_name": "create_branch",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_gist",
+      "operation_name": "create_gist",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_or_update_file",
+      "operation_name": "create_or_update_file",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Tool name spans both create and update semantics."
+      ]
+    },
+    {
+      "source_tool_name": "create_pull_request",
+      "operation_name": "create_pull_request",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_pull_request_with_copilot",
+      "operation_name": "create_pull_request_with_copilot",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_repository",
+      "operation_name": "create_repository",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "auto_init": "autoInit"
+      }
+    },
+    {
+      "source_tool_name": "delete_file",
+      "operation_name": "delete_file",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "dismiss_notification",
+      "operation_name": "dismiss_notification",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ],
+      "param_mappings": {
+        "thread_id": "threadID"
+      }
+    },
+    {
+      "source_tool_name": "fork_repository",
+      "operation_name": "fork_repository",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_code_scanning_alert",
+      "operation_name": "get_code_scanning_alert",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "alert_number": "alertNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_commit",
+      "operation_name": "get_commit",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "get_copilot_job_status",
+      "operation_name": "get_copilot_job_status",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_copilot_space",
+      "operation_name": "get_copilot_space",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_dependabot_alert",
+      "operation_name": "get_dependabot_alert",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "alert_number": "alertNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_discussion",
+      "operation_name": "get_discussion",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "discussion_number": "discussionNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_discussion_comments",
+      "operation_name": "get_discussion_comments",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "discussion_number": "discussionNumber",
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "get_file_contents",
+      "operation_name": "get_file_contents",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_gist",
+      "operation_name": "get_gist",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_global_security_advisory",
+      "operation_name": "get_global_security_advisory",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "ghsa_id": "ghsaId"
+      }
+    },
+    {
+      "source_tool_name": "get_job_logs",
+      "operation_name": "get_job_logs",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_label",
+      "operation_name": "get_label",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_latest_release",
+      "operation_name": "get_latest_release",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_me",
+      "operation_name": "get_me",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_notification_details",
+      "operation_name": "get_notification_details",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "notification_id": "notificationID"
+      }
+    },
+    {
+      "source_tool_name": "get_release_by_tag",
+      "operation_name": "get_release_by_tag",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_repository_tree",
+      "operation_name": "get_repository_tree",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_secret_scanning_alert",
+      "operation_name": "get_secret_scanning_alert",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "alert_number": "alertNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_tag",
+      "operation_name": "get_tag",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_team_members",
+      "operation_name": "get_team_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_teams",
+      "operation_name": "get_teams",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "github_support_docs_search",
+      "operation_name": "github_support_docs_search",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "issue_read",
+      "operation_name": "issue_read",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "issue_write",
+      "operation_name": "issue_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior."
+      ]
+    },
+    {
+      "source_tool_name": "label_write",
+      "operation_name": "label_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior."
+      ]
+    },
+    {
+      "source_tool_name": "list_branches",
+      "operation_name": "list_branches",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_code_scanning_alerts",
+      "operation_name": "list_code_scanning_alerts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_commits",
+      "operation_name": "list_commits",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_copilot_spaces",
+      "operation_name": "list_copilot_spaces",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_dependabot_alerts",
+      "operation_name": "list_dependabot_alerts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_discussion_categories",
+      "operation_name": "list_discussion_categories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_discussions",
+      "operation_name": "list_discussions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "order_by": "orderBy",
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_gists",
+      "operation_name": "list_gists",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_global_security_advisories",
+      "operation_name": "list_global_security_advisories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "cve_id": "cveId",
+        "ghsa_id": "ghsaId",
+        "is_withdrawn": "isWithdrawn"
+      }
+    },
+    {
+      "source_tool_name": "list_issue_types",
+      "operation_name": "list_issue_types",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_issues",
+      "operation_name": "list_issues",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "order_by": "orderBy",
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_label",
+      "operation_name": "list_label",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_notifications",
+      "operation_name": "list_notifications",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_org_repository_security_advisories",
+      "operation_name": "list_org_repository_security_advisories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_pull_requests",
+      "operation_name": "list_pull_requests",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_releases",
+      "operation_name": "list_releases",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_repository_security_advisories",
+      "operation_name": "list_repository_security_advisories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_secret_scanning_alerts",
+      "operation_name": "list_secret_scanning_alerts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_starred_repositories",
+      "operation_name": "list_starred_repositories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_tags",
+      "operation_name": "list_tags",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "manage_notification_subscription",
+      "operation_name": "manage_notification_subscription",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ],
+      "param_mappings": {
+        "notification_id": "notificationID"
+      }
+    },
+    {
+      "source_tool_name": "manage_repository_notification_subscription",
+      "operation_name": "manage_repository_notification_subscription",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ]
+    },
+    {
+      "source_tool_name": "mark_all_notifications_read",
+      "operation_name": "mark_all_notifications_read",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Marks authenticated-user notifications as read; mutates notification state."
+      ],
+      "param_mappings": {
+        "last_read_at": "lastReadAt"
+      }
+    },
+    {
+      "source_tool_name": "merge_pull_request",
+      "operation_name": "merge_pull_request",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "projects_get",
+      "operation_name": "projects_get",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "projects_list",
+      "operation_name": "projects_list",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "projects_write",
+      "operation_name": "projects_write",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ]
+    },
+    {
+      "source_tool_name": "pull_request_read",
+      "operation_name": "pull_request_read",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage",
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "pull_request_review_write",
+      "operation_name": "pull_request_review_write",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ],
+      "param_mappings": {
+        "commit_id": "commitID",
+        "pull_number": "pullNumber",
+        "thread_id": "threadId"
+      }
+    },
+    {
+      "source_tool_name": "push_files",
+      "operation_name": "push_files",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ]
+    },
+    {
+      "source_tool_name": "request_copilot_review",
+      "operation_name": "request_copilot_review",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "run_secret_scanning",
+      "operation_name": "run_secret_scanning",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "search_code",
+      "operation_name": "search_code",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_issues",
+      "operation_name": "search_issues",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_orgs",
+      "operation_name": "search_orgs",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_pull_requests",
+      "operation_name": "search_pull_requests",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_repositories",
+      "operation_name": "search_repositories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_users",
+      "operation_name": "search_users",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "semantic_issue_similarity_search",
+      "operation_name": "semantic_issue_similarity_search",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "semantic_issues_search",
+      "operation_name": "semantic_issues_search",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "star_repository",
+      "operation_name": "star_repository",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "sub_issue_write",
+      "operation_name": "sub_issue_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior."
+      ]
+    },
+    {
+      "source_tool_name": "triage_issue",
+      "operation_name": "triage_issue",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "unstar_repository",
+      "operation_name": "unstar_repository",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "update_gist",
+      "operation_name": "update_gist",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_pull_request",
+      "operation_name": "update_pull_request",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "update_pull_request_branch",
+      "operation_name": "update_pull_request_branch",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "expected_head_sha": "expectedHeadSha",
+        "pull_number": "pullNumber"
+      }
+    }
+  ]
+}
