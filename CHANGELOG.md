@@ -17,7 +17,7 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Fixed
 
-- `.lychee.toml`: `include_fragments` updated from the removed boolean form to the string form (`"full"`) required by current lychee, unbreaking the link-check workflow that had been failing on develop since early August
+- `.lychee.toml`: `include_fragments` updated from the removed boolean form to the string form (`"full"`) required by current lychee, repairing the link-check workflow that had been failing on develop since early August
 
 ## [2026.05.15] - 2026-05-15
 
