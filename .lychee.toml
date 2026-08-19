@@ -69,8 +69,9 @@ exclude_path = [
     "CHANGELOG.md",
 ]
 
-# Include fragment checking (anchors)
-include_fragments = true
+# Include fragment checking (anchors). Newer lychee takes a string here,
+# not a boolean; "full" is the documented value in lychee.example.toml.
+include_fragments = "full"
 
 # Fallback extensions for extensionless URLs
 fallback_extensions = ["html", "htm"]

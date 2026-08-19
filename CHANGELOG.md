@@ -10,9 +10,14 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Root README now links the AirPods head-tracking adapter (`generated/airpods-mcp/`) under a new Native Sensor Adapters section, so it is discoverable from the repository front page
 - GitHub MCP all-toolset case study artifacts
   - Added the full 89-operation GitHub MCP generated adapter capture under `generated/github-mcp-all/`
   - Added the GitHub MCP parity harness and case study writeups with reproducibility commands and measured results
+
+### Fixed
+
+- `.lychee.toml`: `include_fragments` updated from the removed boolean form to the string form (`"full"`) required by current lychee, unbreaking the link-check workflow that had been failing on develop since early August
 
 ## [2026.05.15] - 2026-05-15
 
