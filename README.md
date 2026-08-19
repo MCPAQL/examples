@@ -23,6 +23,12 @@ For **normative protocol specifications**, see the [spec repository](https://git
 | [GitHub MCP Golden Path](generated/github-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | GitHub MCP server |
 | [Playwright MCP Golden Path](generated/playwright-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | Playwright MCP server |
 
+### Native Sensor Adapters
+
+| Example | Description | Source |
+|---------|-------------|--------|
+| [AirPods Head-Tracking Adapter](generated/airpods-mcp/README.md) | Live head-pose streaming (~25 Hz yaw/pitch/roll) behind a CRUDE surface, with a WebSocket HUD and a gaze-driven window-focus sidecar. Runnable today: anyone with AirPods Pro and an Apple Silicon Mac can use it — prebuilt binaries are linked in its README. | AirPods Pro IMU via Apple's `CMHeadphoneMotionManager` |
+
 ## Current Transport Scope
 
 The current golden-path tooling supports upstream source MCP servers over `streamable_http`.
