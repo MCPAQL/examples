@@ -28,6 +28,7 @@ For **normative protocol specifications**, see the [spec repository](https://git
 | Example | Description | Source |
 |---------|-------------|--------|
 | [AirPods Head-Tracking Adapter](generated/airpods-mcp/README.md) | Live head-pose streaming (~25 Hz yaw/pitch/roll) behind a CRUDE surface, with a WebSocket HUD and a gaze-driven window-focus sidecar. Runnable today: anyone with AirPods Pro and an Apple Silicon Mac can use it — prebuilt binaries are linked in its README. | AirPods Pro IMU via Apple's `CMHeadphoneMotionManager` |
+| [Shortcut Remote JIT Adapter](generated/shortcut-remote-mcp/README.md) | Just-in-time observational HID discovery of an undocumented $30 keypad: captured raw reports, mechanically derived the byte layout, and emitted a CRUDE adapter with a live HUD, layered keystroke dispatch, and a kill-switch menu-bar app. Companion to the AirPods adapter (hardware-trigger recenter). | XP-Pen Shortcut Remote (Hanvon Ugee ACK05) via raw HID |
 
 ## Current Transport Scope
 

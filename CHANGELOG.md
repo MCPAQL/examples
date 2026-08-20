@@ -10,6 +10,11 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Shortcut Remote JIT adapter example (`generated/shortcut-remote-mcp/`)
+  - Just-in-time observational HID discovery of the undocumented XP-Pen Shortcut Remote keypad: capture raw input reports, derive the byte layout, emit a CRUDE adapter — no vendor SDK, no kernel extension, no protocol documentation
+  - Single long-lived adapter process serving HID decode, layer state machine, wheel state, keystroke and shell dispatch, and a live WebSocket HUD from one port
+  - Kill-switch tooling: menu-bar app sources, build and LaunchAgent install scripts, and a status/kill script that distinguishes the adapter from other device holders
+  - Companion to the AirPods head-tracking adapter — the keypad provides the hardware recenter trigger documented in that example; the previously broken cross-link between the two now resolves
 - Root README now links the AirPods head-tracking adapter (`generated/airpods-mcp/`) under a new Native Sensor Adapters section, so it is discoverable from the repository front page
 - GitHub MCP all-toolset case study artifacts
   - Added the full 89-operation GitHub MCP generated adapter capture under `generated/github-mcp-all/`
