@@ -29,6 +29,9 @@ exclude = [
     # DollhouseMCP development repo (historical references, may be private)
     "^https?://github\\.com/DollhouseMCP/mcp-server-v2-refactor",
 
+    # MCPAQL adapter-studio (private repo, returns 404 from CI)
+    "^https?://github\\.com/MCPAQL/adapter-studio",
+
     # Example and placeholder URLs
     "^https?://example\\.com",
     "^https?://example\\.org",

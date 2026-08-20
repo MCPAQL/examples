@@ -296,8 +296,8 @@ Extracted from `~/.xppen/config.xml` `<ACK05><CommonAPP><K id="1">`. This is a p
 | K1 | 0 | 110 | (default — keystroke unknown without binary inspection) | — | — |
 | K2 | 0 | 111 | (default — keystroke unknown without binary inspection) | — | — |
 | K3 | 1 | 24 | Claude Desktop | Control+Option+Command+2 | `16777249:59+16777251:58+16777250:55+50:19` |
-| K4 | 1 | 201 | Option (modifier hold) | — | `2|Option|2` |
-| K5 | 1 | 204 | Command (modifier hold) | — | `2|Command|3` |
+| K4 | 1 | 201 | Option (modifier hold) | — | `2\|Option\|2` |
+| K5 | 1 | 204 | Command (modifier hold) | — | `2\|Command\|3` |
 | K6 | 1 | 3 | ChatGPT | Option+Command+1 | `16777251:58+16777250:55+49:18` |
 | K7 | 1 | 5 | SuperWhisper | Option+Command+3 | `16777251:58+16777250:55+51:20` |
 | K8 | 1 | 6 | Escape | ⎋ | `16777216:53` |
