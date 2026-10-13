@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0-draft",
+  "source": {
+    "name": "chief-mcp",
+    "server_url": "https://mcp.chief.bot/mcp",
+    "transport": "streamable_http",
+    "captured_at": "2026-10-13T19:10:53.395Z",
+    "server": {
+      "name": "chief-mcp",
+      "version": "8b24ac23ff464b662b36185f39435792de450cf0"
+    },
+    "auth": {
+      "type": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer ",
+      "token_env": "CHIEF_API_KEY"
+    },
+    "capture_config_redacted": {
+      "name": "chief-mcp",
+      "server_url": "https://mcp.chief.bot/mcp",
+      "transport": {
+        "type": "streamable_http"
+      },
+      "auth": {
+        "type": "bearer",
+        "token_env": "CHIEF_API_KEY",
+        "header": "Authorization",
+        "prefix": "Bearer "
+      },
+      "headers": {
+        "X-Project-Id": "${env:CHIEF_PROJECT_ID}"
+      }
+    }
+  },
+  "tool_count": 60,
+  "warning_count": 10
+}

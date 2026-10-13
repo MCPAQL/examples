@@ -1,0 +1,87 @@
+{
+  "adapter": {
+    "name": "chief-mcp-projects",
+    "version": "0.1.0",
+    "description": "Project-aware MCP-AQL adapter for the Chief MCP server (mcp.chief.bot): lists, shows, and switches projects at runtime.",
+    "token_env": "CHIEF_API_KEY"
+  },
+  "tenancy": {
+    "header": "X-Project-Id",
+    "noun": "project",
+    "list_operation": "list_projects",
+    "list_path": "data",
+    "id_field": "project_id",
+    "name_field": "name",
+    "default_field": "default",
+    "default_env": "CHIEF_PROJECT",
+    "unscoped_operations": [
+      "create_project",
+      "update_project",
+      "list_project_members",
+      "create_project_invitation",
+      "delete_project_invitation"
+    ]
+  },
+  "operations": {
+    "attach_label": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Attaches a label to an existing record; undone by detach_label."
+    },
+    "detach_label": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Removes a label association from an existing record; undone by attach_label."
+    },
+    "enable_skill": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing skill's enabled flag."
+    },
+    "disable_skill": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing skill's enabled flag."
+    },
+    "enable_action": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing action's enabled flag. Enabling can resume scheduled runs, so hosts should confirm it."
+    },
+    "disable_action": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing action's enabled flag."
+    },
+    "regenerate_share_link": {
+      "endpoint": "UPDATE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Rotates an existing share link; the old link stops working for everyone holding it."
+    },
+    "set_chat_visibility": {
+      "endpoint": "UPDATE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Changes who can see an existing chat; widening visibility can expose its contents."
+    },
+    "upload_file": {
+      "endpoint": "CREATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Creates a new asset; removable with delete_asset."
+    },
+    "send_message": {
+      "endpoint": "EXECUTE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Posts a message other members see and may start a Chief agent turn; not undoable from the reader's side."
+    }
+  }
+}

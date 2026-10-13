@@ -1,0 +1,433 @@
+{
+  "summary": {
+    "source_operation_count": 60,
+    "adapter_operation_count": 63,
+    "missing_operations": [],
+    "extra_operations": [],
+    "notes": [
+      "adapter_operation_count includes 3 synthetic adapter operation(s): introspect, get_active_project, set_active_project."
+    ]
+  },
+  "operations": [
+    {
+      "operation": "get_action",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_asset",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_chat",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_memory",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_message",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_session",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_session_transcript",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_share_link",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "get_skill",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_actions",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_assets",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_chat_members",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_chats",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_labels",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_memories",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_messages",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_project_members",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_projects",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_sessions",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "list_skills",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "search_knowledge_base",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "add_chat_member",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_action",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_chat",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_memory",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_project",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_project_invitation",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_share_link",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "create_skill",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "upload_file",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "attach_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "detach_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "disable_action",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "disable_skill",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "enable_action",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "enable_skill",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "regenerate_share_link",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "set_chat_visibility",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_action",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_asset",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_chat",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_memory",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_project",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_session",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "update_skill",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_action",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_asset",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_chat",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_label",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_memory",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_message",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_project_invitation",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_session",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_share_link",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "delete_skill",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "remove_chat_member",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    },
+    {
+      "operation": "send_message",
+      "endpoint_match": true,
+      "parameter_names_match": true,
+      "missing_parameters": [],
+      "extra_parameters": []
+    }
+  ]
+}
