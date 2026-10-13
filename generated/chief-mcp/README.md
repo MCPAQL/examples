@@ -50,7 +50,7 @@ The interrogator flagged 10 operations for review. `schema-overrides.json` recor
 | `upload_file` | CREATE | reversible |
 | `send_message` | EXECUTE | dangerous (visible to other members) |
 
-Four more operations keep the generator's endpoint but are raised to `dangerous`, which sets `requires_confirmation`:
+Six more operations keep the generator's endpoint but are raised to `dangerous`, which sets `requires_confirmation`:
 
 | Operation | Why |
 |---|---|
@@ -58,6 +58,7 @@ Four more operations keep the generator's endpoint but are raised to `dangerous`
 | `create_project_invitation` | Emails an outside address immediately; can grant the owner role |
 | `create_share_link` | Makes a chat readable by anyone with the URL |
 | `add_chat_member` | Widens who can read a restricted chat |
+| `create_action`, `update_action` | Actions start enabled and run on their schedule or trigger; an update can re-enable one |
 
 Result: READ 22, CREATE 10, UPDATE 16, DELETE 11, EXECUTE 1.
 
