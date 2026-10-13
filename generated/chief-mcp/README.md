@@ -45,11 +45,21 @@ The interrogator flagged 10 operations for review. `schema-overrides.json` recor
 | Operation | Endpoint | Danger level |
 |---|---|---|
 | `attach_label`, `detach_label` | UPDATE | reversible |
-| `enable_skill`, `disable_skill`, `enable_action`, `disable_action` | UPDATE | reversible |
+| `enable_skill`, `disable_skill`, `disable_action` | UPDATE | reversible |
+| `enable_action` | UPDATE | dangerous (can resume scheduled runs) |
 | `regenerate_share_link` | UPDATE | dangerous (old link stops working) |
 | `set_chat_visibility` | UPDATE | dangerous (can widen access) |
 | `upload_file` | CREATE | reversible |
 | `send_message` | EXECUTE | dangerous (visible to other members) |
+
+Four more operations keep the generator's endpoint but are raised to `dangerous`, which sets `requires_confirmation`:
+
+| Operation | Why |
+|---|---|
+| `enable_action` | Can resume scheduled or triggered runs |
+| `create_project_invitation` | Emails an outside address immediately; can grant the owner role |
+| `create_share_link` | Makes a chat readable by anyone with the URL |
+| `add_chat_member` | Widens who can read a restricted chat |
 
 Result: READ 22, CREATE 10, UPDATE 16, DELETE 11, EXECUTE 1.
 

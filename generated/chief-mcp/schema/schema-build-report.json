@@ -77,7 +77,9 @@
       "operation_name": "add_chat_member",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Widens who can read a restricted chat."
+      ]
     },
     {
       "source_tool_name": "attach_label",
@@ -129,14 +131,18 @@
       "operation_name": "create_project_invitation",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Emails an outside address immediately and can grant the owner role."
+      ]
     },
     {
       "source_tool_name": "create_share_link",
       "operation_name": "create_share_link",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Makes the chat readable by anyone with the URL, without authentication."
+      ]
     },
     {
       "source_tool_name": "create_skill",
@@ -252,7 +258,7 @@
       "needs_review": false,
       "review_reasons": [
         "Description implies workflow execution.",
-        "Toggles an existing action's enabled flag. Enabling can resume scheduled runs, so hosts should confirm it."
+        "Toggles an existing action's enabled flag. Enabling can resume scheduled or triggered runs, so it requires confirmation."
       ]
     },
     {
