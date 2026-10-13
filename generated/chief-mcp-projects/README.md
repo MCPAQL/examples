@@ -44,7 +44,7 @@ Example session:
 
 - Conformance: passed.
 - Differential: all 60 source operations present; `get_active_project` and `set_active_project` are reported as synthetic, along with `introspect`.
-- Parity: the `../chief-mcp/parity-harness` suite runs against this adapter with `npm run parity:projects` and `npm run parity:projects:writes`. On 2026-10-13: read-only against a populated project, 22 of 22 IDENTICAL; write mode in the test project, 20 IDENTICAL, 33 STRUCTURAL_PARITY, 0 divergent or erroring, 7 SKIPPED (same as `../chief-mcp`). `create_project` and `delete_asset` were run through this adapter separately from the faithful one. See `validation/`.
+- Parity: the `../chief-mcp/parity-harness` suite runs against this adapter with `npm run parity:projects` and `npm run parity:projects:writes`. On 2026-10-13: read-only against a populated project, 22 of 22 IDENTICAL; write mode in the test project, 22 IDENTICAL, 34 STRUCTURAL_PARITY, 0 divergent or erroring, 4 SKIPPED (same as `../chief-mcp`). `create_project`, `delete_asset`, and `delete_session` were each run through this adapter with their own fixtures, separately from the faithful one. See `validation/`.
 - Live behavior check on 2026-10-13: default selection, listing, switching by name, per-call override leaving the active project unchanged, unknown-name error listing valid projects, and unscoped `list_projects`.
 
 ## Regenerating

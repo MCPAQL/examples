@@ -61,13 +61,15 @@ Result: READ 22, CREATE 10, UPDATE 16, DELETE 11, EXECUTE 1.
 
 **Write mode (`CHIEF_PARITY_WRITES=1`).** Runs against a dedicated test project and refuses to start unless the project named by `CHIEF_PROJECT_ID` is called `MCPAQL Testing` (override with `CHIEF_PARITY_PROJECT_NAME`). Setup sweeps leftovers from interrupted runs, then creates its own label, memory, skill, action (on a rare schedule, disabled immediately), and two chats. Teardown deletes every record carrying the `mcpaql-parity` prefix and every chat in the test project. Creates and `send_message` are compared pairwise; updates and deletes run through the adapter and are verified against the official server. The run spends a few short model turns.
 
-Result on 2026-10-13 (`validation/parity-summary-writes.json`): 20 IDENTICAL, 33 STRUCTURAL_PARITY, 0 divergent or erroring, 7 SKIPPED:
+Result on 2026-10-13 (`validation/parity-summary-writes.json`): 22 IDENTICAL, 34 STRUCTURAL_PARITY, 0 divergent or erroring, 4 SKIPPED:
 
 | Skipped | Reason |
 |---|---|
+| `create_project` | Opt-in (see below); passed separately through both adapters |
 | `create_project_invitation`, `delete_project_invitation` | Sends a real invitation email |
 | `upload_file` | Chief opens the given path on its own host (it is meant for Chief's local `chief-mcp stdio` mode), so a remote caller cannot upload; confirmed: `open file: no such file or directory` |
-| `get_session`, `get_session_transcript`, `update_session`, `delete_session` | Sessions come only from Chief's desktop recorder; these run once the test project has a recorded session (one is consumed per run by `delete_session`) |
+
+Session operations need a recorded session in the test project, made with the Chief desktop app (Live Session). Each run consumes one through `delete_session`.
 
 `create_project` is permanent because Chief has no `delete_project` in MCP or the web app. It runs only when `CHIEF_PARITY_CREATE_PROJECT=<name>` is set; it passed on 2026-10-13 through both adapters.
 

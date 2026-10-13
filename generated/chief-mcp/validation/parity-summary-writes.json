@@ -2,13 +2,13 @@
   "suite": "chief-mcp",
   "label": "writes",
   "upstreamUrl": "https://mcp.chief.bot/mcp",
-  "startedAt": "2026-10-13T20:18:42.028Z",
-  "finishedAt": "2026-10-13T20:18:59.510Z",
+  "startedAt": "2026-10-13T20:34:49.036Z",
+  "finishedAt": "2026-10-13T20:35:07.692Z",
   "totals": {
     "TOTAL": 60,
-    "IDENTICAL": 20,
-    "SKIPPED": 7,
-    "STRUCTURAL_PARITY": 33
+    "IDENTICAL": 22,
+    "STRUCTURAL_PARITY": 34,
+    "SKIPPED": 4
   },
   "ops": [
     {
@@ -63,13 +63,17 @@
       "name": "get_session",
       "endpoint": "read",
       "category": "TEST_REPO_READ",
-      "cls": "SKIPPED"
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "get_session_transcript",
       "endpoint": "read",
       "category": "TEST_REPO_READ",
-      "cls": "SKIPPED"
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "get_share_link",
@@ -226,10 +230,9 @@
     {
       "name": "create_project",
       "endpoint": "create",
-      "category": "ONESHOT_WRITE",
-      "cls": "STRUCTURAL_PARITY",
-      "officialOk": true,
-      "mcpaqlOk": true
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "permanent (Chief has no delete_project); set CHIEF_PARITY_CREATE_PROJECT=<name> to run it"
     },
     {
       "name": "create_project_invitation",
@@ -377,7 +380,9 @@
       "name": "update_session",
       "endpoint": "update",
       "category": "ONESHOT_WRITE",
-      "cls": "SKIPPED"
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "update_skill",
@@ -446,7 +451,9 @@
       "name": "delete_session",
       "endpoint": "delete",
       "category": "ONESHOT_WRITE",
-      "cls": "SKIPPED"
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
     },
     {
       "name": "delete_share_link",
