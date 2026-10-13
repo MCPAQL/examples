@@ -49,9 +49,9 @@
     },
     "enable_action": {
       "endpoint": "UPDATE",
-      "danger_level": "reversible",
+      "danger_level": "dangerous",
       "needs_review": false,
-      "review_reason": "Toggles an existing action's enabled flag. Enabling can resume scheduled runs, so hosts should confirm it."
+      "review_reason": "Toggles an existing action's enabled flag. Enabling can resume scheduled or triggered runs, so it requires confirmation."
     },
     "disable_action": {
       "endpoint": "UPDATE",
@@ -82,6 +82,21 @@
       "danger_level": "dangerous",
       "needs_review": false,
       "review_reason": "Posts a message other members see and may start a Chief agent turn; not undoable from the reader's side."
+    },
+    "create_project_invitation": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Emails an outside address immediately and can grant the owner role."
+    },
+    "create_share_link": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Makes the chat readable by anyone with the URL, without authentication."
+    },
+    "add_chat_member": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Widens who can read a restricted chat."
     }
   }
 }

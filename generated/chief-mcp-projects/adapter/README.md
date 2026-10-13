@@ -18,6 +18,10 @@ Set `MCPAQL_TARGET_BASE_URL` if you want this adapter to connect to a different 
 
 Set `CHIEF_API_KEY` and run:
 
+Also set:
+
+- `CHIEF_PROJECT` (optional): starting project, by id or name.
+
 ```bash
 npm install
 npm run start

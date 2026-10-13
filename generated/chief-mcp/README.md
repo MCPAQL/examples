@@ -92,6 +92,7 @@ Upstream behaviors the suite accounts for:
 - `get_share_link` succeeds with `is_shared: false` after revocation instead of erroring.
 - Actions require a schedule or a trigger; the suite uses a schedule that fires at most on the 31st and disables or deletes each action within minutes.
 - `list_skills` pages through 100+ system skills before project skills; teardown follows the cursor.
+- `search_knowledge_base` writes a fresh AI summary for each result on every call, so two identical calls can differ in `summary` text. Treat a DIVERGENT result there as upstream nondeterminism unless other fields differ.
 
 Raw parity reports stay local (`parity-harness/.gitignore`) because their `detail` fields can quote account data. `npm run summarize` and `npm run summarize:writes` write the committable summaries.
 
