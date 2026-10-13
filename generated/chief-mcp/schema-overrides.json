@@ -6,15 +6,80 @@
     "token_env": "CHIEF_API_KEY"
   },
   "operations": {
-    "attach_label": { "endpoint": "UPDATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Attaches a label to an existing record; undone by detach_label." },
-    "detach_label": { "endpoint": "UPDATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Removes a label association from an existing record; undone by attach_label." },
-    "enable_skill": { "endpoint": "UPDATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Toggles an existing skill's enabled flag." },
-    "disable_skill": { "endpoint": "UPDATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Toggles an existing skill's enabled flag." },
-    "enable_action": { "endpoint": "UPDATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Toggles an existing action's enabled flag. Enabling can resume scheduled runs, so hosts should confirm it." },
-    "disable_action": { "endpoint": "UPDATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Toggles an existing action's enabled flag." },
-    "regenerate_share_link": { "endpoint": "UPDATE", "danger_level": "dangerous", "needs_review": false, "review_reason": "Rotates an existing share link; the old link stops working for everyone holding it." },
-    "set_chat_visibility": { "endpoint": "UPDATE", "danger_level": "dangerous", "needs_review": false, "review_reason": "Changes who can see an existing chat; widening visibility can expose its contents." },
-    "upload_file": { "endpoint": "CREATE", "danger_level": "reversible", "needs_review": false, "review_reason": "Creates a new asset; removable with delete_asset." },
-    "send_message": { "endpoint": "EXECUTE", "danger_level": "dangerous", "needs_review": false, "review_reason": "Posts a message other members see and may start a Chief agent turn; not undoable from the reader's side." }
+    "attach_label": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Attaches a label to an existing record; undone by detach_label."
+    },
+    "detach_label": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Removes a label association from an existing record; undone by attach_label."
+    },
+    "enable_skill": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing skill's enabled flag."
+    },
+    "disable_skill": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing skill's enabled flag."
+    },
+    "enable_action": {
+      "endpoint": "UPDATE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Toggles an existing action's enabled flag. Enabling can resume scheduled or triggered runs, so it requires confirmation."
+    },
+    "disable_action": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Toggles an existing action's enabled flag."
+    },
+    "regenerate_share_link": {
+      "endpoint": "UPDATE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Rotates an existing share link; the old link stops working for everyone holding it."
+    },
+    "set_chat_visibility": {
+      "endpoint": "UPDATE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Changes who can see an existing chat; widening visibility can expose its contents."
+    },
+    "upload_file": {
+      "endpoint": "CREATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Creates a new asset; removable with delete_asset."
+    },
+    "send_message": {
+      "endpoint": "EXECUTE",
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Posts a message other members see and may start a Chief agent turn; not undoable from the reader's side."
+    },
+    "create_project_invitation": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Emails an outside address immediately and can grant the owner role."
+    },
+    "create_share_link": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Makes the chat readable by anyone with the URL, without authentication."
+    },
+    "add_chat_member": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Widens who can read a restricted chat."
+    }
   }
 }

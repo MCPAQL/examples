@@ -10,6 +10,13 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 
 export const CHIEF_URL = "https://mcp.chief.bot/mcp";
 export const WRITE_MODE = process.env.CHIEF_PARITY_WRITES === "1";
+
+// Set only by setupFixtures after the project guard passes in this process. Write
+// operations check it, so reused fixture files (--reuse-fixtures) cannot bypass the guard.
+let guardPassed = false;
+export function writeGuardPassed(): boolean {
+  return guardPassed;
+}
 export const TEST_PREFIX = "mcpaql-parity";
 
 // Chief requires a schedule or trigger on every action. This one fires at most on the
@@ -177,10 +184,21 @@ export async function setupFixtures(): Promise<Fixtures> {
   try {
     const fixtures: Fixtures = { writeMode: WRITE_MODE, projectId: process.env.CHIEF_PROJECT_ID };
     if (WRITE_MODE) {
+      // The project-aware adapter picks its project from CHIEF_PROJECT; it must be the guarded one.
+      const adapterProject = process.env.CHIEF_PROJECT;
+      if (adapterProject && adapterProject !== fixtures.projectId) {
+        throw new Error("Write mode refused: CHIEF_PROJECT differs from CHIEF_PROJECT_ID.");
+      }
       await guardTestProject(client, fixtures);
       // Clear anything an interrupted earlier run left behind.
       await teardownFixtures(fixtures);
-      await createWriteFixtures(client, fixtures);
+      try {
+        await createWriteFixtures(client, fixtures);
+      } catch (error) {
+        await teardownFixtures(fixtures);
+        throw error;
+      }
+      guardPassed = true;
     }
     await discover(client, fixtures);
     const found = Object.entries(fixtures).filter(([k, v]) => v && k !== "writeMode").map(([k]) => k);

@@ -543,8 +543,8 @@
           "type": "object",
           "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
         },
-        "danger_level": "reversible",
-        "requires_confirmation": false,
+        "danger_level": "dangerous",
+        "requires_confirmation": true,
         "non_idempotent": false
       },
       {
@@ -708,8 +708,8 @@
           "type": "object",
           "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
         },
-        "danger_level": "reversible",
-        "requires_confirmation": false,
+        "danger_level": "dangerous",
+        "requires_confirmation": true,
         "non_idempotent": false
       },
       {
@@ -727,8 +727,8 @@
           "type": "object",
           "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
         },
-        "danger_level": "reversible",
-        "requires_confirmation": false,
+        "danger_level": "dangerous",
+        "requires_confirmation": true,
         "non_idempotent": false
       },
       {
@@ -900,8 +900,8 @@
           "type": "object",
           "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
         },
-        "danger_level": "reversible",
-        "requires_confirmation": false,
+        "danger_level": "dangerous",
+        "requires_confirmation": true,
         "non_idempotent": false
       },
       {

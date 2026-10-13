@@ -8,7 +8,7 @@
 // performs the write and the official server verifies the effect.
 
 import type { Category, OperationSpec, VerifySpec } from "../../../../../tools/dist/parity-runner.js";
-import { RARE_SCHEDULE, TEST_PREFIX, WRITE_MODE, type Fixtures } from "./fixtures.js";
+import { RARE_SCHEDULE, TEST_PREFIX, WRITE_MODE, writeGuardPassed, type Fixtures } from "./fixtures.js";
 
 type Op = OperationSpec<Fixtures>;
 type Args = Record<string, unknown> | null;
@@ -168,6 +168,6 @@ const READ_ONLY_NOTE = "write op not exercised: read-only mode (set CHIEF_PARITY
 export const OPERATIONS: Op[] = [
   ...READ_OPERATIONS,
   ...(WRITE_MODE
-    ? WRITE_OPERATIONS
+    ? WRITE_OPERATIONS.map((op): Op => ({ ...op, args: (f, v) => (writeGuardPassed() ? op.args(f, v) : null) }))
     : WRITE_OPERATIONS.map((op): Op => ({ name: op.name, category: "SKIP", args: () => null, note: op.category === "SKIP" ? op.note : READ_ONLY_NOTE }))),
 ];
