@@ -108,7 +108,7 @@ let upstreamTransport: StreamableHTTPClientTransport | undefined;
 
 function textResult(payload: unknown): CallToolResult {
   return {
-    content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify(payload) }],
   };
 }
 
@@ -150,11 +150,7 @@ function resolveBaseUrl(): string {
   return schema.target.base_url;
 }
 
-async function getUpstreamClient(): Promise<Client> {
-  if (upstreamClient) {
-    return upstreamClient;
-  }
-
+function buildUpstreamHeaders(): Record<string, string> {
   // Carry discovery-time headers (e.g., toolset selectors) and add the live bearer
   // token. HTTP header names are case-insensitive, and some Fetch implementations
   // combine duplicate-name-different-case headers with commas, so we must drop any
@@ -172,6 +168,15 @@ async function getUpstreamClient(): Promise<Client> {
   if (schema.auth?.type === "bearer") {
     headers[authHeaderName] = `${schema.auth.prefix ?? "Bearer "}${resolveToken()}`;
   }
+  return headers;
+}
+
+async function getUpstreamClient(): Promise<Client> {
+  if (upstreamClient) {
+    return upstreamClient;
+  }
+
+  const headers = buildUpstreamHeaders();
   const transport = new StreamableHTTPClientTransport(new URL(resolveBaseUrl()), {
     requestInit: {
       headers: Object.keys(headers).length > 0 ? headers : undefined,
@@ -432,7 +437,6 @@ async function proxyOperation(operationName: string, params: Record<string, unkn
           structured_content: result.structuredContent ?? null,
         },
       },
-      _meta: { provenance },
     };
   }
 
@@ -444,7 +448,6 @@ async function proxyOperation(operationName: string, params: Record<string, unkn
       structured_content: result.structuredContent ?? null,
       is_error: Boolean(result.isError),
     },
-    _meta: { provenance },
   };
 }
 

@@ -2,13 +2,13 @@
   "suite": "chief-mcp",
   "label": "projects-writes",
   "upstreamUrl": "https://mcp.chief.bot/mcp",
-  "startedAt": "2026-10-13T20:02:04.888Z",
-  "finishedAt": "2026-10-13T20:02:23.910Z",
+  "startedAt": "2026-10-13T20:19:09.266Z",
+  "finishedAt": "2026-10-13T20:19:27.537Z",
   "totals": {
     "TOTAL": 60,
     "IDENTICAL": 20,
-    "SKIPPED": 9,
-    "STRUCTURAL_PARITY": 31
+    "SKIPPED": 7,
+    "STRUCTURAL_PARITY": 33
   },
   "ops": [
     {
@@ -226,9 +226,10 @@
     {
       "name": "create_project",
       "endpoint": "create",
-      "category": "SKIP",
-      "cls": "SKIPPED",
-      "note": "Chief MCP has no delete_project, so created projects cannot be cleaned up"
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "create_project_invitation",
@@ -398,7 +399,9 @@
       "name": "delete_asset",
       "endpoint": "delete",
       "category": "ONESHOT_WRITE",
-      "cls": "SKIPPED"
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
     },
     {
       "name": "delete_chat",
@@ -442,9 +445,8 @@
     {
       "name": "delete_session",
       "endpoint": "delete",
-      "category": "SKIP",
-      "cls": "SKIPPED",
-      "note": "sessions come from Chief's recorder; never delete a real one"
+      "category": "ONESHOT_WRITE",
+      "cls": "SKIPPED"
     },
     {
       "name": "delete_share_link",

@@ -2,8 +2,8 @@
   "suite": "chief-mcp",
   "label": "read-only",
   "upstreamUrl": "https://mcp.chief.bot/mcp",
-  "startedAt": "2026-10-13T19:14:32.140Z",
-  "finishedAt": "2026-10-13T19:14:36.740Z",
+  "startedAt": "2026-10-13T20:20:04.102Z",
+  "finishedAt": "2026-10-13T20:20:08.545Z",
   "totals": {
     "TOTAL": 60,
     "IDENTICAL": 21,
@@ -192,266 +192,266 @@
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "create_action",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "create_chat",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "create_label",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "create_memory",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "create_project",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "permanent (Chief has no delete_project); set CHIEF_PARITY_CREATE_PROJECT=<name> to run it"
     },
     {
       "name": "create_project_invitation",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "sends a real invitation email"
     },
     {
       "name": "create_share_link",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "create_skill",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "upload_file",
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "path is resolved on Chief's host, so remote callers cannot upload; fixtures are uploaded through the web app"
     },
     {
       "name": "attach_label",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "detach_label",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "disable_action",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "disable_skill",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "enable_action",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "enable_skill",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "regenerate_share_link",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "set_chat_visibility",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_action",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_asset",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_chat",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_label",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_memory",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_project",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_session",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "update_skill",
       "endpoint": "update",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_action",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_asset",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_chat",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_label",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_memory",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_message",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_project_invitation",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "paired with create_project_invitation, which sends email"
     },
     {
       "name": "delete_session",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_share_link",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "delete_skill",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "remove_chat_member",
       "endpoint": "delete",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     },
     {
       "name": "send_message",
       "endpoint": "execute",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "write op not exercised: suite is read-only against a live Chief account"
+      "note": "write op not exercised: read-only mode (set CHIEF_PARITY_WRITES=1 against the test project)"
     }
   ]
 }

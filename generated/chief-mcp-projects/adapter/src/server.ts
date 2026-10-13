@@ -305,7 +305,7 @@ let upstreamTransport: StreamableHTTPClientTransport | undefined;
 
 function textResult(payload: unknown): CallToolResult {
   return {
-    content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify(payload) }],
   };
 }
 
@@ -645,7 +645,7 @@ async function proxyOperation(operationName: string, params: Record<string, unkn
           structured_content: result.structuredContent ?? null,
         },
       },
-      _meta: { provenance, ...tenantMeta },
+      _meta: tenantMeta,
     };
   }
 
@@ -657,7 +657,7 @@ async function proxyOperation(operationName: string, params: Record<string, unkn
       structured_content: result.structuredContent ?? null,
       is_error: Boolean(result.isError),
     },
-    _meta: { provenance, ...tenantMeta },
+    _meta: tenantMeta,
   };
 }
 

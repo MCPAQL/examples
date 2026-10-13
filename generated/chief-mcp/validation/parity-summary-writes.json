@@ -2,13 +2,13 @@
   "suite": "chief-mcp",
   "label": "writes",
   "upstreamUrl": "https://mcp.chief.bot/mcp",
-  "startedAt": "2026-10-13T19:58:26.081Z",
-  "finishedAt": "2026-10-13T19:58:43.302Z",
+  "startedAt": "2026-10-13T20:18:42.028Z",
+  "finishedAt": "2026-10-13T20:18:59.510Z",
   "totals": {
     "TOTAL": 60,
     "IDENTICAL": 20,
-    "SKIPPED": 8,
-    "STRUCTURAL_PARITY": 32
+    "SKIPPED": 7,
+    "STRUCTURAL_PARITY": 33
   },
   "ops": [
     {
@@ -226,9 +226,10 @@
     {
       "name": "create_project",
       "endpoint": "create",
-      "category": "SKIP",
-      "cls": "SKIPPED",
-      "note": "Chief MCP has no delete_project, so created projects cannot be cleaned up"
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "create_project_invitation",
@@ -375,9 +376,8 @@
     {
       "name": "update_session",
       "endpoint": "update",
-      "category": "SKIP",
-      "cls": "SKIPPED",
-      "note": "sessions come from Chief's recorder and cannot be created through MCP"
+      "category": "ONESHOT_WRITE",
+      "cls": "SKIPPED"
     },
     {
       "name": "update_skill",
@@ -445,9 +445,8 @@
     {
       "name": "delete_session",
       "endpoint": "delete",
-      "category": "SKIP",
-      "cls": "SKIPPED",
-      "note": "sessions come from Chief's recorder; never delete a real one"
+      "category": "ONESHOT_WRITE",
+      "cls": "SKIPPED"
     },
     {
       "name": "delete_share_link",
