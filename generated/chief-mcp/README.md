@@ -34,6 +34,8 @@ Captured 2026-10-13. Sizes are serialized JSON characters from `tools/list`.
 | `introspect` (all operations) | — | 16,362 |
 | `introspect` (one operation) | — | 1,618 |
 
+Per call, the adapter's result is now about the same size as Chief's own (9,017 vs ~9,050 characters for `list_skills` with `limit: 3`). Generated adapters used to attach the full provenance record and pretty-printed JSON to every result (24,320 characters for the same call); adapter-generator#46 removed both.
+
 The adapter's tool list is about 94% smaller. On the upstream side, `outputSchema` accounts for 28,809 characters (45%), `inputSchema` for 21,266, and descriptions for 8,523. Hosts that load every tool schema eagerly get the full saving; hosts that defer tool schemas already avoid most of the upstream cost.
 
 ## Endpoint Review
@@ -67,21 +69,23 @@ Result: READ 22, CREATE 10, UPDATE 16, DELETE 11, EXECUTE 1.
 
 `parity-harness/` has two modes.
 
-**Read-only (default).** Runs all 22 READ operations against Chief and the adapter, discovering fixture ids through list calls. Safe against any project. Result on 2026-10-13 (`validation/parity-summary.json`): 21 IDENTICAL, 1 STRUCTURAL_PARITY, 0 divergent or erroring.
+**Read-only (default).** Runs all 22 READ operations against Chief and the adapter, discovering fixture ids through list calls. Safe against any project. Result on 2026-10-13 (`validation/parity-summary.json`, run against a populated project): 21 IDENTICAL, 1 STRUCTURAL_PARITY, 0 divergent or erroring.
 
 **Write mode (`CHIEF_PARITY_WRITES=1`).** Runs against a dedicated test project and refuses to start unless the project named by `CHIEF_PROJECT_ID` is called `MCPAQL Testing` (override with `CHIEF_PARITY_PROJECT_NAME`). Setup sweeps leftovers from interrupted runs, then creates its own label, memory, skill, action (on a rare schedule, disabled immediately), and two chats. Teardown deletes every record carrying the `mcpaql-parity` prefix and every chat in the test project. Creates and `send_message` are compared pairwise; updates and deletes run through the adapter and are verified against the official server. The run spends a few short model turns.
 
-Result on 2026-10-13 (`validation/parity-summary-writes.json`): 20 IDENTICAL, 32 STRUCTURAL_PARITY, 0 divergent or erroring, 8 SKIPPED:
+Result on 2026-10-13 (`validation/parity-summary-writes.json`): 22 IDENTICAL, 34 STRUCTURAL_PARITY, 0 divergent or erroring, 4 SKIPPED:
 
 | Skipped | Reason |
 |---|---|
-| `create_project` | Chief MCP has no `delete_project`, so test projects could not be cleaned up |
+| `create_project` | Opt-in (see below); passed separately through both adapters |
 | `create_project_invitation`, `delete_project_invitation` | Sends a real invitation email |
-| `upload_file` | Chief opens the given path on its own host, so a remote caller cannot upload (confirmed: `open file: no such file or directory`) |
-| `get_session`, `get_session_transcript`, `update_session` | Sessions come only from Chief's desktop recorder; these run once the test project has a recorded session |
-| `delete_session` | Never deletes a recorded session |
+| `upload_file` | Chief opens the given path on its own host (it is meant for Chief's local `chief-mcp stdio` mode), so a remote caller cannot upload; confirmed: `open file: no such file or directory` |
 
-**Asset fixtures.** Because `upload_file` cannot work remotely, upload two files to the test project through Chief's web app (Library → Upload files): `mcpaql-parity-fixture.txt` (kept; used by `get_asset`, `update_asset`, `attach_label`, `detach_label`) and `mcpaql-parity-disposable.txt` (deleted by `delete_asset`; re-upload before the next run to cover it again).
+Session operations need a recorded session in the test project, made with the Chief desktop app (Live Session). Each run consumes one through `delete_session`.
+
+`create_project` is permanent because Chief has no `delete_project` in MCP or the web app. It runs only when `CHIEF_PARITY_CREATE_PROJECT=<name>` is set; it passed on 2026-10-13 through both adapters.
+
+**Asset fixtures.** Because `upload_file` cannot work remotely, upload two files to the test project through Chief's web app (Library → Upload files): `mcpaql-parity-fixture.txt` (kept; used by `get_asset`, `update_asset`, `attach_label`, `detach_label`) and `mcpaql-parity-disposable.txt` (deleted by `delete_asset`; one is consumed per run, so upload one per adapter run, with different contents because Chief deduplicates uploads by content).
 
 Upstream behaviors the suite accounts for:
 
@@ -90,6 +94,7 @@ Upstream behaviors the suite accounts for:
 - `get_share_link` succeeds with `is_shared: false` after revocation instead of erroring.
 - Actions require a schedule or a trigger; the suite uses a schedule that fires at most on the 31st and disables or deletes each action within minutes.
 - `list_skills` pages through 100+ system skills before project skills; teardown follows the cursor.
+- `search_knowledge_base` writes a fresh AI summary for each result on every call, so two identical calls can differ in `summary` text. Treat a DIVERGENT result there as upstream nondeterminism unless other fields differ.
 
 Raw parity reports stay local (`parity-harness/.gitignore`) because their `detail` fields can quote account data. `npm run summarize` and `npm run summarize:writes` write the committable summaries.
 

@@ -92,7 +92,13 @@ export const WRITE_OPERATIONS: Op[] = [
   paired("create_chat", () => ({ chat: { prompt: OK_PROMPT }, wait_for_response: false })),
   paired("create_label", (_f, v) => ({ name: `${TEST_PREFIX} ${v} label` })),
   paired("create_memory", (_f, v) => ({ content: `${TEST_PREFIX} ${v} memory`, category: "fact", importance: 1 })),
-  skip("create_project", "Chief MCP has no delete_project, so created projects cannot be cleaned up"),
+  // Chief has no delete_project (in MCP or the web app), so a created project is permanent.
+  // Runs only when CHIEF_PARITY_CREATE_PROJECT names the project to create.
+  ...(process.env.CHIEF_PARITY_CREATE_PROJECT
+    ? [oneshot("create_project", () => ({ name: process.env.CHIEF_PARITY_CREATE_PROJECT, description: "Created by the MCP-AQL Chief adapter parity suite." }),
+      { name: "list_projects", args: () => ({}), isExpected: (r) => r.ok
+        && ((r.payload as { data?: Array<Record<string, unknown>> })?.data ?? []).some((p) => p.name === process.env.CHIEF_PARITY_CREATE_PROJECT) })]
+    : [skip("create_project", "permanent (Chief has no delete_project); set CHIEF_PARITY_CREATE_PROJECT=<name> to run it")]),
   skip("create_project_invitation", "sends a real invitation email"),
   paired("create_share_link", (f) => need(f, "chatId", (chat_id) => ({ chat_id }))),
   paired("create_skill", (_f, v) => ({ name: `${TEST_PREFIX}-${v}-skill`, content: `${TEST_PREFIX} ${v} skill`, scope: "project", category: "skill" })),
@@ -150,7 +156,9 @@ export const WRITE_OPERATIONS: Op[] = [
   oneshot("delete_message", (f) => (f.chatId && f.messageId ? { chat_id: f.chatId, message_id: f.messageId } : null),
     { name: "get_message", args: (f) => (f.chatId && f.messageId ? { chat_id: f.chatId, message_id: f.messageId } : null), expect: "error" }),
   skip("delete_project_invitation", "paired with create_project_invitation, which sends email"),
-  skip("delete_session", "sessions come from Chief's recorder; never delete a real one"),
+  // Deletes the test project's recorded session; record one per run (Chief desktop app).
+  oneshot("delete_session", (f) => need(f, "sessionId", (session_id) => ({ session_id })),
+    { name: "get_session", args: (f) => need(f, "sessionId", (session_id) => ({ session_id })), expect: "error" }),
   oneshot("delete_share_link", (f) => need(f, "chatId", (chat_id) => ({ chat_id })),
     // After revocation Chief answers get_share_link successfully with is_shared: false.
     { name: "get_share_link", args: (f) => need(f, "chatId", (chat_id) => ({ chat_id })), isExpected: field("is_shared", () => false) }),

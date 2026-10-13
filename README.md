@@ -23,6 +23,7 @@ For **normative protocol specifications**, see the [spec repository](https://git
 | [GitHub MCP Golden Path](generated/github-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | GitHub MCP server |
 | [Playwright MCP Golden Path](generated/playwright-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | Playwright MCP server |
 | [Chief MCP Golden Path](generated/chief-mcp/README.md) | Capture, reviewed endpoint overrides, generated adapter, read-only parity suite, and token-footprint comparison (60 tools to 5) | Chief MCP server |
+| [Chief MCP, Project-Aware](generated/chief-mcp-projects/README.md) | Same upstream, generated with `tenancy`: the model lists projects, sees and switches the active one, and targets a project per call, instead of a project ID pinned in config | Chief MCP server |
 
 ### Native Sensor Adapters
 

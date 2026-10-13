@@ -10,6 +10,10 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Project-aware Chief MCP adapter example (`generated/chief-mcp-projects/`)
+  - Same upstream capture, generated with the adapter generator's `tenancy` block: the model lists projects, sees and switches the active one, and targets a project per call, instead of a project id pinned in client config
+  - Needs only `CHIEF_API_KEY`; optional `CHIEF_PROJECT` sets the starting project
+  - Shares the `chief-mcp` parity harness; 56 of 60 operations exercised with no divergence
 - Chief MCP adapter example (`generated/chief-mcp/`)
   - 60 Chief MCP tools behind the five CRUDE endpoints; `tools/list` drops from 63,520 to 3,766 characters, with per-call results the same size as Chief's own
   - Reviewed `schema-overrides.json` for the ten operations the interrogator flagged, with a reason for each endpoint and danger level

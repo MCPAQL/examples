@@ -11,7 +11,10 @@
     "parity": "node ../../../../tools/dist/parity-cli.js --suite ./dist/suite.js --adapter ../adapter/dist/server.js --label read-only --report parity-report.json",
     "summarize": "node ./dist/summarize.js parity-report.json ../validation/parity-summary.json",
     "parity:writes": "CHIEF_PARITY_WRITES=1 node ../../../../tools/dist/parity-cli.js --suite ./dist/suite.js --adapter ../adapter/dist/server.js --label writes --report parity-report-writes.json",
-    "summarize:writes": "node ./dist/summarize.js parity-report-writes.json ../validation/parity-summary-writes.json"
+    "summarize:writes": "node ./dist/summarize.js parity-report-writes.json ../validation/parity-summary-writes.json",
+    "parity:projects": "CHIEF_PROJECT=$CHIEF_PROJECT_ID node ../../../../tools/dist/parity-cli.js --suite ./dist/suite.js --adapter ../../chief-mcp-projects/adapter/dist/server.js --label projects-read-only --report parity-report-projects.json",
+    "parity:projects:writes": "CHIEF_PARITY_WRITES=1 CHIEF_PROJECT=$CHIEF_PROJECT_ID node ../../../../tools/dist/parity-cli.js --suite ./dist/suite.js --adapter ../../chief-mcp-projects/adapter/dist/server.js --label projects-writes --report parity-report-projects-writes.json",
+    "summarize:projects": "node ./dist/summarize.js parity-report-projects.json ../../chief-mcp-projects/validation/parity-summary.json && node ./dist/summarize.js parity-report-projects-writes.json ../../chief-mcp-projects/validation/parity-summary-writes.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1"
