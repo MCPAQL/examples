@@ -59,16 +59,25 @@ Result: READ 22, CREATE 10, UPDATE 16, DELETE 11, EXECUTE 1.
 
 **Write mode (`CHIEF_PARITY_WRITES=1`).** Runs against a dedicated test project and refuses to start unless the project named by `CHIEF_PROJECT_ID` is called `MCPAQL Testing` (override with `CHIEF_PARITY_PROJECT_NAME`). Setup sweeps leftovers from interrupted runs, then creates its own label, memory, skill, action (on a rare schedule, disabled immediately), and two chats. Teardown deletes every record carrying the `mcpaql-parity` prefix and every chat in the test project. Creates and `send_message` are compared pairwise; updates and deletes run through the adapter and are verified against the official server. The run spends a few short model turns.
 
-Result on 2026-10-13 (`validation/parity-summary-writes.json`): 20 IDENTICAL, 27 STRUCTURAL_PARITY, 0 divergent or erroring, 13 SKIPPED:
+Result on 2026-10-13 (`validation/parity-summary-writes.json`): 20 IDENTICAL, 32 STRUCTURAL_PARITY, 0 divergent or erroring, 8 SKIPPED:
 
 | Skipped | Reason |
 |---|---|
 | `create_project` | Chief MCP has no `delete_project`, so test projects could not be cleaned up |
 | `create_project_invitation`, `delete_project_invitation` | Sends a real invitation email |
-| `upload_file`, and asset ops `get_asset`, `attach_label`, `detach_label`, `update_asset`, `delete_asset` | `upload_file` resolves paths on Chief's host, so no asset can be created over remote MCP |
-| `get_session`, `get_session_transcript`, `update_session`, `delete_session` | Sessions come from Chief's recorder and cannot be created through MCP |
+| `upload_file` | Chief opens the given path on its own host, so a remote caller cannot upload (confirmed: `open file: no such file or directory`) |
+| `get_session`, `get_session_transcript`, `update_session` | Sessions come only from Chief's desktop recorder; these run once the test project has a recorded session |
+| `delete_session` | Never deletes a recorded session |
 
-Upstream behaviors the suite accounts for: `get_chat` does not return the chat title (renames are verified through `list_chats`), and `get_share_link` succeeds with `is_shared: false` after revocation instead of erroring.
+**Asset fixtures.** Because `upload_file` cannot work remotely, upload two files to the test project through Chief's web app (Library → Upload files): `mcpaql-parity-fixture.txt` (kept; used by `get_asset`, `update_asset`, `attach_label`, `detach_label`) and `mcpaql-parity-disposable.txt` (deleted by `delete_asset`; re-upload before the next run to cover it again).
+
+Upstream behaviors the suite accounts for:
+
+- `get_chat` does not return the chat title; renames are verified through `list_chats`.
+- `get_asset` does not return labels; label attach and detach are verified through `list_assets`.
+- `get_share_link` succeeds with `is_shared: false` after revocation instead of erroring.
+- Actions require a schedule or a trigger; the suite uses a schedule that fires at most on the 31st and disables or deletes each action within minutes.
+- `list_skills` pages through 100+ system skills before project skills; teardown follows the cursor.
 
 Raw parity reports stay local (`parity-harness/.gitignore`) because their `detail` fields can quote account data. `npm run summarize` and `npm run summarize:writes` write the committable summaries.
 
@@ -102,6 +111,6 @@ Requires the `${env:VAR}` header support in `MCPAQL/tools` and `MCPAQL/adapter-g
 
 ## Known Limitations
 
-- Asset and session operations are not exercised (see Parity).
+- Session operations need a recording in the test project; asset operations need the two fixture files (see Parity).
 - The adapter keeps a singleton upstream connection and needs a restart if it drops.
 - This is a point-in-time capture. Regenerate the capture, schema, and validation reports together when Chief changes its MCP surface.

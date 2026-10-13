@@ -72,6 +72,17 @@ const field = (key: string, expected: (f: Fixtures) => unknown) =>
     return record[key] === expected(f);
   };
 
+// get_asset does not return labels; list_assets does. True when the fixture asset's
+// labels include (or exclude) the fixture label.
+const hasLabel = (expected: boolean) => (result: { ok: boolean; payload: unknown }, f: Fixtures) => {
+  if (!result.ok) return false;
+  const assets = (result.payload as { data?: Array<Record<string, unknown>> })?.data ?? [];
+  const asset = assets.find((a) => a.asset_id === f.assetId);
+  if (!asset) return false;
+  const attached = JSON.stringify(asset.labels ?? []).includes(String(f.labelId));
+  return attached === expected;
+};
+
 const OK_PROMPT = "Reply with the single word: ok";
 
 export const WRITE_OPERATIONS: Op[] = [
@@ -85,13 +96,14 @@ export const WRITE_OPERATIONS: Op[] = [
   skip("create_project_invitation", "sends a real invitation email"),
   paired("create_share_link", (f) => need(f, "chatId", (chat_id) => ({ chat_id }))),
   paired("create_skill", (_f, v) => ({ name: `${TEST_PREFIX}-${v}-skill`, content: `${TEST_PREFIX} ${v} skill`, scope: "project", category: "skill" })),
-  skip("upload_file", "path is resolved on Chief's host; remote HTTP upload is not supported upstream"),
+  skip("upload_file", "path is resolved on Chief's host, so remote callers cannot upload; fixtures are uploaded through the web app"),
 
   // UPDATE
-  oneshot("attach_label", (f) => (f.assetId && f.labelId ? { asset_id: f.assetId, label_name: `${TEST_PREFIX} label renamed` } : null),
-    { name: "get_asset", args: (f) => need(f, "assetId", (asset_id) => ({ asset_id })) }),
+  // attach_label runs before update_label renames the fixture label.
+  oneshot("attach_label", (f) => (f.assetId && f.labelId ? { asset_id: f.assetId, label_name: `${TEST_PREFIX} label` } : null),
+    { name: "list_assets", args: () => ({ limit: 100 }), isExpected: hasLabel(true) }),
   oneshot("detach_label", (f) => (f.assetId && f.labelId ? { asset_id: f.assetId, label_id: f.labelId } : null),
-    { name: "get_asset", args: (f) => need(f, "assetId", (asset_id) => ({ asset_id })) }),
+    { name: "list_assets", args: () => ({ limit: 100 }), isExpected: hasLabel(false) }),
   oneshot("disable_action", (f) => need(f, "actionId", (action_id) => ({ action_id })),
     { name: "get_action", args: (f) => need(f, "actionId", (action_id) => ({ action_id })), isExpected: field("enabled", () => false) }),
   oneshot("disable_skill", (f) => need(f, "skillId", (skill_id) => ({ skill_id })),
@@ -118,14 +130,17 @@ export const WRITE_OPERATIONS: Op[] = [
     { name: "get_memory", args: (f) => need(f, "memoryId", (memory_id) => ({ memory_id })), isExpected: field("content", () => `${TEST_PREFIX} memory updated`) }),
   oneshot("update_project", (f) => (f.projectId && f.projectName ? { project_id: f.projectId, project: { name: f.projectName, description: f.projectDescription ?? "" } } : null),
     { name: "list_projects", args: () => ({}) }),
-  skip("update_session", "sessions come from Chief's recorder and cannot be created through MCP"),
+  // Sessions come only from Chief's desktop recorder; record one into the test project to cover these.
+  oneshot("update_session", (f) => need(f, "sessionId", (session_id) => ({ session_id, session: { description: `${TEST_PREFIX} session` } })),
+    { name: "get_session", args: (f) => need(f, "sessionId", (session_id) => ({ session_id })), isExpected: field("description", () => `${TEST_PREFIX} session`) }),
   oneshot("update_skill", (f) => need(f, "skillId", (skill_id) => ({ skill_id, skill: { description: `${TEST_PREFIX} skill updated` } })),
     { name: "get_skill", args: (f) => need(f, "skillId", (skill_id) => ({ skill_id })), isExpected: field("description", () => `${TEST_PREFIX} skill updated`) }),
 
   // DELETE
   oneshot("delete_action", (f) => need(f, "actionId", (action_id) => ({ action_id })),
     { name: "get_action", args: (f) => need(f, "actionId", (action_id) => ({ action_id })), expect: "error" }),
-  skip("delete_asset", "no asset can be created through remote MCP (see upload_file)"),
+  oneshot("delete_asset", (f) => need(f, "disposableAssetId", (asset_id) => ({ asset_id })),
+    { name: "get_asset", args: (f) => need(f, "disposableAssetId", (asset_id) => ({ asset_id })), expect: "error" }),
   oneshot("delete_chat", (f) => need(f, "deleteChatId", (chat_id) => ({ chat_id })),
     { name: "get_chat", args: (f) => need(f, "deleteChatId", (chat_id) => ({ chat_id })), expect: "error" }),
   oneshot("delete_label", (f) => need(f, "labelId", (label_id) => ({ label_id })),

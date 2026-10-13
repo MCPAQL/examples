@@ -2,13 +2,13 @@
   "suite": "chief-mcp",
   "label": "writes",
   "upstreamUrl": "https://mcp.chief.bot/mcp",
-  "startedAt": "2026-10-13T19:49:06.454Z",
-  "finishedAt": "2026-10-13T19:49:21.376Z",
+  "startedAt": "2026-10-13T19:58:26.081Z",
+  "finishedAt": "2026-10-13T19:58:43.302Z",
   "totals": {
     "TOTAL": 60,
     "IDENTICAL": 20,
-    "SKIPPED": 13,
-    "STRUCTURAL_PARITY": 27
+    "SKIPPED": 8,
+    "STRUCTURAL_PARITY": 32
   },
   "ops": [
     {
@@ -23,7 +23,9 @@
       "name": "get_asset",
       "endpoint": "read",
       "category": "TEST_REPO_READ",
-      "cls": "SKIPPED"
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "get_chat",
@@ -177,7 +179,7 @@
       "name": "search_knowledge_base",
       "endpoint": "read",
       "category": "PURE_READ",
-      "cls": "IDENTICAL",
+      "cls": "STRUCTURAL_PARITY",
       "officialOk": true,
       "mcpaqlOk": true
     },
@@ -256,19 +258,23 @@
       "endpoint": "create",
       "category": "SKIP",
       "cls": "SKIPPED",
-      "note": "path is resolved on Chief's host; remote HTTP upload is not supported upstream"
+      "note": "path is resolved on Chief's host, so remote callers cannot upload; fixtures are uploaded through the web app"
     },
     {
       "name": "attach_label",
       "endpoint": "update",
       "category": "ONESHOT_WRITE",
-      "cls": "SKIPPED"
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "detach_label",
       "endpoint": "update",
       "category": "ONESHOT_WRITE",
-      "cls": "SKIPPED"
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "disable_action",
@@ -330,7 +336,9 @@
       "name": "update_asset",
       "endpoint": "update",
       "category": "ONESHOT_WRITE",
-      "cls": "SKIPPED"
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
     },
     {
       "name": "update_chat",
@@ -390,9 +398,10 @@
     {
       "name": "delete_asset",
       "endpoint": "delete",
-      "category": "SKIP",
-      "cls": "SKIPPED",
-      "note": "no asset can be created through remote MCP (see upload_file)"
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
     },
     {
       "name": "delete_chat",

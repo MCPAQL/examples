@@ -14,6 +14,12 @@ export const TEST_PREFIX = "mcpaql-parity";
 
 // Chief requires a schedule or trigger on every action. This one fires at most on the
 // 31st at 03:00 UTC; the suite disables or deletes every action it creates within minutes.
+// Chief's upload_file opens the path on Chief's own host, so assets cannot be created over
+// remote MCP. Upload these two files to the test project through the web app instead:
+// the first is kept across runs, the second is deleted by delete_asset (re-upload to retest).
+export const FIXTURE_ASSET = `${"mcpaql-parity"}-fixture.txt`;
+export const DISPOSABLE_ASSET = `${"mcpaql-parity"}-disposable.txt`;
+
 export const RARE_SCHEDULE = { hour: "3", weekday: "*", month_day: "31", timezone: "UTC" };
 
 export interface Fixtures {
@@ -28,6 +34,7 @@ export interface Fixtures {
   deleteChatId?: string;
   actionId?: string;
   assetId?: string;
+  disposableAssetId?: string;
   labelId?: string;
   memoryId?: string;
   sessionId?: string;
@@ -159,6 +166,10 @@ async function createWriteFixtures(client: Client, fixtures: Fixtures): Promise<
   });
   fixtures.deleteChatId = idOf(second, "chat_id");
   fixtures.messageId = await firstId(client, "list_messages", "id", { chat_id: fixtures.chatId }, "messages");
+
+  const assets = await listAll(client, "list_assets");
+  fixtures.assetId = str(assets.find((a) => a.filename === FIXTURE_ASSET)?.asset_id);
+  fixtures.disposableAssetId = str(assets.find((a) => a.filename === DISPOSABLE_ASSET)?.asset_id);
 }
 
 export async function setupFixtures(): Promise<Fixtures> {
