@@ -1,13 +1,17 @@
 {
   "name": "@mcpaql/chief-parity-suite",
   "private": true,
-  "description": "Read-only parity suite for the Chief MCP-AQL adapter. Used with mcpaql-parity from @mcpaql/tools.",
+  "description": "Parity suite for the Chief MCP-AQL adapter (read-only by default; writes against a guarded test project). Used with mcpaql-parity from @mcpaql/tools.",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "parity": "node ../../../../tools/dist/parity-cli.js --suite ./dist/suite.js --adapter ../adapter/dist/server.js --label read-only --report parity-report.json",
-    "summarize": "node ./dist/summarize.js parity-report.json ../validation/parity-summary.json"
+    "summarize": "node ./dist/summarize.js parity-report.json ../validation/parity-summary.json",
+    "parity:writes": "CHIEF_PARITY_WRITES=1 node ../../../../tools/dist/parity-cli.js --suite ./dist/suite.js --adapter ../adapter/dist/server.js --label writes --report parity-report-writes.json",
+    "summarize:writes": "node ./dist/summarize.js parity-report-writes.json ../validation/parity-summary-writes.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1"

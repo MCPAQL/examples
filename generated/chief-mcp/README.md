@@ -53,11 +53,24 @@ Result: READ 22, CREATE 10, UPDATE 16, DELETE 11, EXECUTE 1.
 
 ## Parity
 
-`parity-harness/` runs all 22 READ operations against both Chief and the adapter, discovering fixture ids through read-only list calls. It does not run CREATE, UPDATE, DELETE, or EXECUTE operations, because the suite runs against a live account; those 38 are reported as `SKIPPED`.
+`parity-harness/` has two modes.
 
-Result on 2026-10-13 (`validation/parity-summary.json`): 21 IDENTICAL, 1 STRUCTURAL_PARITY (`search_knowledge_base`, which differs only in volatile fields), 38 SKIPPED, 0 divergent or erroring.
+**Read-only (default).** Runs all 22 READ operations against Chief and the adapter, discovering fixture ids through list calls. Safe against any project. Result on 2026-10-13 (`validation/parity-summary.json`): 21 IDENTICAL, 1 STRUCTURAL_PARITY, 0 divergent or erroring.
 
-Raw parity reports stay local (`parity-harness/.gitignore`) because their `detail` fields can quote account data. `npm run summarize` writes the committable summary.
+**Write mode (`CHIEF_PARITY_WRITES=1`).** Runs against a dedicated test project and refuses to start unless the project named by `CHIEF_PROJECT_ID` is called `MCPAQL Testing` (override with `CHIEF_PARITY_PROJECT_NAME`). Setup sweeps leftovers from interrupted runs, then creates its own label, memory, skill, action (on a rare schedule, disabled immediately), and two chats. Teardown deletes every record carrying the `mcpaql-parity` prefix and every chat in the test project. Creates and `send_message` are compared pairwise; updates and deletes run through the adapter and are verified against the official server. The run spends a few short model turns.
+
+Result on 2026-10-13 (`validation/parity-summary-writes.json`): 20 IDENTICAL, 27 STRUCTURAL_PARITY, 0 divergent or erroring, 13 SKIPPED:
+
+| Skipped | Reason |
+|---|---|
+| `create_project` | Chief MCP has no `delete_project`, so test projects could not be cleaned up |
+| `create_project_invitation`, `delete_project_invitation` | Sends a real invitation email |
+| `upload_file`, and asset ops `get_asset`, `attach_label`, `detach_label`, `update_asset`, `delete_asset` | `upload_file` resolves paths on Chief's host, so no asset can be created over remote MCP |
+| `get_session`, `get_session_transcript`, `update_session`, `delete_session` | Sessions come from Chief's recorder and cannot be created through MCP |
+
+Upstream behaviors the suite accounts for: `get_chat` does not return the chat title (renames are verified through `list_chats`), and `get_share_link` succeeds with `is_shared: false` after revocation instead of erroring.
+
+Raw parity reports stay local (`parity-harness/.gitignore`) because their `detail` fields can quote account data. `npm run summarize` and `npm run summarize:writes` write the committable summaries.
 
 ## Regenerating
 
@@ -80,14 +93,15 @@ node ../../../tools/dist/diff-cli.js --bundle capture/discovery-bundle.json --sc
 
 cd parity-harness
 npm install && npm run build
-npm run parity
-npm run summarize
+npm run parity && npm run summarize
+# With CHIEF_PROJECT_ID pointing at the "MCPAQL Testing" project:
+npm run parity:writes && npm run summarize:writes
 ```
 
 Requires the `${env:VAR}` header support in `MCPAQL/tools` and `MCPAQL/adapter-generator`.
 
 ## Known Limitations
 
-- Write-side parity is not covered. A write suite needs a disposable Chief project.
+- Asset and session operations are not exercised (see Parity).
 - The adapter keeps a singleton upstream connection and needs a restart if it drops.
 - This is a point-in-time capture. Regenerate the capture, schema, and validation reports together when Chief changes its MCP surface.
