@@ -96,7 +96,9 @@
       "operation_name": "create_action",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Actions start enabled and run on their schedule or trigger without further confirmation."
+      ]
     },
     {
       "source_tool_name": "create_chat",
@@ -467,7 +469,9 @@
       "operation_name": "update_action",
       "endpoint": "UPDATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "A full replacement can enable the action or change its schedule, trigger, or prompt."
+      ]
     },
     {
       "source_tool_name": "update_asset",
