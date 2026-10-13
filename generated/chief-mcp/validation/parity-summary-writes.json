@@ -1,0 +1,485 @@
+{
+  "suite": "chief-mcp",
+  "label": "writes",
+  "upstreamUrl": "https://mcp.chief.bot/mcp",
+  "startedAt": "2026-10-13T19:58:26.081Z",
+  "finishedAt": "2026-10-13T19:58:43.302Z",
+  "totals": {
+    "TOTAL": 60,
+    "IDENTICAL": 20,
+    "SKIPPED": 8,
+    "STRUCTURAL_PARITY": 32
+  },
+  "ops": [
+    {
+      "name": "get_action",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_asset",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_chat",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_label",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_memory",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_message",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_session",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "SKIPPED"
+    },
+    {
+      "name": "get_session_transcript",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "SKIPPED"
+    },
+    {
+      "name": "get_share_link",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_skill",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_actions",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_assets",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_chat_members",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_chats",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_labels",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_memories",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_messages",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_project_members",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_projects",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_sessions",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_skills",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "search_knowledge_base",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "add_chat_member",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "create_action",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "create_chat",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "create_label",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "create_memory",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "create_project",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "Chief MCP has no delete_project, so created projects cannot be cleaned up"
+    },
+    {
+      "name": "create_project_invitation",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "sends a real invitation email"
+    },
+    {
+      "name": "create_share_link",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "create_skill",
+      "endpoint": "create",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "upload_file",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "path is resolved on Chief's host, so remote callers cannot upload; fixtures are uploaded through the web app"
+    },
+    {
+      "name": "attach_label",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "detach_label",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "disable_action",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "disable_skill",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "enable_action",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "enable_skill",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "regenerate_share_link",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "set_chat_visibility",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_action",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_asset",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_chat",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_label",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_memory",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_project",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "update_session",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "sessions come from Chief's recorder and cannot be created through MCP"
+    },
+    {
+      "name": "update_skill",
+      "endpoint": "update",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_action",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_asset",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_chat",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_label",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_memory",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_message",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_project_invitation",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "paired with create_project_invitation, which sends email"
+    },
+    {
+      "name": "delete_session",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "sessions come from Chief's recorder; never delete a real one"
+    },
+    {
+      "name": "delete_share_link",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "delete_skill",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": false,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "remove_chat_member",
+      "endpoint": "delete",
+      "category": "ONESHOT_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "send_message",
+      "endpoint": "execute",
+      "category": "PAIRED_WRITE",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    }
+  ]
+}

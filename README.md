@@ -22,6 +22,7 @@ For **normative protocol specifications**, see the [spec repository](https://git
 |---------|-------------|--------|
 | [GitHub MCP Golden Path](generated/github-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | GitHub MCP server |
 | [Playwright MCP Golden Path](generated/playwright-mcp/README.md) | End-to-end capture, discovery bundle, generated schema, adapter, and validation artifacts | Playwright MCP server |
+| [Chief MCP Golden Path](generated/chief-mcp/README.md) | Capture, reviewed endpoint overrides, generated adapter, read-only parity suite, and token-footprint comparison (60 tools to 5) | Chief MCP server |
 
 ### Native Sensor Adapters
 

@@ -1,0 +1,472 @@
+{
+  "generated_at": "2026-10-13T22:05:29.738Z",
+  "source_server_name": "chief-mcp",
+  "source_server_version": "8b24ac23ff464b662b36185f39435792de450cf0",
+  "source_capture_name": "chief-mcp",
+  "warning_count": 10,
+  "operation_count": 60,
+  "operations": [
+    {
+      "source_tool_name": "add_chat_member",
+      "operation_name": "add_chat_member",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Widens who can read a restricted chat."
+      ]
+    },
+    {
+      "source_tool_name": "attach_label",
+      "operation_name": "attach_label",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Attaches a label to an existing record; undone by detach_label."
+      ]
+    },
+    {
+      "source_tool_name": "create_action",
+      "operation_name": "create_action",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Actions start enabled and run on their schedule or trigger without further confirmation."
+      ]
+    },
+    {
+      "source_tool_name": "create_chat",
+      "operation_name": "create_chat",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_label",
+      "operation_name": "create_label",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_memory",
+      "operation_name": "create_memory",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_project",
+      "operation_name": "create_project",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Chief has no delete_project in MCP or the web app, so a created project is permanent."
+      ]
+    },
+    {
+      "source_tool_name": "create_project_invitation",
+      "operation_name": "create_project_invitation",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Emails an outside address immediately and can grant the owner role."
+      ]
+    },
+    {
+      "source_tool_name": "create_share_link",
+      "operation_name": "create_share_link",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Makes the chat readable by anyone with the URL, without authentication."
+      ]
+    },
+    {
+      "source_tool_name": "create_skill",
+      "operation_name": "create_skill",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_action",
+      "operation_name": "delete_action",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_asset",
+      "operation_name": "delete_asset",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_chat",
+      "operation_name": "delete_chat",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_label",
+      "operation_name": "delete_label",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_memory",
+      "operation_name": "delete_memory",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_message",
+      "operation_name": "delete_message",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_project_invitation",
+      "operation_name": "delete_project_invitation",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_session",
+      "operation_name": "delete_session",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_share_link",
+      "operation_name": "delete_share_link",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "delete_skill",
+      "operation_name": "delete_skill",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "detach_label",
+      "operation_name": "detach_label",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Removes a label association from an existing record; undone by attach_label."
+      ]
+    },
+    {
+      "source_tool_name": "disable_action",
+      "operation_name": "disable_action",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Toggles an existing action's enabled flag."
+      ]
+    },
+    {
+      "source_tool_name": "disable_skill",
+      "operation_name": "disable_skill",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Toggles an existing skill's enabled flag."
+      ]
+    },
+    {
+      "source_tool_name": "enable_action",
+      "operation_name": "enable_action",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Description implies workflow execution.",
+        "Toggles an existing action's enabled flag. Enabling can resume scheduled or triggered runs, so it requires confirmation."
+      ]
+    },
+    {
+      "source_tool_name": "enable_skill",
+      "operation_name": "enable_skill",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Toggles an existing skill's enabled flag."
+      ]
+    },
+    {
+      "source_tool_name": "get_action",
+      "operation_name": "get_action",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_asset",
+      "operation_name": "get_asset",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_chat",
+      "operation_name": "get_chat",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_label",
+      "operation_name": "get_label",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_memory",
+      "operation_name": "get_memory",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_message",
+      "operation_name": "get_message",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_session",
+      "operation_name": "get_session",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_session_transcript",
+      "operation_name": "get_session_transcript",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_share_link",
+      "operation_name": "get_share_link",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_skill",
+      "operation_name": "get_skill",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_actions",
+      "operation_name": "list_actions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_assets",
+      "operation_name": "list_assets",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_chat_members",
+      "operation_name": "list_chat_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_chats",
+      "operation_name": "list_chats",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_labels",
+      "operation_name": "list_labels",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_memories",
+      "operation_name": "list_memories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_messages",
+      "operation_name": "list_messages",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_project_members",
+      "operation_name": "list_project_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_projects",
+      "operation_name": "list_projects",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_sessions",
+      "operation_name": "list_sessions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_skills",
+      "operation_name": "list_skills",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "regenerate_share_link",
+      "operation_name": "regenerate_share_link",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Rotates an existing share link; the old link stops working for everyone holding it."
+      ]
+    },
+    {
+      "source_tool_name": "remove_chat_member",
+      "operation_name": "remove_chat_member",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_knowledge_base",
+      "operation_name": "search_knowledge_base",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "send_message",
+      "operation_name": "send_message",
+      "endpoint": "EXECUTE",
+      "needs_review": false,
+      "review_reasons": [
+        "Description implies workflow execution.",
+        "Posts a message other members see and may start a Chief agent turn; not undoable from the reader's side."
+      ]
+    },
+    {
+      "source_tool_name": "set_chat_visibility",
+      "operation_name": "set_chat_visibility",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+        "Changes who can see an existing chat; widening visibility can expose its contents."
+      ]
+    },
+    {
+      "source_tool_name": "update_action",
+      "operation_name": "update_action",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [
+        "A full replacement can enable the action or change its schedule, trigger, or prompt."
+      ]
+    },
+    {
+      "source_tool_name": "update_asset",
+      "operation_name": "update_asset",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_chat",
+      "operation_name": "update_chat",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_label",
+      "operation_name": "update_label",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_memory",
+      "operation_name": "update_memory",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_project",
+      "operation_name": "update_project",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_session",
+      "operation_name": "update_session",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_skill",
+      "operation_name": "update_skill",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "upload_file",
+      "operation_name": "upload_file",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Description implies workflow execution.",
+        "Creates a new asset; removable with delete_asset."
+      ]
+    }
+  ]
+}

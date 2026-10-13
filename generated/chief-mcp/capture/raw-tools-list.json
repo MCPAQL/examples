@@ -1,0 +1,4825 @@
+[
+  {
+    "name": "add_chat_member",
+    "description": "Add one project member to a restricted chat's audience by email. The email must belong to a current member of the chat's project. Re-adding an existing member succeeds without change. The chat must already be restricted; other visibility levels respond 409.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the restricted chat"
+        },
+        "email": {
+          "type": "string",
+          "description": "the email of a current member of the chat's project"
+        }
+      },
+      "required": [
+        "chat_id",
+        "email"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id",
+        "email"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "attach_label",
+    "description": "Attach a label by name to an asset. Re-attaching an already-attached label is a no-op.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "description": "the asset to attach the label to"
+        },
+        "label_name": {
+          "type": "string",
+          "description": "the label name; a name with no matching label is auto-created"
+        }
+      },
+      "required": [
+        "asset_id",
+        "label_name"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label_id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_action",
+    "description": "Create an action in the project. Prompt is plain text. Provide a schedule for recurring runs or a trigger for event-driven runs. An action always starts enabled.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "hour": {
+              "type": "string"
+            },
+            "weekday": {
+              "type": "string"
+            },
+            "month_day": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour",
+            "weekday",
+            "month_day",
+            "timezone"
+          ],
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "asset_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "chat_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "label_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "concept_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "project_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "view_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "email": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "to": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "subject": {
+              "type": "string"
+            },
+            "include_date_in_subject": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": [
+            "null",
+            "boolean"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "prompt"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "hour": {
+              "type": "string"
+            },
+            "weekday": {
+              "type": "string"
+            },
+            "month_day": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour",
+            "weekday",
+            "month_day",
+            "timezone"
+          ],
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "asset_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "chat_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "label_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "concept_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "project_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "view_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "email": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "to": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "subject": {
+              "type": "string"
+            },
+            "include_date_in_subject": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "name",
+        "prompt",
+        "enabled",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_chat",
+    "description": "Create a chat with its first turn. intelligence picks a mode preset and provider biases vendor selection within it. Turns run asynchronously; set wait_for_response to block until the answer is ready, otherwise poll get_message with the returned message_id.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string"
+            },
+            "intelligence": {
+              "type": "string"
+            },
+            "provider": {
+              "type": "string"
+            },
+            "skills": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "public_data": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "scope": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "asset_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "chat_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "label_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "concept_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "project_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "view_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "description": "prompt is required. intelligence is one of \"auto\", \"fast\", \"expert\", \"research\" and empty defaults to \"auto\". provider is one of \"automatic\", \"anthropic\", \"openai\", \"google\". An empty scope sees the whole project",
+          "required": [
+            "prompt"
+          ],
+          "additionalProperties": false
+        },
+        "wait_for_response": {
+          "type": "boolean",
+          "description": "block until the turn finishes and the response is ready before returning"
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "description": "seconds to wait when wait_for_response is set; defaults to 360"
+        }
+      },
+      "required": [
+        "chat"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string"
+        },
+        "message_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "chat_id",
+        "message_id",
+        "created_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_label",
+    "description": "Create a label in the project. Color, when set, must be a 6-digit hex code like #6b7280.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label_id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_memory",
+    "description": "Store a memory in the project. category is one of: identity, preference, fact, context, instruction. importance is an integer. scope is optional and, for now, only accepts \"project\".",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "importance": {
+          "type": "integer"
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "content",
+        "category",
+        "importance"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "importance": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "memory_id",
+        "scope",
+        "content",
+        "category",
+        "importance",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_project",
+    "description": "Create a project. It lands in the org and workspace of the caller's root grant.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "default": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "project_id",
+        "name",
+        "default"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_project_invitation",
+    "description": "Invite one user to a project by email. role is one of \"collaborator\", \"reader\", \"owner\". The invitation email is sent automatically; the user becomes a member only after accepting. A project holds one invitation per role: when one already exists the email is added to it, and re-inviting an email already on it succeeds unchanged.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "the project to invite into"
+        },
+        "invitation": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            }
+          },
+          "description": "email is required. role is one of \"collaborator\", \"reader\", \"owner\"",
+          "required": [
+            "email",
+            "role"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "project_id",
+        "invitation"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "invitation_id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "invitation_id",
+        "email",
+        "role",
+        "url",
+        "created_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_share_link",
+    "description": "Create a chat's public share link. Anyone with the URL can read the conversation without authentication. Each chat has at most one active link: when one already exists it is returned unchanged; use regenerate_share_link to rotate it.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "is_shared": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "is_shared"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "create_skill",
+    "description": "Create a skill in the project. scope is \"project\" or \"user\". category is \"skill\" or \"persona\". Content is the skill body.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "content",
+        "scope",
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "skill_id",
+        "name",
+        "content",
+        "scope",
+        "category",
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_action",
+    "description": "Delete an action permanently.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "description": "the action ID"
+        }
+      },
+      "required": [
+        "action_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_asset",
+    "description": "Delete an asset permanently.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "description": "the asset to delete"
+        }
+      },
+      "required": [
+        "asset_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_chat",
+    "description": "Delete a chat and its messages permanently.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_label",
+    "description": "Delete a label permanently. It is detached from every asset it was attached to.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string",
+          "description": "the label ID"
+        }
+      },
+      "required": [
+        "label_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_memory",
+    "description": "Delete a memory permanently.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "type": "string",
+          "description": "the memory ID"
+        }
+      },
+      "required": [
+        "memory_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_message",
+    "description": "Delete a single message from a chat permanently.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat containing the message"
+        },
+        "message_id": {
+          "type": "string",
+          "description": "the message ID"
+        }
+      },
+      "required": [
+        "chat_id",
+        "message_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_project_invitation",
+    "description": "Revoke a pending project invitation by ID.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "the project the invitation belongs to"
+        },
+        "invitation_id": {
+          "type": "string",
+          "description": "the invitation to revoke"
+        }
+      },
+      "required": [
+        "project_id",
+        "invitation_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_session",
+    "description": "Delete a session permanently.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "the session ID"
+        }
+      },
+      "required": [
+        "session_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_share_link",
+    "description": "Revoke a chat's share link. The public URL stops working immediately. Responds 404 when no active link exists.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "delete_skill",
+    "description": "Delete a skill permanently. System skills are read-only.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "the skill ID"
+        }
+      },
+      "required": [
+        "skill_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deleted"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "detach_label",
+    "description": "Detach a label from an asset by ID. Detaching a label that is not attached is a no-op.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "description": "the asset to detach the label from"
+        },
+        "label_id": {
+          "type": "string",
+          "description": "the label to detach"
+        }
+      },
+      "required": [
+        "asset_id",
+        "label_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "detached": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "detached"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "disable_action",
+    "description": "Disable an action without deleting it, pausing its schedule or trigger.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "description": "the action ID"
+        }
+      },
+      "required": [
+        "action_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "hour": {
+              "type": "string"
+            },
+            "weekday": {
+              "type": "string"
+            },
+            "month_day": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour",
+            "weekday",
+            "month_day",
+            "timezone"
+          ],
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "asset_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "chat_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "label_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "concept_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "project_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "view_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "email": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "to": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "subject": {
+              "type": "string"
+            },
+            "include_date_in_subject": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "name",
+        "prompt",
+        "enabled",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "disable_skill",
+    "description": "Disable a skill for the caller so it is no longer offered during chats.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "the skill ID"
+        }
+      },
+      "required": [
+        "skill_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "skill_id",
+        "name",
+        "content",
+        "scope",
+        "category",
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "enable_action",
+    "description": "Enable an action so it runs on its schedule or trigger.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "description": "the action ID"
+        }
+      },
+      "required": [
+        "action_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "hour": {
+              "type": "string"
+            },
+            "weekday": {
+              "type": "string"
+            },
+            "month_day": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour",
+            "weekday",
+            "month_day",
+            "timezone"
+          ],
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "asset_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "chat_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "label_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "concept_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "project_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "view_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "email": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "to": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "subject": {
+              "type": "string"
+            },
+            "include_date_in_subject": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "name",
+        "prompt",
+        "enabled",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "enable_skill",
+    "description": "Enable a skill for the caller so it is offered during chats.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "the skill ID"
+        }
+      },
+      "required": [
+        "skill_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "skill_id",
+        "name",
+        "content",
+        "scope",
+        "category",
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_action",
+    "description": "Get a single action by ID, including its full schedule, trigger, scope, and email configuration.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "description": "the action ID"
+        }
+      },
+      "required": [
+        "action_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "hour": {
+              "type": "string"
+            },
+            "weekday": {
+              "type": "string"
+            },
+            "month_day": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour",
+            "weekday",
+            "month_day",
+            "timezone"
+          ],
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "asset_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "chat_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "label_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "concept_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "project_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "view_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "email": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "to": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "subject": {
+              "type": "string"
+            },
+            "include_date_in_subject": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "name",
+        "prompt",
+        "enabled",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_asset",
+    "description": "Get a single asset by ID, including its current ingest status.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "description": "the asset ID to fetch"
+        }
+      },
+      "required": [
+        "asset_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "size_in_bytes": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "asset_id",
+        "status",
+        "filename",
+        "mime_type",
+        "size_in_bytes",
+        "created_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_chat",
+    "description": "Get a chat's metadata by ID. modified_at is null until the chat's first turn completes.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "visibility": {
+          "type": "string"
+        },
+        "can_manage_visibility": {
+          "type": [
+            "null",
+            "boolean"
+          ]
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_label",
+    "description": "Get a single label by ID, including its color and icon.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string",
+          "description": "the label ID"
+        }
+      },
+      "required": [
+        "label_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label_id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_memory",
+    "description": "Get a single memory by ID.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "type": "string",
+          "description": "the memory ID"
+        }
+      },
+      "required": [
+        "memory_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "importance": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "memory_id",
+        "scope",
+        "content",
+        "category",
+        "importance",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_message",
+    "description": "Get a single message by ID, including its prompt and response. Both stay empty until the async turn finishes, so poll until the response is present.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat containing the message"
+        },
+        "message_id": {
+          "type": "string",
+          "description": "the message ID"
+        }
+      },
+      "required": [
+        "chat_id",
+        "message_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "ingress_credits": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        },
+        "egress_credits": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        },
+        "total_credits": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_session",
+    "description": "Get a single session by ID: its lifecycle state, live summary, and turn_count. Use it for what a session decided and what came out of it; for what was actually said (quotes, who said what, when), use get_session_transcript. state distinguishes a finished session (session.ended) from one still scheduled or running. The live summary is the canonical record of what the session decided: its items with kind todo are the follow-ups. The turns field is deprecated and will be removed; read the transcript with get_session_transcript.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "the session ID"
+        }
+      },
+      "required": [
+        "session_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "brief": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string"
+            },
+            "scheduled_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "started_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "ended_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "calendar_event_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "additionalProperties": false
+        },
+        "turns": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "speaker": {
+                "type": "integer"
+              },
+              "source": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "speaker",
+              "source",
+              "text",
+              "start",
+              "end"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "turn_count": {
+          "type": "integer"
+        },
+        "live_summary": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "headline": {
+              "type": "string"
+            },
+            "items": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "topic": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "owner": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "first_seen_sec": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "id",
+                  "kind",
+                  "text",
+                  "state",
+                  "active",
+                  "first_seen_sec"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "additionalProperties": false
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "name",
+        "state",
+        "turns",
+        "turn_count",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_session_transcript",
+    "description": "Read one page of a session's transcript, oldest turn first: the words actually spoken, each turn with its index, speaker label, text, and m:ss timecode when the recording has one. Use it for quotes, who said what, or when something came up; use get_session for the outcome (live summary, todos). With no cursor it starts at the beginning of the meeting; before_id set to the session's turn_count (from get_session) returns the most recent turns. While has_more is true, pass last_id as after_id to read forward, or first_id as before_id to read backward. Pages hold up to 100 turns. Indices are stable once the session has ended (state session.ended); while it is still recording, turns merged from another device can shift them.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "the session ID"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "turns per page, 1 to 100; defaults to 25"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "the previous page's last_id; returns the turns after that index"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "a turn index, or the session's turn_count for the most recent turns; returns the turns just before it, still oldest first"
+        }
+      },
+      "required": [
+        "session_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "index": {
+                "type": "integer"
+              },
+              "speaker": {
+                "type": "integer"
+              },
+              "speaker_label": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              },
+              "at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "index",
+              "speaker",
+              "speaker_label",
+              "source",
+              "text",
+              "start",
+              "end"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_share_link",
+    "description": "Get a chat's share-link status. url and created_at are empty when the chat isn't shared.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "is_shared": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "is_shared"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_skill",
+    "description": "Get a single skill by ID, including its content and enabled state for the caller.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "the skill ID"
+        }
+      },
+      "required": [
+        "skill_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "skill_id",
+        "name",
+        "content",
+        "scope",
+        "category",
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_actions",
+    "description": "List the actions visible in the project, cursor-paginated. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of actions to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this action ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this action ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "action_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "created_at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action_id",
+              "name",
+              "enabled",
+              "created_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_assets",
+    "description": "List assets in the project, cursor-paginated. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of assets to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this asset ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this asset ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "asset_id": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              },
+              "mime_type": {
+                "type": "string"
+              },
+              "size_in_bytes": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "labels": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label_id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label_id",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "asset_id",
+              "status",
+              "filename",
+              "mime_type",
+              "size_in_bytes",
+              "created_at",
+              "labels"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_chat_members",
+    "description": "List a restricted chat's audience. Use the returned user_id with remove_chat_member.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "members": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "user_id",
+              "email"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "members"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_chats",
+    "description": "List the caller's chats in the project, cursor-paginated. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of chats to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this chat ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this chat ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "chat_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "modified_at": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "visibility": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "chat_id",
+              "created_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_labels",
+    "description": "List the labels visible in the project, cursor-paginated. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of labels to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this label ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this label ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "label_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label_id",
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_memories",
+    "description": "List the memories in the project, cursor-paginated. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of memories to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this memory ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this memory ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "memory_id": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "importance": {
+                "type": "integer"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "modified_at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "memory_id",
+              "scope",
+              "content",
+              "category",
+              "importance",
+              "created_at",
+              "modified_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_messages",
+    "description": "List metadata for every message in a chat. Message content is fetched separately via get_message.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "messages"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_project_members",
+    "description": "List every user holding a grant in a project, with their role and how they joined.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "the project ID"
+        }
+      },
+      "required": [
+        "project_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "join_method": {
+                "type": "string"
+              },
+              "added_at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "user_id",
+              "email",
+              "role",
+              "join_method",
+              "added_at"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_projects",
+    "description": "List the projects the API key can access. Project tools need only the API key, not the configured project ID.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "default": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "project_id",
+              "name",
+              "default"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_sessions",
+    "description": "List the caller's sessions in the project, newest first, cursor-paginated. Each item carries the session's lifecycle state, so finished sessions (state session.ended) can be picked out without fetching each one. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of sessions to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this session ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this session ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "session_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "state": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string"
+                  },
+                  "scheduled_at": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "started_at": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "ended_at": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "calendar_event_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "state"
+                ],
+                "additionalProperties": false
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "modified_at": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "session_id",
+              "name",
+              "state",
+              "created_at",
+              "modified_at"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "list_skills",
+    "description": "List the skills visible in the project, cursor-paginated, including each skill's enabled state for the caller. Use after_id / before_id with the returned first_id / last_id to page.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "description": "maximum number of skills to return; the server clamps to its own bounds"
+        },
+        "after_id": {
+          "type": "string",
+          "description": "page forward from this skill ID"
+        },
+        "before_id": {
+          "type": "string",
+          "description": "page backward from this skill ID"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "skill_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "display_name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "skill_id",
+              "name",
+              "content",
+              "scope",
+              "category",
+              "enabled"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "first_id": {
+          "type": "string"
+        },
+        "last_id": {
+          "type": "string"
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data",
+        "first_id",
+        "last_id",
+        "has_more"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "regenerate_share_link",
+    "description": "Revoke a chat's current share link, if any, and mint a new URL. The old URL stops working immediately.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat ID"
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "is_shared": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "is_shared"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "remove_chat_member",
+    "description": "Remove one user from a restricted chat's audience by user_id. The chat must already be restricted; other visibility levels respond 409.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the restricted chat"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "the user to remove; use the user_id returned by list_chat_members"
+        }
+      },
+      "required": [
+        "chat_id",
+        "user_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "removed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "removed"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "search_knowledge_base",
+    "description": "Search the project's documents and return the passages that answer a question. Use this whenever the user asks about their own files, uploads, or project content, rather than guessing from memory. The search is semantic, so phrase the query as a natural question; keywords work poorly. Searches the whole project unless you pass asset_ids, label_ids, view_ids, or concept_ids. Each result carries an asset and its matching passages, best first, with a relevance_score from 0 to 1 where higher is a stronger match. Quote the passages rather than paraphrasing them, and cite the asset title. Requires a paid plan.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "the question to answer, in natural language; this is a semantic search, so write a question rather than keywords"
+        },
+        "max_results": {
+          "type": "integer",
+          "description": "maximum passages to return, 1 to 50; defaults to 10"
+        },
+        "asset_ids": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "restrict the search to these assets; omit every list to search the whole project"
+        },
+        "label_ids": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "restrict the search to assets carrying these labels"
+        },
+        "view_ids": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "restrict the search to the assets in these views"
+        },
+        "concept_ids": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "restrict the search to the assets behind these concepts"
+        },
+        "indexed_only": {
+          "type": "boolean",
+          "description": "skip the slower pass that reads documents still being ingested; set this when speed matters more than covering a just-uploaded file"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "duration_ms": {
+          "type": "integer"
+        },
+        "total_results": {
+          "type": "integer"
+        },
+        "partial": {
+          "type": "boolean"
+        },
+        "results": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "asset_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "filename": {
+                "type": "string"
+              },
+              "mime_type": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "size_bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "relevance_score": {
+                "type": "number"
+              },
+              "chunks": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "position": {
+                      "type": "integer"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "content": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "position",
+                    "score",
+                    "content"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "asset_id",
+              "title",
+              "relevance_score",
+              "chunks"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "query",
+        "duration_ms",
+        "total_results",
+        "partial",
+        "results"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "send_message",
+    "description": "Append a turn to an existing chat. The tuning fields match create_chat. Turns run asynchronously; set wait_for_response to block until the answer is ready, otherwise poll get_message with the returned message_id.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat to append a turn to"
+        },
+        "message": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string"
+            },
+            "intelligence": {
+              "type": "string"
+            },
+            "provider": {
+              "type": "string"
+            },
+            "skills": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "public_data": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "scope": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "asset_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "chat_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "label_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "concept_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "project_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "view_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "description": "prompt is required. The tuning fields match create_chat",
+          "required": [
+            "prompt"
+          ],
+          "additionalProperties": false
+        },
+        "wait_for_response": {
+          "type": "boolean",
+          "description": "block until the turn finishes and the response is ready before returning"
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "description": "seconds to wait when wait_for_response is set; defaults to 360"
+        }
+      },
+      "required": [
+        "chat_id",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "created_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "set_chat_visibility",
+    "description": "Set a chat's access level: \"project\" lets every project member read it, \"restricted\" limits reads to the owner plus the audience managed via the chat member tools, \"private\" is owner-only. Setting restricted keeps any audience the chat already had; switching to project or private clears it.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat to change"
+        },
+        "visibility": {
+          "type": "string",
+          "description": "one of \"project\", \"restricted\", \"private\""
+        }
+      },
+      "required": [
+        "chat_id",
+        "visibility"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "chat_id",
+        "visibility"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_action",
+    "description": "Replace an action's configuration. The body is a full replacement: any schedule, trigger, scope, or email section omitted from action is cleared.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "description": "the action to update"
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "prompt": {
+              "type": "string"
+            },
+            "schedule": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "hour": {
+                  "type": "string"
+                },
+                "weekday": {
+                  "type": "string"
+                },
+                "month_day": {
+                  "type": "string"
+                },
+                "timezone": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "hour",
+                "weekday",
+                "month_day",
+                "timezone"
+              ],
+              "additionalProperties": false
+            },
+            "trigger": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "additionalProperties": false
+            },
+            "scope": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "asset_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "chat_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "label_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "concept_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "project_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "view_ids": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "email": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "to": {
+                  "type": [
+                    "null",
+                    "array"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "include_date_in_subject": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "to"
+              ],
+              "additionalProperties": false
+            },
+            "enabled": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            }
+          },
+          "description": "the full replacement action body; omitted schedule, trigger, scope, or email sections are cleared",
+          "required": [
+            "name",
+            "prompt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "action_id",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "hour": {
+              "type": "string"
+            },
+            "weekday": {
+              "type": "string"
+            },
+            "month_day": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hour",
+            "weekday",
+            "month_day",
+            "timezone"
+          ],
+          "additionalProperties": false
+        },
+        "trigger": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "asset_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "chat_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "label_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "concept_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "project_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "view_ids": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "email": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "to": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "subject": {
+              "type": "string"
+            },
+            "include_date_in_subject": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "additionalProperties": false
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "name",
+        "prompt",
+        "enabled",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_asset",
+    "description": "Patch an asset's name and/or description. Omitted fields are left unchanged.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "description": "the asset to update"
+        },
+        "name": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "new display name; omit to leave unchanged"
+        },
+        "description": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "new description; omit to leave unchanged"
+        }
+      },
+      "required": [
+        "asset_id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "size_in_bytes": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "asset_id",
+        "status",
+        "filename",
+        "mime_type",
+        "size_in_bytes",
+        "created_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_chat",
+    "description": "Rename a chat. title is the only mutable field and must not be empty.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "description": "the chat to rename"
+        },
+        "chat": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            }
+          },
+          "description": "title is the only mutable field and must not be empty",
+          "required": [
+            "title"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "chat_id",
+        "chat"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "visibility": {
+          "type": "string"
+        },
+        "can_manage_visibility": {
+          "type": [
+            "null",
+            "boolean"
+          ]
+        }
+      },
+      "required": [
+        "chat_id"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_label",
+    "description": "Patch a label's display metadata. Omitted fields are left unchanged. Color, when set, must be a 6-digit hex code like #6b7280.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string",
+          "description": "the label to update"
+        },
+        "label": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "color": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "icon": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          "description": "the patch; omitted fields are left unchanged. color, when set, must be a 6-digit hex code like #6b7280",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "label_id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "label_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label_id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_memory",
+    "description": "Update a memory. content is replaced; category and importance are optional patches. category is one of: identity, preference, fact, context, instruction.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "type": "string",
+          "description": "the memory to update"
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "category": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "importance": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          "description": "content is replaced; category and importance are optional patches. category is one of: identity, preference, fact, context, instruction",
+          "required": [
+            "content"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "memory_id",
+        "memory"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "memory_id": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "importance": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "memory_id",
+        "scope",
+        "content",
+        "category",
+        "importance",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_project",
+    "description": "Replace a project's name and description — the only two mutable fields. The body is a full set, not a patch: an empty description clears it.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "the project to update"
+        },
+        "project": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "description": "the full set of the two mutable fields, not a patch; an empty description clears it",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "project_id",
+        "project"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "default": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "project_id",
+        "name",
+        "default"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_session",
+    "description": "Patch a session's name and/or description. Omitted fields are left unchanged.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "the session to update"
+        },
+        "session": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "description": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          "description": "name and/or description patch; omitted fields are left unchanged",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "session_id",
+        "session"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "brief": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string"
+            },
+            "scheduled_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "started_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "ended_at": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "calendar_event_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "additionalProperties": false
+        },
+        "turns": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "speaker": {
+                "type": "integer"
+              },
+              "source": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "speaker",
+              "source",
+              "text",
+              "start",
+              "end"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "turn_count": {
+          "type": "integer"
+        },
+        "live_summary": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "headline": {
+              "type": "string"
+            },
+            "items": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "topic": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "owner": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "first_seen_sec": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "id",
+                  "kind",
+                  "text",
+                  "state",
+                  "active",
+                  "first_seen_sec"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "additionalProperties": false
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "name",
+        "state",
+        "turns",
+        "turn_count",
+        "created_at",
+        "modified_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "update_skill",
+    "description": "Patch a skill. Omitted fields are left unchanged. category, when set, must be \"skill\" or \"persona\". System skills are read-only.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "description": "the skill to update"
+        },
+        "skill": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "display_name": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "description": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "content": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "icon": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "category": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          "description": "the patch; omitted fields are left unchanged. category, when set, must be \"skill\" or \"persona\"",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "skill_id",
+        "skill"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "skill_id",
+        "name",
+        "content",
+        "scope",
+        "category",
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "upload_file",
+    "description": "Upload a local file as an asset. The path is resolved on the host running this MCP server, so this is intended for local stdio usage; uploading inline content over remote HTTP is not yet supported. Returns the asset and whether its content already existed (a dedup hit).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "absolute path to a local file, resolved on the host running this MCP server"
+        },
+        "wait_for_ready": {
+          "type": "boolean",
+          "description": "block until the asset finishes ingesting before returning"
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "description": "seconds to wait when wait_for_ready is set; defaults to 120"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "size_in_bytes": {
+          "type": "integer"
+        },
+        "already_exists": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "asset_id",
+        "status",
+        "filename",
+        "mime_type",
+        "size_in_bytes",
+        "already_exists"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

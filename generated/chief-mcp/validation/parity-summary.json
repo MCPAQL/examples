@@ -1,0 +1,457 @@
+{
+  "suite": "chief-mcp",
+  "label": "read-only",
+  "upstreamUrl": "https://mcp.chief.bot/mcp",
+  "startedAt": "2026-10-13T19:14:32.140Z",
+  "finishedAt": "2026-10-13T19:14:36.740Z",
+  "totals": {
+    "TOTAL": 60,
+    "IDENTICAL": 21,
+    "STRUCTURAL_PARITY": 1,
+    "SKIPPED": 38
+  },
+  "ops": [
+    {
+      "name": "get_action",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_asset",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_chat",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_label",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_memory",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_message",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_session",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_session_transcript",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_share_link",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "get_skill",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_actions",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_assets",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_chat_members",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_chats",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_labels",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_memories",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_messages",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_project_members",
+      "endpoint": "read",
+      "category": "TEST_REPO_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_projects",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_sessions",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "list_skills",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "search_knowledge_base",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "STRUCTURAL_PARITY",
+      "officialOk": true,
+      "mcpaqlOk": true
+    },
+    {
+      "name": "add_chat_member",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_action",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_chat",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_label",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_memory",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_project",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_project_invitation",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_share_link",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "create_skill",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "upload_file",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "attach_label",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "detach_label",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "disable_action",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "disable_skill",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "enable_action",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "enable_skill",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "regenerate_share_link",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "set_chat_visibility",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_action",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_asset",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_chat",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_label",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_memory",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_project",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_session",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "update_skill",
+      "endpoint": "update",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_action",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_asset",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_chat",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_label",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_memory",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_message",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_project_invitation",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_session",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_share_link",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "delete_skill",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "remove_chat_member",
+      "endpoint": "delete",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    },
+    {
+      "name": "send_message",
+      "endpoint": "execute",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "write op not exercised: suite is read-only against a live Chief account"
+    }
+  ]
+}
