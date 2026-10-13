@@ -126,7 +126,9 @@
       "operation_name": "create_project",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Chief has no delete_project in MCP or the web app, so a created project is permanent."
+      ]
     },
     {
       "source_tool_name": "create_project_invitation",

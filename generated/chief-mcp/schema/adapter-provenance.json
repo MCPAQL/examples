@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-13T20:49:38.399Z",
+  "generated_at": "2026-10-13T22:05:29.738Z",
   "source_server_name": "chief-mcp",
   "source_server_version": "8b24ac23ff464b662b36185f39435792de450cf0",
   "source_capture_name": "chief-mcp",
@@ -60,7 +60,9 @@
       "operation_name": "create_project",
       "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Chief has no delete_project in MCP or the web app, so a created project is permanent."
+      ]
     },
     {
       "source_tool_name": "create_project_invitation",
