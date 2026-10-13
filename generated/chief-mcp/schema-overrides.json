@@ -90,6 +90,11 @@
       "danger_level": "dangerous",
       "needs_review": false,
       "review_reason": "A full replacement can enable the action or change its schedule, trigger, or prompt."
+    },
+    "create_project": {
+      "danger_level": "dangerous",
+      "needs_review": false,
+      "review_reason": "Chief has no delete_project in MCP or the web app, so a created project is permanent."
     }
   }
 }
