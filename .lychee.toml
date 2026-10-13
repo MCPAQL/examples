@@ -29,6 +29,9 @@ exclude = [
     # DollhouseMCP development repo (historical references, may be private)
     "^https?://github\\.com/DollhouseMCP/mcp-server-v2-refactor",
 
+    # Authenticated MCP endpoints (respond 401 without credentials)
+    "^https?://mcp\\.chief\\.bot",
+
     # MCPAQL adapter-studio (private repo, returns 404 from CI)
     "^https?://github\\.com/MCPAQL/adapter-studio",
 

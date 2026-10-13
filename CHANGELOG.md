@@ -10,6 +10,11 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Chief MCP adapter example (`generated/chief-mcp/`)
+  - 60 Chief MCP tools behind the five CRUDE endpoints; `tools/list` drops from 63,520 to 3,766 characters, with per-call results the same size as Chief's own
+  - Reviewed `schema-overrides.json` for the ten operations the interrogator flagged, with a reason for each endpoint and danger level
+  - Parity harness with a read-only mode and a write mode guarded to a dedicated test project; 56 of 60 operations exercised with no divergence
+  - Chief's project id is supplied as `${env:CHIEF_PROJECT_ID}` and never committed
 - Shortcut Remote JIT adapter example (`generated/shortcut-remote-mcp/`)
   - Just-in-time observational HID discovery of the undocumented XP-Pen Shortcut Remote keypad: capture raw input reports, derive the byte layout, emit a CRUDE adapter — no vendor SDK, no kernel extension, no protocol documentation
   - Single long-lived adapter process serving HID decode, layer state machine, wheel state, keystroke and shell dispatch, and a live WebSocket HUD from one port
