@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# Raw reports can carry payload excerpts from the account under test; commit only the summary.
+parity-report.json
+fixtures.json

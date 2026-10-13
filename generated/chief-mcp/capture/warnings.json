@@ -1,0 +1,72 @@
+[
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "attach_label",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "detach_label",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "disable_action",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "disable_skill",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description implies workflow execution.",
+    "tool": "enable_action",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "enable_skill",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "regenerate_share_link",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description implies workflow execution.",
+    "tool": "send_message",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+    "tool": "set_chat_visibility",
+    "heuristic": "endpoint_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Description implies workflow execution.",
+    "tool": "upload_file",
+    "heuristic": "endpoint_classification"
+  }
+]
