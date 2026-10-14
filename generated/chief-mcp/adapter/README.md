@@ -10,6 +10,37 @@ Generated MCP-AQL adapter package for the Chief MCP server (mcp.chief.bot).
 - DELETE: delete_action, delete_asset, delete_chat, delete_label, delete_memory, delete_message, delete_project_invitation, delete_session, delete_share_link, delete_skill, remove_chat_member
 - EXECUTE: send_message
 
+## Install
+
+Add the adapter to any MCP client; `npx` downloads and runs it, with nothing to clone or build:
+
+```json
+{
+  "mcpServers": {
+    "chief-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mcpaql/chief-mcp"
+      ],
+      "env": {
+        "CHIEF_API_KEY": "...",
+        "CHIEF_PROJECT_ID": "..."
+      }
+    }
+  }
+}
+```
+
+Or, in Claude Code:
+
+```bash
+claude mcp add chief-mcp -e CHIEF_API_KEY=... -e CHIEF_PROJECT_ID=... -- npx -y @mcpaql/chief-mcp
+```
+
+- `CHIEF_API_KEY` (required): upstream API token.
+- `CHIEF_PROJECT_ID` (required): sent as the `X-Project-Id` header.
+
 ## Running
 
 Requires Node.js 20 or newer.
