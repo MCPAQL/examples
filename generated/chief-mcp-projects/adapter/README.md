@@ -10,6 +10,36 @@ Generated MCP-AQL adapter package for Project-aware MCP-AQL adapter for the Chie
 - DELETE: delete_action, delete_asset, delete_chat, delete_label, delete_memory, delete_message, delete_project_invitation, delete_session, delete_share_link, delete_skill, remove_chat_member
 - EXECUTE: send_message
 
+## Install
+
+Add the adapter to any MCP client; `npx` downloads and runs it, with nothing to clone or build:
+
+```json
+{
+  "mcpServers": {
+    "chief-mcp-projects": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mcpaql/chief-mcp-projects"
+      ],
+      "env": {
+        "CHIEF_API_KEY": "..."
+      }
+    }
+  }
+}
+```
+
+Or, in Claude Code:
+
+```bash
+claude mcp add chief-mcp-projects -e CHIEF_API_KEY=... -- npx -y @mcpaql/chief-mcp-projects
+```
+
+- `CHIEF_API_KEY` (required): upstream API token.
+- `CHIEF_PROJECT` (optional): starting project, by id or name.
+
 ## Running
 
 Requires Node.js 20 or newer.

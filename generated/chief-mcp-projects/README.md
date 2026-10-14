@@ -2,6 +2,30 @@
 
 A second MCP-AQL adapter for the [Chief](https://chief.bot) MCP server, generated with the adapter generator's `tenancy` support. The faithful adapter is in [`../chief-mcp`](../chief-mcp/README.md).
 
+## Quick Start
+
+Published to npm as [`@mcpaql/chief-mcp-projects`](https://www.npmjs.com/package/@mcpaql/chief-mcp-projects). Only the API key is needed:
+
+```json
+{
+  "mcpServers": {
+    "chief": {
+      "command": "npx",
+      "args": ["-y", "@mcpaql/chief-mcp-projects"],
+      "env": { "CHIEF_API_KEY": "..." }
+    }
+  }
+}
+```
+
+Or, in Claude Code:
+
+```bash
+claude mcp add chief -e CHIEF_API_KEY=... -- npx -y @mcpaql/chief-mcp-projects
+```
+
+Every call still goes to Chief's hosted server at `mcp.chief.bot` with your API key.
+
 ## Why a second adapter
 
 Chief scopes most tools to one project, chosen by an `X-Project-Id` header written into the MCP client config at install time. The model cannot see which project it is in, cannot see the others, and cannot switch without the config being edited and the server restarted.
@@ -53,7 +77,7 @@ The capture is shared with `../chief-mcp`; only the overrides differ (`tenancy` 
 
 ```bash
 node ../../../adapter-generator/dist/schema-cli.js --input capture/discovery-bundle.json --overrides schema-overrides.json --out schema
-node ../../../adapter-generator/dist/generate-cli.js --input schema/adapter-schema.json --provenance schema/adapter-provenance.json --out adapter
+node ../../../adapter-generator/dist/generate-cli.js --input schema/adapter-schema.json --provenance schema/adapter-provenance.json --package package-config.json --out adapter
 (cd adapter && npm install && npm run build)
 ```
 

@@ -7,10 +7,35 @@ Artifacts:
 - `server-config.json`: source MCP connection config used by `mcpaql-interrogate`
 - `capture/`: raw and normalized discovery artifacts
 - `schema-overrides.json`: reviewed endpoint and danger-level corrections
+- `package-config.json`: npm metadata for the published `@mcpaql/chief-mcp` package
 - `schema/`: generated MCP-AQL adapter schema and provenance sidecars
 - `adapter/`: generated runnable TypeScript MCP-AQL adapter package
 - `parity-harness/`: read-only parity suite for `mcpaql-parity`
 - `validation/`: saved conformance, differential, and parity reports
+
+## Quick Start
+
+The adapter is published to npm as [`@mcpaql/chief-mcp`](https://www.npmjs.com/package/@mcpaql/chief-mcp). Add it to any MCP client in place of Chief's own server entry; `npx` downloads and runs it:
+
+```json
+{
+  "mcpServers": {
+    "chief": {
+      "command": "npx",
+      "args": ["-y", "@mcpaql/chief-mcp"],
+      "env": { "CHIEF_API_KEY": "...", "CHIEF_PROJECT_ID": "..." }
+    }
+  }
+}
+```
+
+Or, in Claude Code:
+
+```bash
+claude mcp add chief -e CHIEF_API_KEY=... -e CHIEF_PROJECT_ID=... -- npx -y @mcpaql/chief-mcp
+```
+
+Every call still goes to Chief's hosted server at `mcp.chief.bot` with your API key. The adapter changes how the tools are presented to the model, not where they run. To pick projects from the conversation instead of pinning one in config, use [`@mcpaql/chief-mcp-projects`](../chief-mcp-projects/README.md).
 
 ## Credentials
 
@@ -110,7 +135,7 @@ export CHIEF_PROJECT_ID=<your_chief_project_id>
 
 node ../../../tools/dist/cli.js --config server-config.json --out capture
 node ../../../adapter-generator/dist/schema-cli.js --input capture/discovery-bundle.json --overrides schema-overrides.json --out schema
-node ../../../adapter-generator/dist/generate-cli.js --input schema/adapter-schema.json --provenance schema/adapter-provenance.json --out adapter
+node ../../../adapter-generator/dist/generate-cli.js --input schema/adapter-schema.json --provenance schema/adapter-provenance.json --package package-config.json --out adapter
 
 (cd adapter && npm install && npm run build)
 

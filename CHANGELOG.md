@@ -10,6 +10,7 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Both Chief adapters are published to npm as `@mcpaql/chief-mcp` and `@mcpaql/chief-mcp-projects`, runnable with `npx -y` (generated with the adapter generator's `--package` option; config in each example's `package-config.json`)
 - Project-aware Chief MCP adapter example (`generated/chief-mcp-projects/`)
   - Same upstream capture, generated with the adapter generator's `tenancy` block: the model lists projects, sees and switches the active one, and targets a project per call, instead of a project id pinned in client config
   - Needs only `CHIEF_API_KEY`; optional `CHIEF_PROJECT` sets the starting project
