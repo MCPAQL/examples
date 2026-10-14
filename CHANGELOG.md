@@ -8,6 +8,34 @@ This is a rolling examples collection and uses date-based versioning
 
 ## [Unreleased]
 
+## [2026.10.14] - 2026-10-14
+
+### Added
+
+- Both Chief adapters are published to npm as `@mcpaql/chief-mcp` and `@mcpaql/chief-mcp-projects`, runnable with `npx -y` (generated with the adapter generator's `--package` option; config in each example's `package-config.json`)
+- Project-aware Chief MCP adapter example (`generated/chief-mcp-projects/`)
+  - Same upstream capture, generated with the adapter generator's `tenancy` block: the model lists projects, sees and switches the active one, and targets a project per call, instead of a project id pinned in client config
+  - Needs only `CHIEF_API_KEY`; optional `CHIEF_PROJECT` sets the starting project
+  - Shares the `chief-mcp` parity harness; 56 of 60 operations exercised with no divergence
+- Chief MCP adapter example (`generated/chief-mcp/`)
+  - 60 Chief MCP tools behind the five CRUDE endpoints; `tools/list` drops from 63,520 to 3,766 characters, with per-call results the same size as Chief's own
+  - Reviewed `schema-overrides.json` for the ten operations the interrogator flagged, with a reason for each endpoint and danger level
+  - Parity harness with a read-only mode and a write mode guarded to a dedicated test project; 56 of 60 operations exercised with no divergence
+  - Chief's project id is supplied as `${env:CHIEF_PROJECT_ID}` and never committed
+- Shortcut Remote JIT adapter example (`generated/shortcut-remote-mcp/`)
+  - Just-in-time observational HID discovery of the undocumented XP-Pen Shortcut Remote keypad: capture raw input reports, derive the byte layout, emit a CRUDE adapter — no vendor SDK, no kernel extension, no protocol documentation
+  - Single long-lived adapter process serving HID decode, layer state machine, wheel state, keystroke and shell dispatch, and a live WebSocket HUD from one port
+  - Kill-switch tooling: menu-bar app sources, build and LaunchAgent install scripts, and a status/kill script that distinguishes the adapter from other device holders
+  - Companion to the AirPods head-tracking adapter — the keypad provides the hardware recenter trigger documented in that example; the previously broken cross-link between the two now resolves
+- Root README now links the AirPods head-tracking adapter (`generated/airpods-mcp/`) under a new Native Sensor Adapters section, so it is discoverable from the repository front page
+- GitHub MCP all-toolset case study artifacts
+  - Added the full 89-operation GitHub MCP generated adapter capture under `generated/github-mcp-all/`
+  - Added the GitHub MCP parity harness and case study writeups with reproducibility commands and measured results
+
+### Fixed
+
+- `.lychee.toml`: `include_fragments` updated from the removed boolean form to the string form (`"full"`) required by current lychee, repairing the link-check workflow that had been failing on develop since early August
+
 ## [2026.05.15] - 2026-05-15
 
 ### Added

@@ -1,0 +1,46 @@
+{
+  "name": "@mcpaql/chief-mcp-projects",
+  "version": "0.1.0",
+  "description": "Project-aware MCP-AQL adapter for the Chief MCP server (mcp.chief.bot): see, switch, and target Chief projects from the conversation.",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MCPAQL/examples.git",
+    "directory": "generated/chief-mcp-projects/adapter"
+  },
+  "homepage": "https://github.com/MCPAQL/examples/tree/main/generated/chief-mcp-projects",
+  "keywords": [
+    "mcp",
+    "mcp-aql",
+    "chief",
+    "model-context-protocol",
+    "adapter"
+  ],
+  "bin": {
+    "chief-mcp-projects": "dist/server.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "tsx src/server.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

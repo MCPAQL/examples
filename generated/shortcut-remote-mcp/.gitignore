@@ -1,0 +1,13 @@
+# Build artifacts (rebuild via npm install / build-kill-switch-app.sh per README)
+node_modules/
+
+# Built .app bundle and compiled binaries (rebuilt via tools/build-kill-switch-app.sh)
+tools/*.app/
+
+# Local runtime state and caches
+.dollhousemcp/
+*.log.local
+
+# OS / Finder
+.DS_Store
+._*

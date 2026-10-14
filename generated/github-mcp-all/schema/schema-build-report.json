@@ -1,0 +1,1400 @@
+{
+  "warnings": [
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies workflow execution.",
+      "tool": "actions_get",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies workflow execution.",
+      "tool": "actions_list",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies workflow execution.",
+      "tool": "actions_run_trigger",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'startLine' was normalized to 'start_line'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "startLine",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'startSide' was normalized to 'start_side'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "startSide",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'subjectType' was normalized to 'subject_type'.",
+      "tool": "add_comment_to_pending_review",
+      "field": "subjectType",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'commentId' was normalized to 'comment_id'.",
+      "tool": "add_reply_to_pull_request_comment",
+      "field": "commentId",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "add_reply_to_pull_request_comment",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Assignment semantics treated as UPDATE on an existing resource.",
+      "tool": "assign_copilot_to_issue",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "check_dependency_vulnerabilities",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "Tool name spans both create and update semantics.",
+      "tool": "create_or_update_file",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'autoInit' was normalized to 'auto_init'.",
+      "tool": "create_repository",
+      "field": "autoInit",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "dismiss_notification",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'threadID' was normalized to 'thread_id'.",
+      "tool": "dismiss_notification",
+      "field": "threadID",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'alertNumber' was normalized to 'alert_number'.",
+      "tool": "get_code_scanning_alert",
+      "field": "alertNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "get_commit",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'alertNumber' was normalized to 'alert_number'.",
+      "tool": "get_dependabot_alert",
+      "field": "alertNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'discussionNumber' was normalized to 'discussion_number'.",
+      "tool": "get_discussion",
+      "field": "discussionNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'discussionNumber' was normalized to 'discussion_number'.",
+      "tool": "get_discussion_comments",
+      "field": "discussionNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "get_discussion_comments",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'ghsaId' was normalized to 'ghsa_id'.",
+      "tool": "get_global_security_advisory",
+      "field": "ghsaId",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'notificationID' was normalized to 'notification_id'.",
+      "tool": "get_notification_details",
+      "field": "notificationID",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'alertNumber' was normalized to 'alert_number'.",
+      "tool": "get_secret_scanning_alert",
+      "field": "alertNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "github_support_docs_search",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "issue_read",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Write suffix is semantically broad and may hide create/update behavior.",
+      "tool": "issue_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Write suffix is semantically broad and may hide create/update behavior.",
+      "tool": "label_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_branches",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_commits",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'orderBy' was normalized to 'order_by'.",
+      "tool": "list_discussions",
+      "field": "orderBy",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_discussions",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_gists",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'cveId' was normalized to 'cve_id'.",
+      "tool": "list_global_security_advisories",
+      "field": "cveId",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'ghsaId' was normalized to 'ghsa_id'.",
+      "tool": "list_global_security_advisories",
+      "field": "ghsaId",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'isWithdrawn' was normalized to 'is_withdrawn'.",
+      "tool": "list_global_security_advisories",
+      "field": "isWithdrawn",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'orderBy' was normalized to 'order_by'.",
+      "tool": "list_issues",
+      "field": "orderBy",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_issues",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_notifications",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_pull_requests",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_releases",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_starred_repositories",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "list_tags",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies destructive behavior.",
+      "tool": "manage_notification_subscription",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'notificationID' was normalized to 'notification_id'.",
+      "tool": "manage_notification_subscription",
+      "field": "notificationID",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies destructive behavior.",
+      "tool": "manage_repository_notification_subscription",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'lastReadAt' was normalized to 'last_read_at'.",
+      "tool": "mark_all_notifications_read",
+      "field": "lastReadAt",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Action-oriented tool classified as EXECUTE conservatively.",
+      "tool": "merge_pull_request",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "merge_pull_request",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "projects_get",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "projects_list",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies destructive behavior.",
+      "tool": "projects_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "pull_request_read",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "pull_request_read",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies destructive behavior.",
+      "tool": "pull_request_review_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'commitID' was normalized to 'commit_id'.",
+      "tool": "pull_request_review_write",
+      "field": "commitID",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "pull_request_review_write",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'threadId' was normalized to 'thread_id'.",
+      "tool": "pull_request_review_write",
+      "field": "threadId",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Action-oriented tool classified as EXECUTE conservatively.",
+      "tool": "push_files",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Action-oriented tool classified as EXECUTE conservatively.",
+      "tool": "request_copilot_review",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "request_copilot_review",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Description implies workflow execution.",
+      "tool": "run_secret_scanning",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_code",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_issues",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_orgs",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_pull_requests",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_repositories",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'perPage' was normalized to 'per_page'.",
+      "tool": "search_users",
+      "field": "perPage",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "semantic_issue_similarity_search",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "semantic_issues_search",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "star_repository",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "info",
+      "message": "Write suffix is semantically broad and may hide create/update behavior.",
+      "tool": "sub_issue_write",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "triage_issue",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "REVIEW_REQUIRED",
+      "severity": "warning",
+      "message": "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE.",
+      "tool": "unstar_repository",
+      "heuristic": "endpoint_classification"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "update_pull_request",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'expectedHeadSha' was normalized to 'expected_head_sha'.",
+      "tool": "update_pull_request_branch",
+      "field": "expectedHeadSha",
+      "heuristic": "snake_case_normalization"
+    },
+    {
+      "code": "PARAM_NAME_NORMALIZED",
+      "severity": "info",
+      "message": "Parameter 'pullNumber' was normalized to 'pull_number'.",
+      "tool": "update_pull_request_branch",
+      "field": "pullNumber",
+      "heuristic": "snake_case_normalization"
+    }
+  ],
+  "operations": [
+    {
+      "source_tool_name": "actions_get",
+      "operation_name": "actions_get",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "actions_list",
+      "operation_name": "actions_list",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "actions_run_trigger",
+      "operation_name": "actions_run_trigger",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "add_comment_to_pending_review",
+      "operation_name": "add_comment_to_pending_review",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "pull_number": "pullNumber",
+        "start_line": "startLine",
+        "start_side": "startSide",
+        "subject_type": "subjectType"
+      }
+    },
+    {
+      "source_tool_name": "add_issue_comment",
+      "operation_name": "add_issue_comment",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "add_reply_to_pull_request_comment",
+      "operation_name": "add_reply_to_pull_request_comment",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "comment_id": "commentId",
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "assign_copilot_to_issue",
+      "operation_name": "assign_copilot_to_issue",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Assignment semantics treated as UPDATE on an existing resource."
+      ]
+    },
+    {
+      "source_tool_name": "check_dependency_vulnerabilities",
+      "operation_name": "check_dependency_vulnerabilities",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "create_branch",
+      "operation_name": "create_branch",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_gist",
+      "operation_name": "create_gist",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_or_update_file",
+      "operation_name": "create_or_update_file",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Tool name spans both create and update semantics."
+      ]
+    },
+    {
+      "source_tool_name": "create_pull_request",
+      "operation_name": "create_pull_request",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_pull_request_with_copilot",
+      "operation_name": "create_pull_request_with_copilot",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "create_repository",
+      "operation_name": "create_repository",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "auto_init": "autoInit"
+      }
+    },
+    {
+      "source_tool_name": "delete_file",
+      "operation_name": "delete_file",
+      "endpoint": "DELETE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "dismiss_notification",
+      "operation_name": "dismiss_notification",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ],
+      "param_mappings": {
+        "thread_id": "threadID"
+      }
+    },
+    {
+      "source_tool_name": "fork_repository",
+      "operation_name": "fork_repository",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_code_scanning_alert",
+      "operation_name": "get_code_scanning_alert",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "alert_number": "alertNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_commit",
+      "operation_name": "get_commit",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "get_copilot_job_status",
+      "operation_name": "get_copilot_job_status",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_copilot_space",
+      "operation_name": "get_copilot_space",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_dependabot_alert",
+      "operation_name": "get_dependabot_alert",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "alert_number": "alertNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_discussion",
+      "operation_name": "get_discussion",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "discussion_number": "discussionNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_discussion_comments",
+      "operation_name": "get_discussion_comments",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "discussion_number": "discussionNumber",
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "get_file_contents",
+      "operation_name": "get_file_contents",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_gist",
+      "operation_name": "get_gist",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_global_security_advisory",
+      "operation_name": "get_global_security_advisory",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "ghsa_id": "ghsaId"
+      }
+    },
+    {
+      "source_tool_name": "get_job_logs",
+      "operation_name": "get_job_logs",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_label",
+      "operation_name": "get_label",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_latest_release",
+      "operation_name": "get_latest_release",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_me",
+      "operation_name": "get_me",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_notification_details",
+      "operation_name": "get_notification_details",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "notification_id": "notificationID"
+      }
+    },
+    {
+      "source_tool_name": "get_release_by_tag",
+      "operation_name": "get_release_by_tag",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_repository_tree",
+      "operation_name": "get_repository_tree",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_secret_scanning_alert",
+      "operation_name": "get_secret_scanning_alert",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "alert_number": "alertNumber"
+      }
+    },
+    {
+      "source_tool_name": "get_tag",
+      "operation_name": "get_tag",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_team_members",
+      "operation_name": "get_team_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_teams",
+      "operation_name": "get_teams",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "github_support_docs_search",
+      "operation_name": "github_support_docs_search",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "issue_read",
+      "operation_name": "issue_read",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "issue_write",
+      "operation_name": "issue_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior."
+      ]
+    },
+    {
+      "source_tool_name": "label_write",
+      "operation_name": "label_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior."
+      ]
+    },
+    {
+      "source_tool_name": "list_branches",
+      "operation_name": "list_branches",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_code_scanning_alerts",
+      "operation_name": "list_code_scanning_alerts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_commits",
+      "operation_name": "list_commits",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_copilot_spaces",
+      "operation_name": "list_copilot_spaces",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_dependabot_alerts",
+      "operation_name": "list_dependabot_alerts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_discussion_categories",
+      "operation_name": "list_discussion_categories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_discussions",
+      "operation_name": "list_discussions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "order_by": "orderBy",
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_gists",
+      "operation_name": "list_gists",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_global_security_advisories",
+      "operation_name": "list_global_security_advisories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "cve_id": "cveId",
+        "ghsa_id": "ghsaId",
+        "is_withdrawn": "isWithdrawn"
+      }
+    },
+    {
+      "source_tool_name": "list_issue_types",
+      "operation_name": "list_issue_types",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_issues",
+      "operation_name": "list_issues",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "order_by": "orderBy",
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_label",
+      "operation_name": "list_label",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_notifications",
+      "operation_name": "list_notifications",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_org_repository_security_advisories",
+      "operation_name": "list_org_repository_security_advisories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_pull_requests",
+      "operation_name": "list_pull_requests",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_releases",
+      "operation_name": "list_releases",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_repository_security_advisories",
+      "operation_name": "list_repository_security_advisories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_secret_scanning_alerts",
+      "operation_name": "list_secret_scanning_alerts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_starred_repositories",
+      "operation_name": "list_starred_repositories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "list_tags",
+      "operation_name": "list_tags",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "manage_notification_subscription",
+      "operation_name": "manage_notification_subscription",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ],
+      "param_mappings": {
+        "notification_id": "notificationID"
+      }
+    },
+    {
+      "source_tool_name": "manage_repository_notification_subscription",
+      "operation_name": "manage_repository_notification_subscription",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ]
+    },
+    {
+      "source_tool_name": "mark_all_notifications_read",
+      "operation_name": "mark_all_notifications_read",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Marks authenticated-user notifications as read; mutates notification state."
+      ],
+      "param_mappings": {
+        "last_read_at": "lastReadAt"
+      }
+    },
+    {
+      "source_tool_name": "merge_pull_request",
+      "operation_name": "merge_pull_request",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "projects_get",
+      "operation_name": "projects_get",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "projects_list",
+      "operation_name": "projects_list",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "projects_write",
+      "operation_name": "projects_write",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ]
+    },
+    {
+      "source_tool_name": "pull_request_read",
+      "operation_name": "pull_request_read",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage",
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "pull_request_review_write",
+      "operation_name": "pull_request_review_write",
+      "endpoint": "DELETE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies destructive behavior."
+      ],
+      "param_mappings": {
+        "commit_id": "commitID",
+        "pull_number": "pullNumber",
+        "thread_id": "threadId"
+      }
+    },
+    {
+      "source_tool_name": "push_files",
+      "operation_name": "push_files",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ]
+    },
+    {
+      "source_tool_name": "request_copilot_review",
+      "operation_name": "request_copilot_review",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Action-oriented tool classified as EXECUTE conservatively."
+      ],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "run_secret_scanning",
+      "operation_name": "run_secret_scanning",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "Description implies workflow execution."
+      ]
+    },
+    {
+      "source_tool_name": "search_code",
+      "operation_name": "search_code",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_issues",
+      "operation_name": "search_issues",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_orgs",
+      "operation_name": "search_orgs",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_pull_requests",
+      "operation_name": "search_pull_requests",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_repositories",
+      "operation_name": "search_repositories",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "search_users",
+      "operation_name": "search_users",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "per_page": "perPage"
+      }
+    },
+    {
+      "source_tool_name": "semantic_issue_similarity_search",
+      "operation_name": "semantic_issue_similarity_search",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "semantic_issues_search",
+      "operation_name": "semantic_issues_search",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "star_repository",
+      "operation_name": "star_repository",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "sub_issue_write",
+      "operation_name": "sub_issue_write",
+      "endpoint": "UPDATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Write suffix is semantically broad and may hide create/update behavior."
+      ]
+    },
+    {
+      "source_tool_name": "triage_issue",
+      "operation_name": "triage_issue",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "unstar_repository",
+      "operation_name": "unstar_repository",
+      "endpoint": "EXECUTE",
+      "needs_review": true,
+      "review_reasons": [
+        "No strong semantic signal found in tool name or description; defaulting conservatively to EXECUTE."
+      ]
+    },
+    {
+      "source_tool_name": "update_gist",
+      "operation_name": "update_gist",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_pull_request",
+      "operation_name": "update_pull_request",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "pull_number": "pullNumber"
+      }
+    },
+    {
+      "source_tool_name": "update_pull_request_branch",
+      "operation_name": "update_pull_request_branch",
+      "endpoint": "UPDATE",
+      "needs_review": false,
+      "review_reasons": [],
+      "param_mappings": {
+        "expected_head_sha": "expectedHeadSha",
+        "pull_number": "pullNumber"
+      }
+    }
+  ]
+}

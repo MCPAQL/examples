@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0.0-draft",
+  "source": {
+    "name": "shortcut-remote-local",
+    "server_url": "native-hid://0x28bd:0x0202",
+    "transport": "native-hid",
+    "captured_at": "2026-04-26T16:30:00.000Z",
+    "server": {
+      "name": "Shortcut Remote",
+      "version": "0.0.0",
+      "title": "Hanvon Ugee Shortcut Remote (XP-Pen)"
+    },
+    "auth": { "type": "none" },
+    "capture_config_redacted": {
+      "transport": "native-hid",
+      "vendor_id": "0x28bd",
+      "product_id": "0x0202",
+      "interfaces_opened": ["interface=2 usagePage=0xff0a"],
+      "discovery_method": "observational",
+      "policy": "vendor_pages_only"
+    }
+  },
+  "raw_capture": {
+    "report_count": 235,
+    "interface": "vendor (0xFF0A, interface 2)",
+    "report_byte_layout_inferred": {
+      "byte_0": "report_id (always 0x02)",
+      "byte_1": "report_type (0xf0=button/wheel, 0xf2=battery_heartbeat)",
+      "byte_2": "primary_button_bitmap (8 bits, one per button)",
+      "byte_3": "secondary_button_bitmap (>=3 bits observed)",
+      "bytes_4_6": "reserved/zero",
+      "byte_7": "wheel_direction (0x01=cw, 0x02=ccw, 0x00=idle)",
+      "bytes_8_11": "reserved/zero"
+    }
+  },
+  "normalized_bundle": {
+    "operations": [
+      {
+        "source_tool_name": "vendor_report_query",
+        "operation_name": "list_devices",
+        "description": "List currently connected Shortcut Remote devices.",
+        "endpoint": "READ",
+        "endpoint_confidence": "high",
+        "danger_level": "safe",
+        "needs_review": false,
+        "review_reasons": [],
+        "params": [],
+        "maps_to": "native-hid:enumerate"
+      },
+      {
+        "source_tool_name": "vendor_report_query",
+        "operation_name": "get_device_info",
+        "description": "Get vendor/product info, manufacturer, serial, and inferred capabilities for the device.",
+        "endpoint": "READ",
+        "endpoint_confidence": "high",
+        "danger_level": "safe",
+        "needs_review": false,
+        "review_reasons": [],
+        "params": [],
+        "maps_to": "native-hid:device_info"
+      },
+      {
+        "source_tool_name": "vendor_report_query",
+        "operation_name": "get_battery_status",
+        "description": "Read battery percent and charging state from the latest 0xf2 heartbeat report.",
+        "endpoint": "READ",
+        "endpoint_confidence": "high",
+        "danger_level": "safe",
+        "needs_review": false,
+        "review_reasons": ["heartbeat decode validated against single observed transition"],
+        "params": [],
+        "maps_to": "native-hid:report_decode:battery"
+      },
+      {
+        "source_tool_name": "vendor_report_query",
+        "operation_name": "get_button_state",
+        "description": "Return the most recent button bitmap (which buttons are currently held, if any).",
+        "endpoint": "READ",
+        "endpoint_confidence": "high",
+        "danger_level": "safe",
+        "needs_review": false,
+        "review_reasons": [],
+        "params": [],
+        "maps_to": "native-hid:report_decode:button_state"
+      },
+      {
+        "source_tool_name": "vendor_report_query",
+        "operation_name": "wait_for_button_press",
+        "description": "Block until the next button press, then return which button(s) and the report.",
+        "endpoint": "READ",
+        "endpoint_confidence": "medium",
+        "danger_level": "safe",
+        "needs_review": true,
+        "review_reasons": ["semantic naming of buttons is observational; physical layout not yet labeled by user"],
+        "params": [
+          { "name": "timeout_ms", "original_name": "timeout_ms", "type": "integer", "required": false, "default": 30000, "minimum": 100, "maximum": 600000, "source_path": "synthesized" }
+        ],
+        "maps_to": "native-hid:event_wait:button_press"
+      },
+      {
+        "source_tool_name": "vendor_report_query",
+        "operation_name": "get_recent_events",
+        "description": "Return the in-memory log of recent button and wheel events (since adapter start).",
+        "endpoint": "READ",
+        "endpoint_confidence": "high",
+        "danger_level": "safe",
+        "needs_review": false,
+        "review_reasons": [],
+        "params": [
+          { "name": "limit", "original_name": "limit", "type": "integer", "required": false, "default": 50, "minimum": 1, "maximum": 1000, "source_path": "synthesized" },
+          { "name": "since_ts", "original_name": "since_ts", "type": "integer", "required": false, "source_path": "synthesized", "description": "Unix milliseconds; only events at or after this time" }
+        ],
+        "maps_to": "native-hid:event_log"
+      }
+    ],
+    "warnings": [
+      {
+        "code": "DISCOVERY_OBSERVATIONAL",
+        "severity": "info",
+        "message": "Operations were inferred from observed input reports, not from a parsed HID report descriptor. Byte layout is hypothesis-grade and should be confirmed by the user pressing labeled buttons."
+      },
+      {
+        "code": "BUTTON_LABELS_MISSING",
+        "severity": "warning",
+        "message": "Bit-position to physical-button-label mapping is not yet known. The adapter exposes raw bit indices; semantic names (e.g. 'top_left') require a labelled re-capture or an override file."
+      },
+      {
+        "code": "WRITE_OPS_NOT_DISCOVERED",
+        "severity": "info",
+        "message": "Output reports (LEDs, key-remap pushdown) were not exercised. The device may accept feature reports for configuration; not yet discovered."
+      }
+    ]
+  }
+}

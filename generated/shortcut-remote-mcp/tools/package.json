@@ -1,0 +1,8 @@
+{
+  "name": "@mcpaql/shortcut-remote-tools",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "node-hid": "^3.3.0"
+  }
+}

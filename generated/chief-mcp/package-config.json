@@ -1,0 +1,18 @@
+{
+  "name": "@mcpaql/chief-mcp",
+  "version": "0.1.0",
+  "description": "MCP-AQL adapter for the Chief MCP server (mcp.chief.bot): Chief's 60 tools behind five endpoints.",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "url": "git+https://github.com/MCPAQL/examples.git",
+    "directory": "generated/chief-mcp/adapter"
+  },
+  "homepage": "https://github.com/MCPAQL/examples/tree/main/generated/chief-mcp",
+  "keywords": [
+    "mcp",
+    "mcp-aql",
+    "chief",
+    "model-context-protocol",
+    "adapter"
+  ]
+}

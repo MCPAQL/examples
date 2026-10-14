@@ -1,0 +1,16 @@
+{
+  "name": "chief-mcp",
+  "server_url": "https://mcp.chief.bot/mcp",
+  "transport": {
+    "type": "streamable_http"
+  },
+  "auth": {
+    "type": "bearer",
+    "token_env": "CHIEF_API_KEY",
+    "header": "Authorization",
+    "prefix": "Bearer "
+  },
+  "headers": {
+    "X-Project-Id": "${env:CHIEF_PROJECT_ID}"
+  }
+}

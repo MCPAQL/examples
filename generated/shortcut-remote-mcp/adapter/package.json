@@ -1,0 +1,17 @@
+{
+  "name": "@mcpaql/generated-shortcut-remote",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "capture": "node ../tools/capture-hid.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "node-hid": "^3.3.0",
+    "ws": "^8.20.0"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.tsbuildinfo
+# Local-run artifacts kept out of version control
+fixtures-*.json
+parity-*.json
+parity-via-cli.json

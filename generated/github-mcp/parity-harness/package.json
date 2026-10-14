@@ -1,0 +1,19 @@
+{
+  "name": "@mcpaql/github-parity-suite",
+  "private": true,
+  "description": "Parity test suite for the GitHub MCP-AQL adapter. Used with mcpaql-parity from @mcpaql/tools.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "parity:default": "mcpaql-parity --suite ./dist/suite.js --adapter ../adapter/dist/server.js --label default --report parity-default.json",
+    "parity:all": "mcpaql-parity --suite ./dist/suite.js --adapter ../../github-mcp-all/adapter/dist/server.js --label all --report parity-all.json"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}
