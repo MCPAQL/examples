@@ -32,6 +32,9 @@ exclude = [
     # Authenticated MCP endpoints (respond 401 without credentials)
     "^https?://mcp\\.chief\\.bot",
 
+    # npm package pages (npmjs.com answers automated checkers with 403)
+    "^https?://(www\\.)?npmjs\\.com",
+
     # MCPAQL adapter-studio (private repo, returns 404 from CI)
     "^https?://github\\.com/MCPAQL/adapter-studio",
 
