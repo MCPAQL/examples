@@ -30,11 +30,12 @@ jobs:
         if: steps.skip-label.outputs.has_skip_label != 'true'
         id: changed-files
         env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          # Get the list of changed files
-          CHANGED_FILES=$(gh pr diff "$PR_NUMBER" --name-only)
+          # Get the list of changed files from the local checkout (fetch-depth: 0).
+          # The PR diff API refuses diffs over 20,000 lines, which release PRs exceed.
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA...$HEAD_SHA")
           echo "Changed files:"
           echo "$CHANGED_FILES"
 

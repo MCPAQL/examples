@@ -8,6 +8,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ## [Unreleased]
 
+## [2026.10.14] - 2026-10-14
+
 ### Added
 
 - Both Chief adapters are published to npm as `@mcpaql/chief-mcp` and `@mcpaql/chief-mcp-projects`, runnable with `npx -y` (generated with the adapter generator's `--package` option; config in each example's `package-config.json`)
