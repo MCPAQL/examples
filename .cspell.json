@@ -1,8 +1,30 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": [],
-  "dictionaries": ["project-words"],
+  "words": [
+    "REA",
+    "rea",
+    "REA's",
+    "Rea",
+    "TSHARK",
+    "PRLIMIT",
+    "frida",
+    "Frida",
+    "WAKARU",
+    "WABT",
+    "UNBLOB",
+    "RIZIN",
+    "objc",
+    "JADX",
+    "dlx",
+    "evm",
+    "bunx",
+    "apktool",
+    "aot"
+  ],
+  "dictionaries": [
+    "project-words"
+  ],
   "dictionaryDefinitions": [
     {
       "name": "project-words",

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-17T21:47:41.463Z",
+  "generated_at": "2026-10-17T22:11:15.936Z",
   "source_server_name": "rea-agents",
   "source_server_version": "6.5.0",
   "source_capture_name": "rea-mcp",
   "warning_count": 122,
-  "operation_count": 132,
+  "operation_count": 131,
   "excluded_operations": [
     {
       "source_tool_name": "annotate_native_function",
@@ -335,6 +335,12 @@
       "operation_name": "capture_process_scenario",
       "endpoint": "EXECUTE",
       "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "update_unknown",
+      "operation_name": "update_unknown",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
     },
     {
       "source_tool_name": "list_cutter_sessions",
@@ -1172,9 +1178,11 @@
     {
       "source_tool_name": "import_managed_reconstruction",
       "operation_name": "import_managed_reconstruction",
-      "endpoint": "READ",
+      "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Imports a reconstruction into the session (additive session state)."
+      ]
     },
     {
       "source_tool_name": "project_managed_application_graph",
@@ -1439,16 +1447,11 @@
     {
       "source_tool_name": "record_unknown",
       "operation_name": "record_unknown",
-      "endpoint": "READ",
+      "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
-    },
-    {
-      "source_tool_name": "update_unknown",
-      "operation_name": "update_unknown",
-      "endpoint": "READ",
-      "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Records a new unknown in the session (additive session state)."
+      ]
     },
     {
       "source_tool_name": "verify_unknown_resolution",

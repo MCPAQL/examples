@@ -18,7 +18,19 @@
       "REA_GHIDRA_STARTUP_TIMEOUT_MS",
       "REA_HOPPER_STARTUP_TIMEOUT_MS",
       "REA_MCP_INPUT_SCHEMA_PROFILE",
-      "REA_LOG_LEVEL"
+      "REA_LOG_LEVEL",
+      "REA_TSHARK_COMMAND",
+      "REA_TSHARK_PRLIMIT_COMMAND",
+      "REA_SIGROK_COMMAND",
+      "REA_SIGROK_PRLIMIT_COMMAND",
+      "REA_WABT_BIN_DIRECTORY",
+      "REA_PWNTOOLS_PYTHON",
+      "REA_BINWALK_COMMAND",
+      "REA_UNBLOB_COMMAND",
+      "REA_WAKARU_COMMAND",
+      "REA_JADX_MCP_JAR",
+      "REA_OBJDUMP_COMMAND",
+      "REA_RIZIN_COMMAND"
     ]
   },
   "exclude_endpoints": [
@@ -135,6 +147,12 @@
       "danger_level": "reversible",
       "needs_review": false,
       "review_reason": "Merges an Evidence bundle into the current session (additive session state)."
+    },
+    "import_managed_reconstruction": {
+      "endpoint": "CREATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Imports a reconstruction into the session (additive session state)."
     },
     "inspect_adb_client": {
       "exclude": true,
@@ -391,6 +409,12 @@
       "exclude": true,
       "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
     },
+    "record_unknown": {
+      "endpoint": "CREATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Records a new unknown in the session (additive session state)."
+    },
     "resolve_adb_packages": {
       "exclude": true,
       "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
@@ -466,6 +490,12 @@
       "endpoint": "EXECUTE",
       "danger_level": "dangerous",
       "review_reason": "Removes injected instrumentation from a live foreign process."
+    },
+    "update_unknown": {
+      "endpoint": "UPDATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Changes an existing unknown in the session; stage 2 (UPDATE)."
     }
   }
 }

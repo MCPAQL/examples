@@ -22,7 +22,19 @@
         "REA_GHIDRA_STARTUP_TIMEOUT_MS",
         "REA_HOPPER_STARTUP_TIMEOUT_MS",
         "REA_MCP_INPUT_SCHEMA_PROFILE",
-        "REA_LOG_LEVEL"
+        "REA_LOG_LEVEL",
+        "REA_TSHARK_COMMAND",
+        "REA_TSHARK_PRLIMIT_COMMAND",
+        "REA_SIGROK_COMMAND",
+        "REA_SIGROK_PRLIMIT_COMMAND",
+        "REA_WABT_BIN_DIRECTORY",
+        "REA_PWNTOOLS_PYTHON",
+        "REA_BINWALK_COMMAND",
+        "REA_UNBLOB_COMMAND",
+        "REA_WAKARU_COMMAND",
+        "REA_JADX_MCP_JAR",
+        "REA_OBJDUMP_COMMAND",
+        "REA_RIZIN_COMMAND"
       ]
     }
   },
@@ -2294,36 +2306,6 @@
         "non_idempotent": false
       },
       {
-        "name": "import_managed_reconstruction",
-        "maps_to": "tool:import_managed_reconstruction",
-        "description": "Import decompiler-produced managed reconstruction against authenticated inspect_managed_members Evidence. The workflow locks each method to artifact SHA-256, MVID, metadata token, signature hash, and the limited decoded-IL tuple hash, records the decompiler identity and options, and marks C# or pseudocode as analyst inference rather than canonical byte observation.",
-        "params": {
-          "decompiler": {
-            "type": "object",
-            "required": true
-          },
-          "methods": {
-            "type": "array",
-            "required": true
-          },
-          "notes": {
-            "type": "array",
-            "default": []
-          },
-          "static_members": {
-            "type": "object",
-            "required": true
-          }
-        },
-        "response": {
-          "type": "object",
-          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
-        },
-        "danger_level": "safe",
-        "requires_confirmation": false,
-        "non_idempotent": false
-      },
-      {
         "name": "project_managed_application_graph",
         "maps_to": "tool:project_managed_application_graph",
         "description": "Project authenticated managed artifact, member, and native-boundary Evidence into the provider-neutral application graph without executing managed code, loading assemblies, or translating managed metadata tokens to native addresses. The graph preserves managed static observations as managed-specific nodes linked to source Evidence.",
@@ -3148,165 +3130,6 @@
         "non_idempotent": false
       },
       {
-        "name": "record_unknown",
-        "maps_to": "tool:record_unknown",
-        "description": "Create one deterministic residual unknown and immutable mutation evidence. Validates all evidence and relationship references, and rejects duplicate stable identity.",
-        "params": {
-          "comparison_conclusion_scope": {
-            "type": "object"
-          },
-          "contradicting_evidence_ids": {
-            "type": "array",
-            "description": "Ordered Evidence identifiers for the contradicting observations.",
-            "default": []
-          },
-          "domain": {
-            "type": "string",
-            "required": true
-          },
-          "question": {
-            "type": "string",
-            "required": true,
-            "description": "Concrete unresolved question to retain for later investigation."
-          },
-          "recommended_probes": {
-            "type": "array",
-            "required": true
-          },
-          "relationships": {
-            "type": "array",
-            "required": true
-          },
-          "required_authority": {
-            "type": "object",
-            "required": true
-          },
-          "required_confidence": {
-            "type": "string",
-            "required": true,
-            "enum": [
-              "observed",
-              "derived",
-              "inferred"
-            ]
-          },
-          "required_environment": {
-            "type": "object",
-            "required": true
-          },
-          "severity": {
-            "type": "string",
-            "required": true,
-            "enum": [
-              "low",
-              "medium",
-              "high",
-              "critical"
-            ]
-          },
-          "supporting_evidence_ids": {
-            "type": "array",
-            "description": "Ordered Evidence identifiers for the supporting observations.",
-            "default": []
-          }
-        },
-        "response": {
-          "type": "object",
-          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
-        },
-        "danger_level": "safe",
-        "requires_confirmation": false,
-        "non_idempotent": false
-      },
-      {
-        "name": "update_unknown",
-        "maps_to": "tool:update_unknown",
-        "description": "Append one immutable full-state revision and mutation evidence. Requires exact expected_revision; stale concurrent writers fail instead of overwriting newer analysis.",
-        "params": {
-          "contradicting_evidence_ids": {
-            "type": "array",
-            "required": true,
-            "description": "Ordered Evidence identifiers for the contradicting observations."
-          },
-          "expected_revision": {
-            "type": "integer",
-            "required": true,
-            "description": "Expected revision used to reject stale or mismatched input.",
-            "minimum": 1,
-            "maximum": 9007199254740991
-          },
-          "recommended_probes": {
-            "type": "array",
-            "required": true
-          },
-          "relationships": {
-            "type": "array",
-            "required": true
-          },
-          "required_authority": {
-            "type": "object",
-            "required": true
-          },
-          "required_confidence": {
-            "type": "string",
-            "required": true,
-            "enum": [
-              "observed",
-              "derived",
-              "inferred"
-            ]
-          },
-          "required_environment": {
-            "type": "object",
-            "required": true
-          },
-          "resolution": {
-            "type": "object",
-            "required": true
-          },
-          "severity": {
-            "type": "string",
-            "required": true,
-            "enum": [
-              "low",
-              "medium",
-              "high",
-              "critical"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "required": true,
-            "description": "Current lifecycle or verification status.",
-            "enum": [
-              "open",
-              "investigating",
-              "blocked",
-              "contradicted",
-              "resolved"
-            ]
-          },
-          "supporting_evidence_ids": {
-            "type": "array",
-            "required": true,
-            "description": "Ordered Evidence identifiers for the supporting observations."
-          },
-          "unknown_id": {
-            "type": "string",
-            "required": true,
-            "description": "Exact residual-unknown identifier.",
-            "pattern": "^unk_[a-f0-9]{64}$"
-          }
-        },
-        "response": {
-          "type": "object",
-          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
-        },
-        "danger_level": "safe",
-        "requires_confirmation": false,
-        "non_idempotent": false
-      },
-      {
         "name": "verify_unknown_resolution",
         "maps_to": "tool:verify_unknown_resolution",
         "description": "Revalidate the current residual-unknown head against live bundled evidence, exact authority/confidence/environment requirements, and revision integrity. Withdrawn and out-of-scope dispositions are not truth claims.",
@@ -3482,6 +3305,36 @@
           "range": {
             "type": "object",
             "description": "Explicit file-byte interval; omit to extract the whole file"
+          }
+        },
+        "response": {
+          "type": "object",
+          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
+        },
+        "danger_level": "reversible",
+        "requires_confirmation": false,
+        "non_idempotent": false
+      },
+      {
+        "name": "import_managed_reconstruction",
+        "maps_to": "tool:import_managed_reconstruction",
+        "description": "Import decompiler-produced managed reconstruction against authenticated inspect_managed_members Evidence. The workflow locks each method to artifact SHA-256, MVID, metadata token, signature hash, and the limited decoded-IL tuple hash, records the decompiler identity and options, and marks C# or pseudocode as analyst inference rather than canonical byte observation.",
+        "params": {
+          "decompiler": {
+            "type": "object",
+            "required": true
+          },
+          "methods": {
+            "type": "array",
+            "required": true
+          },
+          "notes": {
+            "type": "array",
+            "default": []
+          },
+          "static_members": {
+            "type": "object",
+            "required": true
           }
         },
         "response": {
@@ -3680,6 +3533,77 @@
             "required": true,
             "description": "Absolute local filesystem path for the evidence bundle to import; relative paths are rejected.",
             "pattern": "^[^\\x00]*$"
+          }
+        },
+        "response": {
+          "type": "object",
+          "description": "Wrapped upstream MCP tool result preserving content and structured payloads."
+        },
+        "danger_level": "reversible",
+        "requires_confirmation": false,
+        "non_idempotent": false
+      },
+      {
+        "name": "record_unknown",
+        "maps_to": "tool:record_unknown",
+        "description": "Create one deterministic residual unknown and immutable mutation evidence. Validates all evidence and relationship references, and rejects duplicate stable identity.",
+        "params": {
+          "comparison_conclusion_scope": {
+            "type": "object"
+          },
+          "contradicting_evidence_ids": {
+            "type": "array",
+            "description": "Ordered Evidence identifiers for the contradicting observations.",
+            "default": []
+          },
+          "domain": {
+            "type": "string",
+            "required": true
+          },
+          "question": {
+            "type": "string",
+            "required": true,
+            "description": "Concrete unresolved question to retain for later investigation."
+          },
+          "recommended_probes": {
+            "type": "array",
+            "required": true
+          },
+          "relationships": {
+            "type": "array",
+            "required": true
+          },
+          "required_authority": {
+            "type": "object",
+            "required": true
+          },
+          "required_confidence": {
+            "type": "string",
+            "required": true,
+            "enum": [
+              "observed",
+              "derived",
+              "inferred"
+            ]
+          },
+          "required_environment": {
+            "type": "object",
+            "required": true
+          },
+          "severity": {
+            "type": "string",
+            "required": true,
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "supporting_evidence_ids": {
+            "type": "array",
+            "description": "Ordered Evidence identifiers for the supporting observations.",
+            "default": []
           }
         },
         "response": {

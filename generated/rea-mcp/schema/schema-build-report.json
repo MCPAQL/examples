@@ -1570,9 +1570,11 @@
     {
       "source_tool_name": "import_managed_reconstruction",
       "operation_name": "import_managed_reconstruction",
-      "endpoint": "READ",
+      "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Imports a reconstruction into the session (additive session state)."
+      ]
     },
     {
       "source_tool_name": "project_managed_application_graph",
@@ -1837,16 +1839,11 @@
     {
       "source_tool_name": "record_unknown",
       "operation_name": "record_unknown",
-      "endpoint": "READ",
+      "endpoint": "CREATE",
       "needs_review": false,
-      "review_reasons": []
-    },
-    {
-      "source_tool_name": "update_unknown",
-      "operation_name": "update_unknown",
-      "endpoint": "READ",
-      "needs_review": false,
-      "review_reasons": []
+      "review_reasons": [
+        "Records a new unknown in the session (additive session state)."
+      ]
     },
     {
       "source_tool_name": "verify_unknown_resolution",

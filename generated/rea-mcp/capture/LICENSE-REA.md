@@ -1,6 +1,8 @@
-The tool definitions in this directory (inside discovery-bundle.json.gz) come from REA's published MCP tool catalog, rea-agents 6.5.0, and are redistributed under REA's license:
+# REA license notice
 
-```
+Tool names, descriptions and schemas in this package come from REA's published MCP tool catalog (rea-agents 6.5.0, https://github.com/morluto/rea). That REA-derived text keeps REA's license:
+
+```text
 MIT License
 
 Copyright (c) 2026 morluto

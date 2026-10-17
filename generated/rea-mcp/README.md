@@ -1,29 +1,36 @@
 # REA MCP Golden Path (stage 1: static analysis)
 
-Pipeline output for wrapping [REA (Reverse Engineer Anything)](https://github.com/morluto/rea), the `rea-agents` npm package pinned to **6.5.0**, as an MCP-AQL adapter.
+Pipeline output for wrapping [REA (Reverse Engineer Anything)](https://github.com/morluto/rea) as an MCP-AQL adapter. REA is published as the `rea-agents` npm package, pinned here to **6.5.0**.
 
 REA is a local stdio MCP server with 207 reverse-engineering tools. Some of them run targets, inject Frida scripts, drive browsers and native UIs, or change attached Android devices. This adapter is staged:
 
 | Stage | Scope | Status |
 |---|---|---|
 | 1 | Static analysis: READ and CREATE operations with no network, device, UI or foreign-code effects | this package |
-| 2 | UPDATE and DELETE: provider annotations, bookmarks, unknowns | planned |
+| 2 | UPDATE and DELETE: provider annotations, bookmarks, updating unknowns | planned |
 | 3 | EXECUTE: runtime capture, instrumentation, device control. Denied by default and enabled per deployment with confirmation | planned |
 
-Stage 1 exposes **132 of REA's 207 tools**: 124 READ and 8 CREATE. The other 75 are left out of the adapter entirely. They are not listed, introspectable or callable. Each one is recorded with its reason in `schema/adapter-provenance.json` (`excluded_operations`).
+Stage 1 exposes **131 of REA's 207 tools**: 121 READ and 10 CREATE. The other 76 are left out of the adapter entirely: they are not listed, introspectable or callable. Each one is recorded with its reason in `schema/adapter-provenance.json`, under `excluded_operations`.
+
+Use REA for analysis you are authorized to do; see REA's [DISCLAIMER.md](https://github.com/morluto/rea/blob/main/DISCLAIMER.md).
 
 Artifacts:
 
 - `server-config.json`: the stdio launch config, pinned to `rea-agents@6.5.0`.
-- `capture/`: the discovery bundle (gzipped), warnings and capture metadata. It was built offline from REA's published tool catalog with `mcpaql-import-catalog`; REA was not run.
-- `schema-overrides.json`: the reviewed endpoint and danger-level corrections and the stage-1 exclusions.
+- `capture/`:
+  - REA's published tool catalog (`rea-mcp-tool-catalog-6.5.0.json.gz`);
+  - the discovery bundle built from it offline with `mcpaql-import-catalog` (`discovery-bundle.json.gz`). REA was not run.
+  - warnings and capture metadata.
+- `schema-overrides.json`: the reviewed endpoint and danger-level corrections, the stage-1 exclusions and the child environment passthrough.
 - `schema/`: the generated MCP-AQL adapter schema and provenance sidecars.
 - `adapter/`: the generated, runnable TypeScript MCP-AQL adapter package.
-- `validation/footprint.json`: measured token-footprint figures.
+- `validation/footprint.json`: measured footprint figures.
 
 ## Run it only in an isolated environment
 
 REA is not a sandbox. Analysis providers run with your user's permissions, and analyzed targets can carry prompt injection. Run this adapter, and REA, in a disposable VM or container with no production credentials.
+
+"READ, safe" means no effects on the target or the system. It does not mean the data is harmless: `inspect_plist`, `inspect_sqlite_database`, `inspect_with_objdump` and similar tools read any file your user can read. A prompt-injected target could steer those reads toward secrets, and the results go to your model provider.
 
 ```bash
 cd adapter
@@ -33,45 +40,72 @@ npm run start
 
 On the first call, the adapter starts `npx -y rea-agents@6.5.0 mcp` as a child process and keeps it running. REA sessions (an opened binary, retained Evidence) persist across calls until `close_binary` is called or the adapter exits.
 
-The child gets a minimal environment plus only these variables, when they are set:
+`npx` resolves REA's dependency tree fresh, not from REA's lockfile. That includes the optional `frida` dependency, whose install script downloads a native binding, even though stage 1 excludes every Frida operation. To avoid that, install REA into the environment first and point the launch at the local binary:
 
-- `REA_ANALYSIS_PROVIDER`
-- `GHIDRA_INSTALL_DIR`
-- `JAVA_HOME`
-- `REA_GHIDRA_STARTUP_TIMEOUT_MS`
-- `REA_HOPPER_STARTUP_TIMEOUT_MS`
-- `REA_MCP_INPUT_SCHEMA_PROFILE`
-- `REA_LOG_LEVEL`
+1. Run `npm install --omit=optional rea-agents@6.5.0`.
+2. Edit `target.stdio` in `adapter/src/schema.json` to launch that `rea` binary with the `mcp` argument.
 
-Native analysis with a cold Ghidra or Hopper start can take minutes. The adapter's per-call deadline defaults to 60 s and is reset by upstream progress notifications. For native work, set a longer deadline and a hard cap:
+### Analysis provider and tools
+
+Use **Ghidra** for stage 1: `REA_ANALYSIS_PROVIDER=ghidra` with `GHIDRA_INSTALL_DIR` and `JAVA_HOME`. With the Hopper provider, `open_binary` launches the Hopper app, which may come to the foreground, and runs REA's bridge inside it. That is a UI effect stage 1 otherwise excludes.
+
+Several operations work only when REA is told where a local tool is. The adapter passes these variables through to REA when they are set:
+
+| Variable | Enables |
+|---|---|
+| `REA_TSHARK_COMMAND`, `REA_TSHARK_PRLIMIT_COMMAND` | `inspect_packet_fields`, `inspect_packet_capture` |
+| `REA_SIGROK_COMMAND`, `REA_SIGROK_PRLIMIT_COMMAND` | `inspect_signal_decoders`, `decode_signal_recording` |
+| `REA_WABT_BIN_DIRECTORY` | `inspect_wasm_artifact` |
+| `REA_PWNTOOLS_PYTHON` | `inspect_binary_layout`, `inspect_recorded_crash` |
+| `REA_BINWALK_COMMAND`, `REA_UNBLOB_COMMAND` | `inspect_firmware_regions`, `extract_firmware` |
+| `REA_WAKARU_COMMAND` | `recover_javascript_sources` |
+| `REA_JADX_MCP_JAR` | the Android class, method and reference operations |
+| `REA_OBJDUMP_COMMAND`, `REA_RIZIN_COMMAND` | objdump- and rizin-based inspection |
+
+These are also passed through: `REA_ANALYSIS_PROVIDER`, `GHIDRA_INSTALL_DIR`, `JAVA_HOME`, `REA_GHIDRA_STARTUP_TIMEOUT_MS`, `REA_HOPPER_STARTUP_TIMEOUT_MS`, `REA_MCP_INPUT_SCHEMA_PROFILE` and `REA_LOG_LEVEL`. Nothing else from the adapter's environment reaches REA. EVM inspection works on Linux x64 only.
+
+Some static operations parse or run more than their names suggest. All of them are fine in an isolated VM:
+
+- `inspect_artifact` and `extract_artifact` mount DMGs read-only. This is kernel-level filesystem parsing.
+- `inspect_recorded_crash` with `include_debugger_context` runs GDB/pwndbg on a core file in batch mode, with auto-load and debuginfod off.
+- `inspect_binary_layout` may emulate PLT stubs in Unicorn.
+
+### Timeouts
+
+Native analysis with a cold Ghidra start can take minutes. The adapter's per-call deadline defaults to 60 s and is reset by upstream progress notifications. For native work, set a longer deadline and a hard cap:
 
 ```bash
 MCPAQL_UPSTREAM_TIMEOUT_MS=600000 MCPAQL_UPSTREAM_MAX_TOTAL_TIMEOUT_MS=1800000 npm run start
 ```
 
-## Gate the shell too
+## Gate the host, not just the adapter
 
-The adapter gates only its own path. REA also ships a CLI, and its agent skill tells agents to run `npx rea-agents@latest …`. A host that allows shell commands should deny direct REA invocations in the same policy, for example:
+**Confirm CREATE operations in the host.** `close_binary` and `export_evidence_bundle` are marked `destructive` in the schema, because they can overwrite a caller-chosen path. The generated adapter does not enforce that flag yet (MCPAQL/adapter-generator#48), so the host's approval of `mcp_aql_create` calls is the gate.
 
-- `npx * rea-agents*`, `npx rea-agents*`, `bunx rea-agents*`
-- `rea *`
-- any command that registers REA directly with an MCP client
+**Gate the shell too.** The adapter gates only its own path. REA also ships a CLI, and its agent skill tells agents to run `npx rea-agents@latest …`. A host that allows shell commands should deny direct REA invocations in the same policy, for example:
 
-Install REA's setup with `--skill=false`, or skip it entirely. See MCPAQL/spec#277.
+- `npx * rea-agents*`, `npx rea-agents*`, `npm exec * rea-agents*`, `bunx rea-agents*`, `pnpm dlx rea-agents*`, `yarn dlx rea-agents*`;
+- `rea *`;
+- any command that registers REA directly with an MCP client.
+
+Install REA without its skill: use `--skill=false`, or skip REA's setup entirely. See MCPAQL/spec#277.
 
 ## Token Footprint
 
-Measured 2026-10-17 from REA's own SDK `listTools()` catalog: the CI artifact `rea-test-runtime` from the 6.5.0 release commit. Sizes are serialized JSON characters. For the adapter, `tools/list` and `introspect` were served by the generated adapter with its upstream command replaced by `/usr/bin/false`, so REA never ran.
+Measured 2026-10-17 from REA's own SDK `listTools()` catalog: the CI artifact `rea-test-runtime` from the 6.5.0 release commit, committed here as `capture/rea-mcp-tool-catalog-6.5.0.json.gz`. Sizes are serialized JSON characters. For the adapter, `tools/list` and `introspect` were served by the generated adapter with its upstream command replaced by `/usr/bin/false`, so REA never ran.
 
 | Surface | Tools | Characters |
 |---|---|---|
-| REA upstream, all tools (`tools/list`) | 207 | 3,087,725 |
+| REA upstream, all tools (sum of tool definitions in `tools/list`) | 207 | 3,087,725 |
 | REA upstream, all tools, model-visible (name + description + inputSchema) | 207 | 792,163 |
-| REA upstream, the 132 stage-1 tools, model-visible | 132 | 665,125 |
-| Generated MCP-AQL adapter (`tools/list`) | 2 | 4,073 |
-| `introspect` (all 132 operations) | — | 72,816 |
+| REA upstream, the 131 stage-1 tools, model-visible | 131 | 660,806 |
+| Generated MCP-AQL adapter (`tools/list`) | 2 | 4,057 |
+| `introspect` operation list (names and descriptions) | — | 72,593 |
+| `introspect` detail for every one of the 131 operations | — | 170,809 |
 
-`outputSchema` makes up 73% of REA's `tools/list`. Hosts that build Anthropic API tool definitions don't send it to the model, so the model-visible figures are the relevant ones there. A public benchmark ([aicodeking/leanrea](https://github.com/aicodeking/leanrea), `bench/BENCHMARK.md`) measured about 369k tokens of extra context with every REA tool loaded in Claude Code, which works out to about 2.25 characters per token for these schemas.
+`outputSchema` makes up 73% of REA's `tools/list`. Hosts that build Anthropic API tool definitions don't send it to the model, so the model-visible figures are the relevant ones there.
+
+A public benchmark ([aicodeking/leanrea](https://github.com/aicodeking/leanrea), `bench/BENCHMARK.md`) measured about 369k tokens of extra context with every REA tool loaded in Claude Code. That works out to about 2.15 characters per token for these schemas.
 
 **Up front**, the adapter's tool list is about 99% smaller than the matching upstream tools. That is the saving hosts that load every tool schema eagerly will see. Hosts that defer tool schemas, such as Claude Code with tool search, already avoid most of the upstream cost up front.
 
@@ -87,16 +121,15 @@ The Electron saving is partly lossy. Adapter introspection currently flattens st
 
 ## Endpoint Review
 
-REA publishes per-tool effect flags (`executesForeignCode`, `mutatesDevice`, `mayDiscardData`, `mutatesTarget`, `changesUiState`, `writesFilesystem`, `accessesNetwork`, `launchesProcess` and others). The importer classifies every tool from these flags (MCPAQL/tools#41). Before stage-1 exclusions, that gives 139 READ, 35 CREATE, 12 UPDATE and 21 EXECUTE. Without the flags, a name heuristic put 169 tools in EXECUTE.
+REA publishes per-tool effect flags: `executesForeignCode`, `mutatesDevice`, `mayDiscardData`, `mutatesTarget`, `changesUiState`, `writesFilesystem`, `accessesNetwork`, `launchesProcess` and others. The importer classifies every tool from these flags (MCPAQL/tools#41). Before the overrides, that gives 139 READ, 35 CREATE, 12 UPDATE and 21 EXECUTE. Without the flags, a name heuristic put 169 tools in EXECUTE.
 
 `schema-overrides.json` then applies these reviewed corrections:
 
-- **Cache-only writes to READ:** 23 inspection tools flagged `writesFilesystem` take no caller output path. REA writes only provider-owned cache or workspace files for them, so they are READ/safe. Examples are `inspect_artifact`, `inspect_android_class` and `inspect_sqlite_database`.
-- **Session lifecycle as CREATE:**
-  - `open_binary`: reversible, because it starts a persistent provider session.
-  - `close_binary`: destructive, because it drops unexported session state and may write a snapshot.
-  - `import_evidence_bundle`: reversible, because it merges into the session.
-- **Stage-3 reclassifications to EXECUTE/dangerous:** `start_frida_session`, `close_frida_session` (it may resume a paused process), `unload_frida_script` and `observe_web_execution`. The flags understate these. They are recorded now and excluded in stage 1.
+- **Cache-only writes to READ.** 23 inspection tools flagged `writesFilesystem` take no caller output path. REA writes only to owner-only temporary or provider-owned workspace directories for them, so they are READ/safe. Examples are `inspect_artifact`, `inspect_android_class` and `inspect_sqlite_database`.
+- **Session state to CREATE or UPDATE:**
+  - `open_binary`, `close_binary`, `import_evidence_bundle`, `import_managed_reconstruction` and `record_unknown` become CREATE.
+  - `update_unknown` becomes UPDATE, which makes it stage 2.
+- **Stage-3 reclassifications to EXECUTE/dangerous:** `start_frida_session`, `close_frida_session` (it may resume a paused process), `unload_frida_script` and `observe_web_execution`. REA's flags understate these four. They are recorded now and excluded in stage 1.
 - **Excluded in stage 1:**
   - every tool REA marks as reaching a network or device, running foreign code, or changing UI state (62);
   - the rest of the adb, Frida, GDB and rizin-debugger runtime families;
@@ -105,28 +138,30 @@ REA publishes per-tool effect flags (`executesForeignCode`, `mutatesDevice`, `ma
 
 ## Reproduce
 
-```bash
-# 1. REA's catalog: CI artifact "rea-test-runtime" from run 38565969170 (morluto/rea, rea-agents 6.5.0 release commit 3b79af28e).
-gh run download 38565969170 -R morluto/rea -n rea-test-runtime -D rea-runtime
-cp rea-runtime/.cache/mcp-tool-catalog.json rea-mcp-tool-catalog-6.5.0.json
-shasum -a 256 rea-mcp-tool-catalog-6.5.0.json   # 4dc9ecae7a6e57438f8ee57ca1f4fcfdb5764e0b880406ae8e114203a8e4bda8
+Build `mcpaql-import-catalog` from [MCPAQL/tools](https://github.com/MCPAQL/tools), and `mcpaql-schema-build` and `mcpaql-generate-adapter` from [MCPAQL/adapter-generator](https://github.com/MCPAQL/adapter-generator), from their `develop` branches. Neither package is published, so either run `npm run build` and use `node dist/<cli>.js`, or use `npx tsx src/<cli>.ts`.
 
-# 2. Capture (MCPAQL/tools), no upstream execution.
-mcpaql-import-catalog --config server-config.json --catalog rea-mcp-tool-catalog-6.5.0.json --out capture \
+```bash
+# REA's catalog. Its provenance: CI artifact "rea-test-runtime" from run 38565969170
+# (morluto/rea, rea-agents 6.5.0 release commit 3b79af28e).
+gunzip -k capture/rea-mcp-tool-catalog-6.5.0.json.gz
+shasum -a 256 capture/rea-mcp-tool-catalog-6.5.0.json   # 4dc9ecae7a6e57438f8ee57ca1f4fcfdb5764e0b880406ae8e114203a8e4bda8
+
+# Capture, without running the upstream.
+mcpaql-import-catalog --config server-config.json --catalog capture/rea-mcp-tool-catalog-6.5.0.json --out capture \
   --server-name rea-agents --server-version 6.5.0
 
-# 3. Schema and adapter (MCPAQL/adapter-generator).
+# Schema and adapter.
 mcpaql-schema-build --input capture/discovery-bundle.json --out schema --overrides schema-overrides.json
 mcpaql-generate-adapter --input schema/adapter-schema.json --provenance schema/adapter-provenance.json --out adapter
 ```
 
-The committed bundle is gzipped (`gunzip -k capture/discovery-bundle.json.gz`) because REA's full tool definitions are about 10 MB uncompressed.
+The catalog and the discovery bundle are committed gzipped because REA's full tool definitions are about 10 MB uncompressed. `adapter/LICENSE` and the `LICENSE-REA.md` files are added by hand, not generated.
 
 ## Validation status
 
-- Generation and the footprint figures are static, measured from the published catalog.
-- Parity against a live REA (`mcpaql-parity`) has not been run yet. It must run in an isolated VM with a real analysis provider (Ghidra or Hopper) and will be added under `validation/`.
+- **Done:** generation and the footprint figures. Both are static, measured from the published catalog. Regenerating from the catalog gives a byte-identical bundle (apart from `captured_at`) and an identical schema, and the generated adapter typechecks.
+- **Not done:** parity against a live REA (`mcpaql-parity`). It must run in an isolated VM with Ghidra and will be added under `validation/`.
 
 ## Licenses
 
-The generated adapter is AGPL-3.0 (`adapter/LICENSE`). The REA tool definitions inside `capture/` come from REA's published catalog and are redistributed under REA's MIT license (`capture/LICENSE-REA.md`). REA is a separate project by its authors; this adapter is not affiliated with or endorsed by it.
+The generated adapter code is AGPL-3.0 (`adapter/LICENSE`). REA's tool names, descriptions and schemas appear in `capture/`, `schema/` and `adapter/src/`, and that REA-derived text keeps REA's MIT license (`LICENSE-REA.md` in each of those directories). REA is a separate project by its authors; this adapter is not affiliated with or endorsed by it.
