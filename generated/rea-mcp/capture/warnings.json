@@ -1,0 +1,856 @@
+[
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "annotate_native_function",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "set_address_name",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "set_addresses_names",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "set_bookmark",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "set_comment",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "set_inline_comment",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "unset_bookmark",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "observe_native_ui",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "capture_native_ui_scenario",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "observe_native_calls",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_macho",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_signature",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_plist",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_architectures",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "demangle_swift",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_binary_layout",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_recorded_crash",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_artifact",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "extract_artifact",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_asset_catalog",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_evm_interface",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_wasm_artifact",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_sqlite_database",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_packet_fields",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_packet_capture",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_signal_decoders",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "decode_signal_recording",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_android_package",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "search_android_classes",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_android_class",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_android_method",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "trace_android_references",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_apktool_client",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "decode_android_resources",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_pcap_client",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_pcap_capture",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "identify_flutter_build",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_dart_aot",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_jeb_client",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "open_jeb_project",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_jeb_units",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "decompile_jeb_item",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_adb_client",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_adb_devices",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_adb_devices",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_adb_device",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_adb_device",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_adb_packages",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_adb_packages",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "pull_adb_package",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "read_adb_logcat",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "read_adb_logcat",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_adb_package",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_adb_package",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "pull_adb_file",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Changes an attached device (effects.mutatesDevice).",
+    "tool": "push_adb_file",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "capture_adb_screen",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_adb_processes",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_adb_processes",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_adb_directory",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_adb_directory",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_adb_features",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_adb_features",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_adb_services",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_adb_services",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_adb_display",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_adb_display",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_adb_window",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_adb_window",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "read_adb_setting",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "read_adb_setting",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "collect_adb_bugreport",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "resolve_adb_packages",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "resolve_adb_packages",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Changes an attached device (effects.mutatesDevice).",
+    "tool": "install_adb_package",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Changes an attached device (effects.mutatesDevice).",
+    "tool": "uninstall_adb_package",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Changes an attached device (effects.mutatesDevice).",
+    "tool": "start_adb_app",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Changes an attached device (effects.mutatesDevice).",
+    "tool": "start_adb_activity",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Changes an attached device (effects.mutatesDevice).",
+    "tool": "stop_adb_app",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_firmware_regions",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "extract_firmware",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_browser_targets",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_web_page",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "analyze_web_bundle",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "observe_web_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "discover_webmcp_tools",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "capture_web_screenshot",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "capture_browser_scenario",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_electron_targets",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_electron_page",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "capture_electron_scenario",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_javascript_runtime_targets",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "observe_javascript_runtime",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "trace_web_source_location",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "trace_web_module_imports",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "export_web_scripts",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Overwrites existing target data (effects.mayDiscardData with mutatesTarget); confirm UPDATE vs DELETE.",
+    "tool": "observe_web_execution",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "inspect_web_event_listeners",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "inspect_web_network_capture",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+    "tool": "recover_javascript_sources",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "open_binary",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Writes host files and may replace existing ones (effects.mayDiscardData with writesFilesystem).",
+    "tool": "close_binary",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "binary_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Writes host files and may replace existing ones (effects.mayDiscardData with writesFilesystem).",
+    "tool": "export_evidence_bundle",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "capture_process_scenario",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_cutter_sessions",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "cutter_command",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "inspect_with_objdump",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "execute_rizin_command",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "start_gdb_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "gdb_console",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "close_gdb_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "start_rizin_debug_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "rizin_debug_command",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "close_rizin_debug_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_frida_devices",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_frida_devices",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+    "tool": "list_frida_processes",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "info",
+    "message": "Read that reaches a network or attached device (effects.accessesNetwork); consider requiring confirmation.",
+    "tool": "list_frida_processes",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "load_frida_script",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "resume_frida_session",
+    "heuristic": "effect_classification"
+  },
+  {
+    "code": "REVIEW_REQUIRED",
+    "severity": "warning",
+    "message": "Runs or drives code the upstream does not own (effects.executesForeignCode).",
+    "tool": "instrument_with_frida",
+    "heuristic": "effect_classification"
+  }
+]

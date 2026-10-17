@@ -8,6 +8,14 @@ This is a rolling examples collection and uses date-based versioning
 
 ## [Unreleased]
 
+### Added
+
+- REA (Reverse Engineer Anything) adapter example, stage 1: static analysis (`generated/rea-mcp/`)
+  - Wraps the local stdio MCP server `rea-agents@6.5.0` using the adapter generator's stdio upstream
+  - Captured offline from REA's published tool catalog with `mcpaql-import-catalog`, without running REA; classified from REA's own effect flags
+  - Exposes 131 of 207 tools (121 READ, 10 CREATE). Runtime, device, UI, foreign-code, UPDATE, DELETE and EXECUTE operations are excluded and recorded in provenance
+  - `tools/list` is 4,057 characters, against 660,806 model-visible characters for the same upstream tools
+
 ## [2026.10.14] - 2026-10-14
 
 ### Added

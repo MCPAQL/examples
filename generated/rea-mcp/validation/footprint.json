@@ -1,0 +1,65 @@
+{
+  "measured_at": "2026-10-17",
+  "method": "Serialized JSON characters. Upstream: REA's own SDK listTools() catalog (.cache/mcp-tool-catalog.json, CI artifact rea-test-runtime, run 38565969170, release commit 3b79af28e). Adapter: tools/list and introspect served by the generated adapter with its stdio command replaced by /usr/bin/false, so REA was never run.",
+  "upstream_all_tools": {
+    "tools": 207,
+    "wire_chars": 3087725,
+    "description_chars": 90143,
+    "input_schema_chars": 688971,
+    "output_schema_chars": 2264286,
+    "model_visible_chars": 792163
+  },
+  "upstream_stage1_subset": {
+    "tools": 131,
+    "wire_chars": 2291164,
+    "model_visible_chars": 660806
+  },
+  "adapter_stage1": {
+    "tools": 2,
+    "operations": 131,
+    "tools_list_chars": 4057,
+    "introspect_operation_list_chars": 72593,
+    "introspect_all_operation_details_chars": 170809
+  },
+  "per_workflow_detail_chars": {
+    "native_function": {
+      "operations": [
+        "open_binary",
+        "search_procedures",
+        "analyze_function",
+        "procedure_pseudo_code",
+        "xrefs",
+        "close_binary"
+      ],
+      "upstream": 9176,
+      "adapter_introspect": 8582
+    },
+    "electron_feature_trace": {
+      "operations": [
+        "analyze_javascript_application",
+        "trace_application_feature",
+        "trace_javascript_semantics",
+        "inspect_analysis_view",
+        "list_unknowns",
+        "export_evidence_bundle"
+      ],
+      "upstream": 64601,
+      "adapter_introspect": 14774
+    },
+    "go_rust_artifact": {
+      "operations": [
+        "inspect_go_binary",
+        "inspect_rust_binary",
+        "inspect_artifact"
+      ],
+      "upstream": 4611,
+      "adapter_introspect": 4670
+    }
+  },
+  "notes": [
+    "model_visible = name + description + inputSchema; hosts using the Anthropic API do not send outputSchema to the model.",
+    "The electron_feature_trace saving is partly lossy: adapter introspection flattens structured params (MCPAQL/adapter-generator#55, #47, #19).",
+    "A public benchmark (aicodeking/leanrea bench/BENCHMARK.md) measured about 369k tokens of extra context with all REA tools loaded in Claude Code: 792,163 model-visible characters, about 2.15 characters per token for these schemas.",
+    "Upstream wire_chars sum per-tool compact JSON without the tools/list envelope."
+  ]
+}
