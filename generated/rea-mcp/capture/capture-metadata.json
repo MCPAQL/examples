@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0.0-draft",
+  "source": {
+    "name": "rea-mcp",
+    "server_url": "stdio://rea",
+    "transport": "stdio",
+    "captured_at": "2026-10-17T21:47:34.711Z",
+    "server": {
+      "name": "rea-agents",
+      "version": "6.5.0"
+    },
+    "auth": {
+      "type": "none",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "capture_config_redacted": {
+      "name": "rea-mcp",
+      "server_url": "stdio://rea",
+      "transport": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "rea-agents@6.5.0",
+          "mcp"
+        ]
+      },
+      "classification": {
+        "effects_field": "effects"
+      }
+    }
+  },
+  "tool_count": 207,
+  "warning_count": 122
+}

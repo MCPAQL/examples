@@ -1,0 +1,471 @@
+{
+  "adapter": {
+    "name": "rea-mcp",
+    "version": "0.1.0",
+    "description": "Generated MCP-AQL adapter for REA (Reverse Engineer Anything), rea-agents 6.5.0: static analysis stage."
+  },
+  "stdio": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "rea-agents@6.5.0",
+      "mcp"
+    ],
+    "env_passthrough": [
+      "REA_ANALYSIS_PROVIDER",
+      "GHIDRA_INSTALL_DIR",
+      "JAVA_HOME",
+      "REA_GHIDRA_STARTUP_TIMEOUT_MS",
+      "REA_HOPPER_STARTUP_TIMEOUT_MS",
+      "REA_MCP_INPUT_SCHEMA_PROFILE",
+      "REA_LOG_LEVEL"
+    ]
+  },
+  "exclude_endpoints": [
+    "UPDATE",
+    "DELETE",
+    "EXECUTE"
+  ],
+  "operations": {
+    "analyze_web_bundle": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "capture_adb_screen": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "capture_browser_scenario": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "capture_electron_scenario": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "capture_native_ui_scenario": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "capture_process_scenario": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "capture_web_screenshot": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "close_binary": {
+      "endpoint": "CREATE",
+      "danger_level": "destructive",
+      "needs_review": false,
+      "review_reason": "Ends the session and drops its unexported state; may write a snapshot to a caller path."
+    },
+    "close_frida_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state.",
+      "endpoint": "EXECUTE",
+      "danger_level": "dangerous",
+      "review_reason": "May resume a paused spawned process before detaching, which runs the target."
+    },
+    "close_gdb_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "close_rizin_debug_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "collect_adb_bugreport": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "cutter_command": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "decode_android_resources": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "decode_signal_recording": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "decompile_jeb_item": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "discover_webmcp_tools": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "execute_rizin_command": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "frida_session_status": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: part of the frida runtime family."
+    },
+    "gdb_console": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "gdb_session_status": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: part of the GDB runtime family."
+    },
+    "goto_address": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "identify_flutter_build": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "import_evidence_bundle": {
+      "endpoint": "CREATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Merges an Evidence bundle into the current session (additive session state)."
+    },
+    "inspect_adb_client": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: part of the adb runtime family."
+    },
+    "inspect_adb_device": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_adb_display": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_adb_package": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_adb_window": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_android_class": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_android_method": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_android_package": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_artifact": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_binary_layout": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_dart_aot": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_electron_page": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_evm_interface": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_firmware_regions": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_jeb_client": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_packet_capture": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_packet_fields": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_pcap_capture": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_pcap_client": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_recorded_crash": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_signal_decoders": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_sqlite_database": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_wasm_artifact": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_web_event_listeners": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "inspect_web_network_capture": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "inspect_web_page": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "install_adb_package": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "instrument_with_frida": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_adb_devices": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_adb_directory": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_adb_features": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_adb_packages": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_adb_processes": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_adb_services": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_browser_targets": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_cutter_sessions": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_electron_targets": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_frida_devices": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_frida_processes": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_javascript_runtime_targets": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "list_jeb_units": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "load_frida_script": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "observe_javascript_runtime": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "observe_native_calls": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "observe_native_ui": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: reads the accessibility tree of a running app (needs Accessibility permission)."
+    },
+    "observe_web_execution": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state.",
+      "endpoint": "EXECUTE",
+      "danger_level": "dangerous",
+      "review_reason": "Drives page JavaScript in a live browser target."
+    },
+    "observe_web_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "open_binary": {
+      "endpoint": "CREATE",
+      "danger_level": "reversible",
+      "needs_review": false,
+      "review_reason": "Opens a target and starts a provider session that persists across calls; end it with close_binary."
+    },
+    "open_jeb_project": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "pull_adb_file": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "pull_adb_package": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "push_adb_file": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "read_adb_logcat": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "read_adb_setting": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "resolve_adb_packages": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "resume_frida_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "rizin_debug_command": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "rizin_debug_session_status": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: part of the rizin debugger runtime family."
+    },
+    "search_android_classes": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "start_adb_activity": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "start_adb_app": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "start_frida_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state.",
+      "endpoint": "EXECUTE",
+      "danger_level": "dangerous",
+      "review_reason": "Attaches Frida to a process (injects an agent); runs code in the target."
+    },
+    "start_gdb_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: starts a persistent GDB process that gdb_console (EXECUTE) then drives."
+    },
+    "start_rizin_debug_session": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "stop_adb_app": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "trace_android_references": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "trace_web_module_imports": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "trace_web_source_location": {
+      "endpoint": "READ",
+      "danger_level": "safe",
+      "needs_review": false,
+      "review_reason": "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+    },
+    "uninstall_adb_package": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    "unload_frida_script": {
+      "exclude": true,
+      "exclude_reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state.",
+      "endpoint": "EXECUTE",
+      "danger_level": "dangerous",
+      "review_reason": "Removes injected instrumentation from a live foreign process."
+    }
+  }
+}

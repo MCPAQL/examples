@@ -1,0 +1,1491 @@
+{
+  "generated_at": "2026-10-17T21:47:41.463Z",
+  "source_server_name": "rea-agents",
+  "source_server_version": "6.5.0",
+  "source_capture_name": "rea-mcp",
+  "warning_count": 122,
+  "operation_count": 132,
+  "excluded_operations": [
+    {
+      "source_tool_name": "annotate_native_function",
+      "operation_name": "annotate_native_function",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "goto_address",
+      "operation_name": "goto_address",
+      "endpoint": "UPDATE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "set_address_name",
+      "operation_name": "set_address_name",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "set_addresses_names",
+      "operation_name": "set_addresses_names",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "set_bookmark",
+      "operation_name": "set_bookmark",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "set_comment",
+      "operation_name": "set_comment",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "set_inline_comment",
+      "operation_name": "set_inline_comment",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "unset_bookmark",
+      "operation_name": "unset_bookmark",
+      "endpoint": "UPDATE",
+      "reason": "endpoint UPDATE excluded by exclude_endpoints"
+    },
+    {
+      "source_tool_name": "observe_native_ui",
+      "operation_name": "observe_native_ui",
+      "endpoint": "CREATE",
+      "reason": "Stage 1 is static analysis only: reads the accessibility tree of a running app (needs Accessibility permission)."
+    },
+    {
+      "source_tool_name": "capture_native_ui_scenario",
+      "operation_name": "capture_native_ui_scenario",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "observe_native_calls",
+      "operation_name": "observe_native_calls",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_jeb_client",
+      "operation_name": "inspect_jeb_client",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "open_jeb_project",
+      "operation_name": "open_jeb_project",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_jeb_units",
+      "operation_name": "list_jeb_units",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "decompile_jeb_item",
+      "operation_name": "decompile_jeb_item",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_adb_client",
+      "operation_name": "inspect_adb_client",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: part of the adb runtime family."
+    },
+    {
+      "source_tool_name": "list_adb_devices",
+      "operation_name": "list_adb_devices",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_adb_device",
+      "operation_name": "inspect_adb_device",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_adb_packages",
+      "operation_name": "list_adb_packages",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "pull_adb_package",
+      "operation_name": "pull_adb_package",
+      "endpoint": "CREATE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "read_adb_logcat",
+      "operation_name": "read_adb_logcat",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_adb_package",
+      "operation_name": "inspect_adb_package",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "pull_adb_file",
+      "operation_name": "pull_adb_file",
+      "endpoint": "CREATE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "push_adb_file",
+      "operation_name": "push_adb_file",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "capture_adb_screen",
+      "operation_name": "capture_adb_screen",
+      "endpoint": "CREATE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_adb_processes",
+      "operation_name": "list_adb_processes",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_adb_directory",
+      "operation_name": "list_adb_directory",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_adb_features",
+      "operation_name": "list_adb_features",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_adb_services",
+      "operation_name": "list_adb_services",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_adb_display",
+      "operation_name": "inspect_adb_display",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_adb_window",
+      "operation_name": "inspect_adb_window",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "read_adb_setting",
+      "operation_name": "read_adb_setting",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "collect_adb_bugreport",
+      "operation_name": "collect_adb_bugreport",
+      "endpoint": "CREATE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "resolve_adb_packages",
+      "operation_name": "resolve_adb_packages",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "install_adb_package",
+      "operation_name": "install_adb_package",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "uninstall_adb_package",
+      "operation_name": "uninstall_adb_package",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "start_adb_app",
+      "operation_name": "start_adb_app",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "start_adb_activity",
+      "operation_name": "start_adb_activity",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "stop_adb_app",
+      "operation_name": "stop_adb_app",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_browser_targets",
+      "operation_name": "list_browser_targets",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_web_page",
+      "operation_name": "inspect_web_page",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "analyze_web_bundle",
+      "operation_name": "analyze_web_bundle",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "observe_web_session",
+      "operation_name": "observe_web_session",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "discover_webmcp_tools",
+      "operation_name": "discover_webmcp_tools",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "capture_web_screenshot",
+      "operation_name": "capture_web_screenshot",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "capture_browser_scenario",
+      "operation_name": "capture_browser_scenario",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_electron_targets",
+      "operation_name": "list_electron_targets",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_electron_page",
+      "operation_name": "inspect_electron_page",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "capture_electron_scenario",
+      "operation_name": "capture_electron_scenario",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_javascript_runtime_targets",
+      "operation_name": "list_javascript_runtime_targets",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "observe_javascript_runtime",
+      "operation_name": "observe_javascript_runtime",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "trace_web_module_imports",
+      "operation_name": "trace_web_module_imports",
+      "endpoint": "CREATE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "observe_web_execution",
+      "operation_name": "observe_web_execution",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "inspect_web_event_listeners",
+      "operation_name": "inspect_web_event_listeners",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "capture_process_scenario",
+      "operation_name": "capture_process_scenario",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_cutter_sessions",
+      "operation_name": "list_cutter_sessions",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "cutter_command",
+      "operation_name": "cutter_command",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "execute_rizin_command",
+      "operation_name": "execute_rizin_command",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "start_gdb_session",
+      "operation_name": "start_gdb_session",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: starts a persistent GDB process that gdb_console (EXECUTE) then drives."
+    },
+    {
+      "source_tool_name": "gdb_console",
+      "operation_name": "gdb_console",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "gdb_session_status",
+      "operation_name": "gdb_session_status",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: part of the GDB runtime family."
+    },
+    {
+      "source_tool_name": "close_gdb_session",
+      "operation_name": "close_gdb_session",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "start_rizin_debug_session",
+      "operation_name": "start_rizin_debug_session",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "rizin_debug_command",
+      "operation_name": "rizin_debug_command",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "rizin_debug_session_status",
+      "operation_name": "rizin_debug_session_status",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: part of the rizin debugger runtime family."
+    },
+    {
+      "source_tool_name": "close_rizin_debug_session",
+      "operation_name": "close_rizin_debug_session",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_frida_devices",
+      "operation_name": "list_frida_devices",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "list_frida_processes",
+      "operation_name": "list_frida_processes",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "start_frida_session",
+      "operation_name": "start_frida_session",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "load_frida_script",
+      "operation_name": "load_frida_script",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "resume_frida_session",
+      "operation_name": "resume_frida_session",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "unload_frida_script",
+      "operation_name": "unload_frida_script",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "frida_session_status",
+      "operation_name": "frida_session_status",
+      "endpoint": "READ",
+      "reason": "Stage 1 is static analysis only: part of the frida runtime family."
+    },
+    {
+      "source_tool_name": "close_frida_session",
+      "operation_name": "close_frida_session",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    },
+    {
+      "source_tool_name": "instrument_with_frida",
+      "operation_name": "instrument_with_frida",
+      "endpoint": "EXECUTE",
+      "reason": "Stage 1 is static analysis only: REA marks this tool as reaching a network or device, running foreign code, or changing UI state."
+    }
+  ],
+  "operations": [
+    {
+      "source_tool_name": "inspect_native_load_image",
+      "operation_name": "inspect_native_load_image",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_native_data_type",
+      "operation_name": "inspect_native_data_type",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_native_instruction",
+      "operation_name": "inspect_native_instruction",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "resolve_native_call_targets",
+      "operation_name": "resolve_native_call_targets",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "address_name",
+      "operation_name": "address_name",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "comment",
+      "operation_name": "comment",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "current_address",
+      "operation_name": "current_address",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "current_procedure",
+      "operation_name": "current_procedure",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "current_document",
+      "operation_name": "current_document",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inline_comment",
+      "operation_name": "inline_comment",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_bookmarks",
+      "operation_name": "list_bookmarks",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_documents",
+      "operation_name": "list_documents",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_names",
+      "operation_name": "list_names",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_procedures",
+      "operation_name": "list_procedures",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_segments",
+      "operation_name": "list_segments",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_strings",
+      "operation_name": "list_strings",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "next_address",
+      "operation_name": "next_address",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "prev_address",
+      "operation_name": "prev_address",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_address",
+      "operation_name": "procedure_address",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_assembly",
+      "operation_name": "procedure_assembly",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_callees",
+      "operation_name": "procedure_callees",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_callers",
+      "operation_name": "procedure_callers",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_info",
+      "operation_name": "procedure_info",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "read_function_instructions",
+      "operation_name": "read_function_instructions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_bytes",
+      "operation_name": "search_bytes",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "read_bytes",
+      "operation_name": "read_bytes",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "address_to_file_offset",
+      "operation_name": "address_to_file_offset",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_references",
+      "operation_name": "procedure_references",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "procedure_pseudo_code",
+      "operation_name": "procedure_pseudo_code",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "resolve_containing_procedure",
+      "operation_name": "resolve_containing_procedure",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_procedures",
+      "operation_name": "search_procedures",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "search_strings",
+      "operation_name": "search_strings",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "xrefs",
+      "operation_name": "xrefs",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_native_dispatch_metadata",
+      "operation_name": "inspect_native_dispatch_metadata",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_objc_classes",
+      "operation_name": "get_objc_classes",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_objc_protocols",
+      "operation_name": "get_objc_protocols",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "batch_decompile",
+      "operation_name": "batch_decompile",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_call_graph",
+      "operation_name": "get_call_graph",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "analyze_swift_types",
+      "operation_name": "analyze_swift_types",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "find_xrefs_to_name",
+      "operation_name": "find_xrefs_to_name",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "binary_overview",
+      "operation_name": "binary_overview",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "analyze_function",
+      "operation_name": "analyze_function",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_native_api",
+      "operation_name": "inspect_native_api",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_feature",
+      "operation_name": "trace_feature",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_call_path",
+      "operation_name": "trace_call_path",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_native_ui_action",
+      "operation_name": "trace_native_ui_action",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_native_values",
+      "operation_name": "trace_native_values",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_macho",
+      "operation_name": "inspect_macho",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_signature",
+      "operation_name": "inspect_signature",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_plist",
+      "operation_name": "inspect_plist",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "list_architectures",
+      "operation_name": "list_architectures",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "demangle_swift",
+      "operation_name": "demangle_swift",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_pe_resources",
+      "operation_name": "inspect_pe_resources",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_binary_layout",
+      "operation_name": "inspect_binary_layout",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_recorded_crash",
+      "operation_name": "inspect_recorded_crash",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_analysis_view",
+      "operation_name": "inspect_analysis_view",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_artifact",
+      "operation_name": "inspect_artifact",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "extract_artifact",
+      "operation_name": "extract_artifact",
+      "endpoint": "CREATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ."
+      ]
+    },
+    {
+      "source_tool_name": "decode_interface_builder",
+      "operation_name": "decode_interface_builder",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_keyed_archive",
+      "operation_name": "inspect_keyed_archive",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_asset_catalog",
+      "operation_name": "inspect_asset_catalog",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "trace_dylib_resolution",
+      "operation_name": "trace_dylib_resolution",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_evm_interface",
+      "operation_name": "inspect_evm_interface",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_go_binary",
+      "operation_name": "inspect_go_binary",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_rust_binary",
+      "operation_name": "inspect_rust_binary",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_wasm_artifact",
+      "operation_name": "inspect_wasm_artifact",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "compare_wasm_interfaces",
+      "operation_name": "compare_wasm_interfaces",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_sqlite_database",
+      "operation_name": "inspect_sqlite_database",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_packet_fields",
+      "operation_name": "inspect_packet_fields",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_packet_capture",
+      "operation_name": "inspect_packet_capture",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_signal_decoders",
+      "operation_name": "inspect_signal_decoders",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "decode_signal_recording",
+      "operation_name": "decode_signal_recording",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_managed_artifact",
+      "operation_name": "inspect_managed_artifact",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_managed_members",
+      "operation_name": "inspect_managed_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_managed_native_boundaries",
+      "operation_name": "inspect_managed_native_boundaries",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_android_package",
+      "operation_name": "inspect_android_package",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "search_android_classes",
+      "operation_name": "search_android_classes",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_android_class",
+      "operation_name": "inspect_android_class",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_android_method",
+      "operation_name": "inspect_android_method",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "trace_android_references",
+      "operation_name": "trace_android_references",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_apktool_client",
+      "operation_name": "inspect_apktool_client",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "decode_android_resources",
+      "operation_name": "decode_android_resources",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_pcap_client",
+      "operation_name": "inspect_pcap_client",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_pcap_capture",
+      "operation_name": "inspect_pcap_capture",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "identify_flutter_build",
+      "operation_name": "identify_flutter_build",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_dart_aot",
+      "operation_name": "inspect_dart_aot",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_firmware_regions",
+      "operation_name": "inspect_firmware_regions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "extract_firmware",
+      "operation_name": "extract_firmware",
+      "endpoint": "CREATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ."
+      ]
+    },
+    {
+      "source_tool_name": "compare_managed_members",
+      "operation_name": "compare_managed_members",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "verify_managed_native_boundaries",
+      "operation_name": "verify_managed_native_boundaries",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "import_managed_reconstruction",
+      "operation_name": "import_managed_reconstruction",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "project_managed_application_graph",
+      "operation_name": "project_managed_application_graph",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_web_captures",
+      "operation_name": "compare_web_captures",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_web_screenshots",
+      "operation_name": "compare_web_screenshots",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "analyze_javascript_application",
+      "operation_name": "analyze_javascript_application",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "reconcile_javascript_runtime",
+      "operation_name": "reconcile_javascript_runtime",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_electron_fuses",
+      "operation_name": "inspect_electron_fuses",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_application_feature",
+      "operation_name": "trace_application_feature",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_javascript_semantics",
+      "operation_name": "trace_javascript_semantics",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_application_versions",
+      "operation_name": "compare_application_versions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_source_to_bundle",
+      "operation_name": "compare_source_to_bundle",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_javascript_export_shapes",
+      "operation_name": "compare_javascript_export_shapes",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "build_reconstruction_obligation_ledger",
+      "operation_name": "build_reconstruction_obligation_ledger",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "evaluate_reconstruction_coverage",
+      "operation_name": "evaluate_reconstruction_coverage",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "project_android_application_graph",
+      "operation_name": "project_android_application_graph",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "project_apple_application_graph",
+      "operation_name": "project_apple_application_graph",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "project_harmony_application_graph",
+      "operation_name": "project_harmony_application_graph",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "trace_web_source_location",
+      "operation_name": "trace_web_source_location",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "export_web_scripts",
+      "operation_name": "export_web_scripts",
+      "endpoint": "CREATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ."
+      ]
+    },
+    {
+      "source_tool_name": "inspect_web_network_capture",
+      "operation_name": "inspect_web_network_capture",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ.",
+        "REA writes only provider-owned cache or workspace files for this inspection; it takes no caller output path."
+      ]
+    },
+    {
+      "source_tool_name": "recover_javascript_sources",
+      "operation_name": "recover_javascript_sources",
+      "endpoint": "CREATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Writes files on the host (effects.writesFilesystem); if these are only internal caches, override to READ."
+      ]
+    },
+    {
+      "source_tool_name": "open_binary",
+      "operation_name": "open_binary",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code.",
+        "Opens a target and starts a provider session that persists across calls; end it with close_binary."
+      ]
+    },
+    {
+      "source_tool_name": "close_binary",
+      "operation_name": "close_binary",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Writes host files and may replace existing ones (effects.mayDiscardData with writesFilesystem).",
+        "Ends the session and drops its unexported state; may write a snapshot to a caller path."
+      ]
+    },
+    {
+      "source_tool_name": "binary_session",
+      "operation_name": "binary_session",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    },
+    {
+      "source_tool_name": "export_evidence_bundle",
+      "operation_name": "export_evidence_bundle",
+      "endpoint": "CREATE",
+      "needs_review": true,
+      "review_reasons": [
+        "Writes host files and may replace existing ones (effects.mayDiscardData with writesFilesystem)."
+      ]
+    },
+    {
+      "source_tool_name": "import_evidence_bundle",
+      "operation_name": "import_evidence_bundle",
+      "endpoint": "CREATE",
+      "needs_review": false,
+      "review_reasons": [
+        "Merges an Evidence bundle into the current session (additive session state)."
+      ]
+    },
+    {
+      "source_tool_name": "compare_process_captures",
+      "operation_name": "compare_process_captures",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_artifacts",
+      "operation_name": "compare_artifacts",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_functions",
+      "operation_name": "compare_functions",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "compare_bundles",
+      "operation_name": "compare_bundles",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "find_changed_behavior",
+      "operation_name": "find_changed_behavior",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "build_call_path",
+      "operation_name": "build_call_path",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "correlate_static_and_runtime",
+      "operation_name": "correlate_static_and_runtime",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "verify_reconstruction",
+      "operation_name": "verify_reconstruction",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "list_unknowns",
+      "operation_name": "list_unknowns",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "record_unknown",
+      "operation_name": "record_unknown",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "update_unknown",
+      "operation_name": "update_unknown",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "verify_unknown_resolution",
+      "operation_name": "verify_unknown_resolution",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_evidence_bundle",
+      "operation_name": "get_evidence_bundle",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "get_navigation_context",
+      "operation_name": "get_navigation_context",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_address_context",
+      "operation_name": "inspect_address_context",
+      "endpoint": "READ",
+      "needs_review": false,
+      "review_reasons": []
+    },
+    {
+      "source_tool_name": "inspect_with_objdump",
+      "operation_name": "inspect_with_objdump",
+      "endpoint": "READ",
+      "needs_review": true,
+      "review_reasons": [
+        "Read that launches a process (effects.launchesProcess); check whether the process persists or runs target code."
+      ]
+    }
+  ]
+}

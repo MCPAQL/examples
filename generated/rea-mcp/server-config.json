@@ -1,0 +1,16 @@
+{
+  "name": "rea-mcp",
+  "server_url": "stdio://rea",
+  "transport": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "rea-agents@6.5.0",
+      "mcp"
+    ]
+  },
+  "classification": {
+    "effects_field": "effects"
+  }
+}
