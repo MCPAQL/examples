@@ -115,10 +115,8 @@ const workflows = {
   ],
 };
 
-const findProcedure = (value) => {
-  const text = JSON.stringify(value) ?? "";
-  return text.match(/"(_?parity_checksum)"/)?.[1];
-};
+// From normalized_result: the record also echoes the search pattern under parameters.
+const findProcedure = (record) => (JSON.stringify(record?.normalized_result) ?? "").match(/"(_?parity_checksum)"/)?.[1];
 
 const calls = [];
 for (const [workflow, steps] of Object.entries(workflows)) {
@@ -127,7 +125,7 @@ for (const [workflow, steps] of Object.entries(workflows)) {
     let started = Date.now();
     const rawResult = await raw.callTool({ name: operation, arguments: args }, undefined, CALL_OPTIONS);
     const rawMs = Date.now() - started;
-    if (operation === "search_procedures") fixtures.procedure = findProcedure(rawResult.structuredContent ?? rawResult.content);
+    if (operation === "search_procedures") fixtures.procedure = findProcedure(rawResult.structuredContent);
     started = Date.now();
     const adapterArgs = { operation, params: args };
     const adapterResult = await adapter.callTool({ name: `mcp_aql_${endpoint}`, arguments: adapterArgs }, undefined, CALL_OPTIONS);

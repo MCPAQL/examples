@@ -119,13 +119,11 @@ export const suite = {
 
     // Both arms run the same session-recording calls, so later results stay comparable.
     const search = await onBothArms(clients, "read", "search_procedures", { pattern: "parity_checksum", mode: "literal", case_sensitive: false });
-    fixtures.procedure = findString(search.official, /^_?parity_checksum$/);
+    // From normalized_result: the record also echoes the search pattern under parameters.
+    fixtures.procedure = findString(search.official?.normalized_result, /^_?parity_checksum$/);
     if (!fixtures.procedure) throw new Error("search_procedures did not return parity_checksum; check the provider and target.");
     const analysis = await onBothArms(clients, "read", "analyze_function", { procedure: fixtures.procedure });
-    fixtures.evidence = {
-      official: findString(analysis.official, /^ev_[a-f0-9]{64}$/),
-      mcpaql: findString(analysis.mcpaql, /^ev_[a-f0-9]{64}$/),
-    };
+    fixtures.evidence = { official: analysis.official?.evidence_id, mcpaql: analysis.mcpaql?.evidence_id };
 
     report.search_procedures = { same: search.same };
     report.analyze_function = { same: analysis.same, evidence: fixtures.evidence };
