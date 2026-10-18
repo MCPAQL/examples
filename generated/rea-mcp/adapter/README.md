@@ -50,3 +50,9 @@ Upstream calls follow the caller's cancellation and forward upstream progress. O
 - `MCPAQL_UPSTREAM_MAX_TOTAL_TIMEOUT_MS`: hard cap per call, regardless of progress; the upstream call is cancelled when it is reached.
 
 Every endpoint except EXECUTE also accepts a batch, `{ operations: [{ operation, params }, ...] }`, run in order (`MCPAQL_MAX_BATCH_OPERATIONS`, default 25). A batch stops before any dangerous or confirmation-gated operation, which must be called on its own; a batch's duration is the sum of its operations.
+
+Result shaping is on:
+
+- Text content that is JSON for exactly the structured content is dropped.
+- Over 20000 characters per operation (`MCPAQL_RESULT_BUDGET_CHARS` overrides; 0 disables), results of 1 READ operation become a summary plus a ready-to-call continuation that pages the retained result.
+- Every shaped result lists what it omitted in `_meta.shaped`. Pass `params._full_result: true` to get the unshaped result.

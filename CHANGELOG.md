@@ -17,6 +17,8 @@ This is a rolling examples collection and uses date-based versioning
   - `tools/list` is 4,697 characters, against 660,806 model-visible characters for the same upstream tools
   - Regenerated with the adapter generator's batching and result-shaping runtime. Batching is available on READ and CREATE; result shaping is not configured for REA yet
   - Live-validation kit in `generated/rea-mcp/validation/` for an isolated VM: an `mcpaql-parity` suite (raw REA and the adapter, each with its own session), analysis targets built from source, and a harness that records tool-list, request and response sizes for both arms
+  - Result shaping on for REA: duplicate text content is dropped, and `analyze_function` results over 20,000 characters become a summary and an `inspect_analysis_view` handle. Verified lossless against a live REA
+  - Live results (2026-10-18, isolated VM): parity 23/23 identical, batching 19/19, shaping checks passing; an 11-call workflow drops from 205,983 characters (REA) to 42,667 (adapter, shaped)
 
 ## [2026.10.14] - 2026-10-14
 

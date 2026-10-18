@@ -1,0 +1,155 @@
+{
+  "checked_at": "2026-10-18T05:00:36.277Z",
+  "results": {
+    "read_batch_matches_singles": {
+      "pass": true,
+      "detail": {
+        "total": 4,
+        "succeeded": 4,
+        "failed": 0
+      }
+    },
+    "read_batch_schema_valid": {
+      "pass": true,
+      "detail": []
+    },
+    "read_batch_summary": {
+      "pass": true,
+      "detail": {
+        "total": 4,
+        "succeeded": 4,
+        "failed": 0
+      }
+    },
+    "routing_wrong_endpoint_refused": {
+      "pass": true,
+      "detail": {
+        "total": 3,
+        "succeeded": 2,
+        "failed": 1
+      }
+    },
+    "halt_before_confirmation_operation": {
+      "pass": true,
+      "detail": {
+        "index": 1,
+        "operation": "close_binary",
+        "result": {
+          "success": false,
+          "error": {
+            "code": "VALIDATION_SINGLE_CALL_REQUIRED",
+            "message": "Operation 'close_binary' requires confirmation, so it must be called on its own, not in a batch."
+          }
+        }
+      }
+    },
+    "halt_pending_operations": {
+      "pass": true,
+      "detail": {
+        "pending": [
+          {
+            "index": 2,
+            "operation": "open_binary",
+            "params": {
+              "path": "~/rea-eval/targets/run1/parity-native"
+            }
+          }
+        ],
+        "summary": {
+          "total": 3,
+          "succeeded": 1,
+          "failed": 0,
+          "halted": 1,
+          "pending": 1
+        }
+      }
+    },
+    "halt_schema_valid": {
+      "pass": true,
+      "detail": []
+    },
+    "halt_left_session_open": {
+      "pass": true
+    },
+    "limit_26_refused": {
+      "pass": true,
+      "detail": {
+        "code": "VALIDATION_BATCH_SIZE",
+        "message": "A batch needs 1 to 25 operations; got 26."
+      }
+    },
+    "empty_batch_refused": {
+      "pass": true,
+      "detail": {
+        "code": "VALIDATION_BATCH_SIZE",
+        "message": "A batch needs 1 to 25 operations; got 0."
+      }
+    },
+    "operation_and_operations_refused": {
+      "pass": true,
+      "detail": {
+        "code": "VALIDATION_AMBIGUOUS_REQUEST",
+        "message": "Send either operation or operations, not both."
+      }
+    },
+    "no_execute_endpoint": {
+      "pass": true,
+      "detail": [
+        "mcp_aql_read",
+        "mcp_aql_create"
+      ]
+    },
+    "introspect_batch_capabilities": {
+      "pass": true,
+      "detail": "\"capabilities\":{\"batch\":true,\"batch_max_operations\":25,\"batch_excluded_endpoints\":[\"EXECUTE\"]}"
+    },
+    "env_max_batch_honored": {
+      "pass": true,
+      "detail": {
+        "code": "VALIDATION_BATCH_SIZE",
+        "message": "A batch needs 1 to 3 operations; got 4."
+      }
+    },
+    "progress_monotonic": {
+      "pass": true,
+      "detail": {
+        "count": 7,
+        "first": {
+          "progress": 0,
+          "total": 2,
+          "message": "binary_overview",
+          "t": 2
+        },
+        "last": {
+          "progress": 2,
+          "total": 2,
+          "message": "batch complete",
+          "t": 6256
+        },
+        "ms": 6256
+      }
+    },
+    "progress_cold_batch_ok": {
+      "pass": true,
+      "detail": {
+        "total": 2,
+        "succeeded": 2,
+        "failed": 0
+      }
+    },
+    "cancel_rejects_call": {
+      "pass": true,
+      "detail": "MCP error -32001: parity cancel test"
+    },
+    "cancel_stops_before_next_entry": {
+      "pass": true,
+      "detail": [
+        "open_binary",
+        "binary_overview"
+      ]
+    },
+    "adapter_usable_after_cancel": {
+      "pass": true
+    }
+  }
+}

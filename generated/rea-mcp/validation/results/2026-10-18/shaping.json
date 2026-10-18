@@ -1,0 +1,209 @@
+{
+  "checked_at": "2026-10-18T04:56:41.198Z",
+  "results": {
+    "handle_is_evidence_id": {
+      "pass": true,
+      "detail": {
+        "original": 136003,
+        "returned": 2543
+      }
+    },
+    "handle_keeps_summary_paths": {
+      "pass": true
+    },
+    "repeat_changes_evidence_id": {
+      "value": true,
+      "first_diff": {
+        "path": ".evidence_id",
+        "raw": "\"ev_c67b1317056ca4ccc353f0b088ef2c18380baa4f1ad52096277f3c9104baed86\"",
+        "adapter": "\"ev_a3082ac19a32f211ce1c3cddaa97a6a282a5a19d22c4849a1a6da22bf1a29aaf\""
+      }
+    },
+    "full_result_matches_raw": {
+      "pass": true,
+      "detail": null
+    },
+    "facets_lossless": {
+      "pass": true,
+      "detail": {
+        "procedure": true,
+        "pseudocode": true,
+        "assembly": true,
+        "comments": true,
+        "callers": true,
+        "callees": true,
+        "incoming_references": true,
+        "outgoing_references": true,
+        "unresolved_calls": true,
+        "referenced_strings": true,
+        "referenced_names": true,
+        "basic_blocks": true,
+        "native_api": true
+      }
+    },
+    "facet_details": {
+      "procedure": {
+        "pages": 1,
+        "coverage": {
+          "status": "complete-within-view",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "pseudocode": {
+        "pages": 4,
+        "coverage": {
+          "status": "page",
+          "examined": 48,
+          "total": 240,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "assembly": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 26,
+          "total": 26,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "comments": {
+        "pages": 1,
+        "coverage": {
+          "status": "empty",
+          "examined": 0,
+          "total": 0,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "callers": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 2,
+          "total": 2,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "callees": {
+        "pages": 1,
+        "coverage": {
+          "status": "empty",
+          "examined": 0,
+          "total": 0,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "incoming_references": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 4,
+          "total": 4,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "outgoing_references": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 14,
+          "total": 14,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "unresolved_calls": {
+        "pages": 1,
+        "coverage": {
+          "status": "empty",
+          "examined": 0,
+          "total": 0,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "referenced_strings": {
+        "pages": 1,
+        "coverage": {
+          "status": "empty",
+          "examined": 0,
+          "total": 0,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "referenced_names": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 4,
+          "total": 4,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "basic_blocks": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 5,
+          "total": 5,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "native_api": {
+        "pages": 1,
+        "coverage": {
+          "status": "complete-within-view",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      }
+    },
+    "sizes": {
+      "raw_analyze_function_chars": 64116,
+      "handle_response_chars": 2913,
+      "all_facets_paged_chars": 159283
+    },
+    "drop_duplicate_text_lossless": {
+      "pass": true,
+      "detail": {
+        "raw_chars": 8923,
+        "shaped_chars": 4549
+      }
+    },
+    "handle_invalid_after_close": {
+      "pass": true,
+      "detail": "evidence_integrity_mismatch"
+    },
+    "budget_zero_disables_handles": {
+      "pass": true
+    }
+  }
+}

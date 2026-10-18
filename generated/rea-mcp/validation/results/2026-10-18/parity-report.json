@@ -1,0 +1,1087 @@
+{
+  "suite": "rea-mcp",
+  "startedAt": "2026-10-18T04:56:49.574Z",
+  "finishedAt": "2026-10-18T04:57:02.890Z",
+  "adapterPath": "~/rea-eval/run2/examples/generated/rea-mcp/adapter/dist/server.js",
+  "upstreamUrl": "stdio:~/rea-eval/rea-local/node_modules/.bin/rea",
+  "upstreamTransport": "stdio",
+  "totals": {
+    "TOTAL": 131,
+    "SKIPPED": 108,
+    "IDENTICAL": 23
+  },
+  "ops": [
+    {
+      "name": "inspect_native_load_image",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_native_data_type",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_native_instruction",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "resolve_native_call_targets",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "address_name",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "comment",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "current_address",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "current_procedure",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "current_document",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "not declared by the Ghidra provider",
+      "ms": 0
+    },
+    {
+      "name": "inline_comment",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "list_bookmarks",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "list_documents",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 44
+    },
+    {
+      "name": "list_names",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "list_procedures",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 16
+    },
+    {
+      "name": "list_segments",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 21
+    },
+    {
+      "name": "list_strings",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 26
+    },
+    {
+      "name": "next_address",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "prev_address",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "procedure_address",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "procedure_assembly",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 11
+    },
+    {
+      "name": "procedure_callees",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 10
+    },
+    {
+      "name": "procedure_callers",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 10
+    },
+    {
+      "name": "procedure_info",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 13
+    },
+    {
+      "name": "read_function_instructions",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "search_bytes",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "read_bytes",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "address_to_file_offset",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "procedure_references",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "procedure_pseudo_code",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 13
+    },
+    {
+      "name": "resolve_containing_procedure",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "search_procedures",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 5
+    },
+    {
+      "name": "search_strings",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 7
+    },
+    {
+      "name": "xrefs",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 8
+    },
+    {
+      "name": "inspect_native_dispatch_metadata",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "get_objc_classes",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "get_objc_protocols",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "batch_decompile",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "get_call_graph",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "analyze_swift_types",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "find_xrefs_to_name",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "binary_overview",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 27
+    },
+    {
+      "name": "analyze_function",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 22
+    },
+    {
+      "name": "inspect_native_api",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_feature",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_call_path",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_native_ui_action",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_native_values",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_macho",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 316
+    },
+    {
+      "name": "inspect_signature",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_plist",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 80
+    },
+    {
+      "name": "list_architectures",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 40
+    },
+    {
+      "name": "demangle_swift",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_pe_resources",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_binary_layout",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_recorded_crash",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_analysis_view",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 13
+    },
+    {
+      "name": "inspect_artifact",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 16
+    },
+    {
+      "name": "decode_interface_builder",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_keyed_archive",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_asset_catalog",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_dylib_resolution",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_evm_interface",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_go_binary",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "note": "needs the optional Go target",
+      "ms": 10
+    },
+    {
+      "name": "inspect_rust_binary",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_wasm_artifact",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_wasm_interfaces",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_sqlite_database",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 109
+    },
+    {
+      "name": "inspect_packet_fields",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_packet_capture",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_signal_decoders",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "decode_signal_recording",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_managed_artifact",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_managed_members",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_managed_native_boundaries",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_android_package",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "search_android_classes",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_android_class",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_android_method",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_android_references",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_apktool_client",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "decode_android_resources",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_pcap_client",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_pcap_capture",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "identify_flutter_build",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_dart_aot",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_firmware_regions",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_managed_members",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "verify_managed_native_boundaries",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "project_managed_application_graph",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_web_captures",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_web_screenshots",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "analyze_javascript_application",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "reconcile_javascript_runtime",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_electron_fuses",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_application_feature",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_javascript_semantics",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_application_versions",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_source_to_bundle",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_javascript_export_shapes",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "build_reconstruction_obligation_ledger",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "evaluate_reconstruction_coverage",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "project_android_application_graph",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "project_apple_application_graph",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "project_harmony_application_graph",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "trace_web_source_location",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_web_network_capture",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "binary_session",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_process_captures",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_artifacts",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_functions",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "compare_bundles",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "find_changed_behavior",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "build_call_path",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "correlate_static_and_runtime",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "verify_reconstruction",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "list_unknowns",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 3
+    },
+    {
+      "name": "verify_unknown_resolution",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "get_evidence_bundle",
+      "endpoint": "read",
+      "category": "PURE_READ",
+      "cls": "IDENTICAL",
+      "officialOk": true,
+      "mcpaqlOk": true,
+      "ms": 8
+    },
+    {
+      "name": "get_navigation_context",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_address_context",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "inspect_with_objdump",
+      "endpoint": "read",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "extract_artifact",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "extract_firmware",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "import_managed_reconstruction",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "export_web_scripts",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "recover_javascript_sources",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "open_binary",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "opened on each arm in openSessions; compared in the session report",
+      "ms": 0
+    },
+    {
+      "name": "close_binary",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "note": "closed on each arm in closeSessions",
+      "ms": 0
+    },
+    {
+      "name": "export_evidence_bundle",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "import_evidence_bundle",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    },
+    {
+      "name": "record_unknown",
+      "endpoint": "create",
+      "category": "SKIP",
+      "cls": "SKIPPED",
+      "detail": "no suite arg builder",
+      "ms": 0
+    }
+  ]
+}

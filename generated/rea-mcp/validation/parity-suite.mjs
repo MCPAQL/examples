@@ -22,12 +22,22 @@ const SESSION_CALL_OPTIONS = { timeout: 600_000, resetTimeoutOnProgress: true, m
 
 const target = (name) => join(targets, name);
 
+// Operations the adapter returns as a result handle (schema-overrides.json result_shaping).
+// Parity compares full results, so the adapter arm asks for them; validation/check-shaping.mjs
+// checks the handles themselves.
+const UNSHAPED = new Set(["analyze_function"]);
+const unshaped = (args) => (fixtures, variant) => {
+  const built = typeof args === "function" ? args(fixtures, variant) : args;
+  return built && variant === "mcpaql" ? { ...built, _full_result: true } : built;
+};
+
 async function callArm(clients, variant, endpoint, operation, params) {
   if (variant === "official") {
     const result = await clients.official.callTool({ name: operation, arguments: params }, undefined, SESSION_CALL_OPTIONS);
     return { ok: !result.isError, payload: result.structuredContent ?? result.content };
   }
-  const result = await clients.mcpaql.callTool({ name: `mcp_aql_${endpoint}`, arguments: { operation, params } }, undefined, SESSION_CALL_OPTIONS);
+  const adapterParams = UNSHAPED.has(operation) ? { ...params, _full_result: true } : params;
+  const result = await clients.mcpaql.callTool({ name: `mcp_aql_${endpoint}`, arguments: { operation, params: adapterParams } }, undefined, SESSION_CALL_OPTIONS);
   const envelope = JSON.parse(result.content?.find((item) => item.type === "text")?.text ?? "null");
   const data = envelope?.data;
   return {
@@ -78,7 +88,7 @@ export const suite = {
     read("procedure_pseudo_code", procedure),
     read("procedure_callers", procedure),
     read("procedure_callees", procedure),
-    read("analyze_function", procedure),
+    read("analyze_function", unshaped(procedure)),
     read("xrefs", (fixtures) => (fixtures.address ? { address: fixtures.address } : null)),
     read("inspect_macho", {}),
     read("inspect_artifact", {}),
