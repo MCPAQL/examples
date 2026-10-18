@@ -92,15 +92,15 @@ Install REA without its skill: use `--skill=false`, or skip REA's setup entirely
 
 ## Token Footprint
 
-Measured 2026-10-17 from REA's own SDK `listTools()` catalog: the CI artifact `rea-test-runtime` from the 6.5.0 release commit, committed here as `capture/rea-mcp-tool-catalog-6.5.0.json.gz`. Sizes are serialized JSON characters. For the adapter, `tools/list` and `introspect` were served by the generated adapter with its upstream command replaced by `/usr/bin/false`, so REA never ran.
+Measured 2026-10-17 from REA's own SDK `listTools()` catalog: the CI artifact `rea-test-runtime` from the 6.5.0 release commit, committed here as `capture/rea-mcp-tool-catalog-6.5.0.json.gz`. Sizes are serialized JSON characters. For the adapter, `tools/list` and `introspect` were served by the generated adapter with its upstream command replaced by `/usr/bin/false`, so REA never ran. The adapter figures were re-measured on 2026-10-18 after regenerating with batching and result shaping.
 
 | Surface | Tools | Characters |
 |---|---|---|
 | REA upstream, all tools (sum of tool definitions in `tools/list`) | 207 | 3,087,725 |
 | REA upstream, all tools, model-visible (name + description + inputSchema) | 207 | 792,163 |
 | REA upstream, the 131 stage-1 tools, model-visible | 131 | 660,806 |
-| Generated MCP-AQL adapter (`tools/list`) | 2 | 4,057 |
-| `introspect` operation list (names and descriptions) | — | 72,593 |
+| Generated MCP-AQL adapter (`tools/list`) | 2 | 4,697 |
+| `introspect` operation list (names and descriptions) | — | 72,688 |
 | `introspect` detail for every one of the 131 operations | — | 170,809 |
 
 `outputSchema` makes up 73% of REA's `tools/list`. Hosts that build Anthropic API tool definitions don't send it to the model, so the model-visible figures are the relevant ones there.
