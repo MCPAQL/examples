@@ -16,6 +16,7 @@ This is a rolling examples collection and uses date-based versioning
   - Exposes 131 of 207 tools (121 READ, 10 CREATE). Runtime, device, UI, foreign-code, UPDATE, DELETE and EXECUTE operations are excluded and recorded in provenance
   - `tools/list` is 4,697 characters, against 660,806 model-visible characters for the same upstream tools
   - Regenerated with the adapter generator's batching and result-shaping runtime. Batching is available on READ and CREATE; result shaping is not configured for REA yet
+  - Live-validation kit in `generated/rea-mcp/validation/` for an isolated VM: an `mcpaql-parity` suite (raw REA and the adapter, each with its own session), analysis targets built from source, and a harness that records tool-list, request and response sizes for both arms
 
 ## [2026.10.14] - 2026-10-14
 
