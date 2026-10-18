@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # Builds the REA parity targets from the sources in this directory. Run it inside the
-# isolated VM, not on a developer host. Needs clang (Xcode Command Line Tools), sqlite3 and
-# zip; go is optional (without it there is no Go target, and the suite skips inspect_go_binary).
+# isolated VM, not on a developer host. Needs clang (Xcode Command Line Tools) and sqlite3;
+# go is optional (without it there is no Go target, and the suite skips inspect_go_binary).
 # Usage: ./build.sh [output directory, default ./build]
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 out="${1:-$here/build}"
 mkdir -p "$out"
+out="$(cd "$out" && pwd)"
 
 clang -O0 -o "$out/parity-native" "$here/parity.c"
 if command -v go >/dev/null 2>&1; then
@@ -40,9 +41,6 @@ CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 INSERT INTO settings VALUES ('mode', 'parity'), ('retries', '3');
 CREATE INDEX settings_value ON settings (value);
 SQL
-
-rm -f "$out/parity.zip"
-(cd "$out" && zip -q -X parity.zip parity.plist)
 
 echo "built parity targets in $out"
 ls -l "$out"

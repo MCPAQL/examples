@@ -36,20 +36,6 @@ async function callArm(clients, variant, endpoint, operation, params) {
   };
 }
 
-// The first string anywhere in a result that matches the pattern.
-function findString(value, pattern) {
-  if (typeof value === "string") return pattern.test(value) ? value : undefined;
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      const found = findString(item, pattern);
-      if (found) return found;
-    }
-    return undefined;
-  }
-  if (value && typeof value === "object") return findString(Object.values(value), pattern);
-  return undefined;
-}
-
 async function onBothArms(clients, endpoint, operation, params) {
   const [official, mcpaql] = await Promise.all([
     callArm(clients, "official", endpoint, operation, params),
@@ -72,7 +58,8 @@ const ifTarget = (name, args) => () => (existsSync(target(name)) ? args : null);
 
 export const suite = {
   name: "rea-mcp",
-  upstreamStdio: { command: reaCommand ?? "rea", args: ["mcp"] },
+  // The adapter's own REA child runs in the adapter directory, so the raw arm does too.
+  upstreamStdio: { command: reaCommand ?? "rea", args: ["mcp"], cwd: join(here, "..", "adapter") },
   operations: [
     skip("open_binary", "opened on each arm in openSessions; compared in the session report"),
     skip("close_binary", "closed on each arm in closeSessions"),
@@ -80,7 +67,7 @@ export const suite = {
     read("binary_overview", {}),
     read("list_architectures", {}),
     read("list_documents", {}),
-    read("current_document", {}),
+    skip("current_document", "not declared by the Ghidra provider"),
     read("list_segments", {}),
     read("list_procedures", {}),
     read("list_strings", {}),
@@ -92,11 +79,11 @@ export const suite = {
     read("procedure_callers", procedure),
     read("procedure_callees", procedure),
     read("analyze_function", procedure),
-    read("xrefs", {}),
+    read("xrefs", (fixtures) => (fixtures.address ? { address: fixtures.address } : null)),
     read("inspect_macho", {}),
     read("inspect_artifact", {}),
     read("inspect_analysis_view", (fixtures, variant) => (fixtures.evidence?.[variant]
-      ? { source: { kind: "retained-evidence", evidence_id: fixtures.evidence[variant] }, view: { kind: "summary" } }
+      ? { source: { kind: "retained-evidence", evidence_id: fixtures.evidence[variant] }, view: { kind: "native", facet: "assembly", limit: 8, offset: 0 } }
       : null)),
     read("list_unknowns", { limit: 50, offset: 0 }),
     read("get_evidence_bundle", { detail: "summary" }),
@@ -120,7 +107,9 @@ export const suite = {
     // Both arms run the same session-recording calls, so later results stay comparable.
     const search = await onBothArms(clients, "read", "search_procedures", { pattern: "parity_checksum", mode: "literal", case_sensitive: false });
     // From normalized_result: the record also echoes the search pattern under parameters.
-    fixtures.procedure = findString(search.official?.normalized_result, /^_?parity_checksum$/);
+    const match = search.official?.normalized_result?.find?.((entry) => /^_?parity_checksum$/.test(entry?.value));
+    fixtures.procedure = match?.value;
+    fixtures.address = match?.address;
     if (!fixtures.procedure) throw new Error("search_procedures did not return parity_checksum; check the provider and target.");
     const analysis = await onBothArms(clients, "read", "analyze_function", { procedure: fixtures.procedure });
     fixtures.evidence = { official: analysis.official?.evidence_id, mcpaql: analysis.mcpaql?.evidence_id };

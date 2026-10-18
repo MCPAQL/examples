@@ -5,10 +5,11 @@ These files check the stage-1 REA adapter against a live REA 6.5.0: adapter vs r
 | File | What it is |
 |---|---|
 | `footprint.json` | Static footprint figures, measured from REA's published catalog without running REA |
-| `targets/` | Sources for the analysis targets (a small C program, an optional Go program, a plist, a SQLite database, a zip) and `build.sh` |
+| `targets/` | Sources for the analysis targets (a small C program, an optional Go program, a plist and a SQLite database) and `build.sh` |
 | `parity-suite.mjs` | `mcpaql-parity` suite: the same calls on raw REA and on the adapter |
 | `measure-calls.mjs` | Records `tools/list`, request and response sizes for both arms, the adapter's batch form and introspection |
 | `use-local-rea.mjs` | Points the adapter at a locally installed `rea` binary, so both arms run the same REA |
+| `check-batching.mjs` | Batching checks on the adapter (spec §7 and §7.5): batch vs single calls, routing, halting, limits, progress and cancellation |
 
 ## Run only in an isolated VM
 
@@ -37,7 +38,15 @@ REA_PARITY_SESSION_REPORT=validation/parity-sessions.json \
 
 # 5. Sizes.
 node validation/measure-calls.mjs --rea "$REA_COMMAND" --out validation/calls.json
+
+# 6. Batching. The schema is from MCPAQL/spec; ajv comes from an MCPAQL/tools checkout.
+node validation/check-batching.mjs adapter validation/targets/build \
+  ../spec/schemas/batch-operation.schema.json ../tools validation/batching.json
 ```
+
+Needs Node 24.15 or later, for REA's SQLite inspection, and `mcpaql-parity` from MCPAQL/tools `develop`; stdio upstream support is not in a release yet.
+
+Both arms run REA in the adapter directory. The environments differ: the raw arm sees the harness's whole environment, while the adapter passes REA only the variables on its passthrough list.
 
 REA keeps one current binary per server process. The parity suite therefore opens the native target on each arm in `openSessions` and runs the same session-recording calls, in the same order, on both. `parity-sessions.json` records whether `open_binary`, `search_procedures` and `analyze_function` matched across arms. Operations without an argument builder in the suite are reported as SKIPPED.
 

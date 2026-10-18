@@ -45,7 +45,8 @@ async function connect(name, command, args, cwd) {
   return client;
 }
 
-const raw = await connect("raw", reaCommand, ["mcp"]);
+// The adapter's own REA child runs in the adapter directory, so the raw arm does too.
+const raw = await connect("raw", reaCommand, ["mcp"], adapterDir);
 const adapter = await connect("adapter", process.execPath, [join(adapterDir, "dist", "server.js")], adapterDir);
 const target = (name) => join(targets, name);
 
@@ -106,7 +107,7 @@ const workflows = {
     ["read", "analyze_function", () => ({ procedure: fixtures.procedure })],
     ["read", "procedure_pseudo_code", () => ({ procedure: fixtures.procedure })],
     ["read", "procedure_callers", () => ({ procedure: fixtures.procedure })],
-    ["read", "xrefs", () => ({})],
+    ["read", "xrefs", () => ({ address: fixtures.address })],
   ],
   artifacts: [
     ["read", "inspect_plist", () => ({ path: target("parity.plist") })],
@@ -116,65 +117,73 @@ const workflows = {
 };
 
 // From normalized_result: the record also echoes the search pattern under parameters.
-const findProcedure = (record) => (JSON.stringify(record?.normalized_result) ?? "").match(/"(_?parity_checksum)"/)?.[1];
+const findProcedure = (record) => record?.normalized_result?.find?.((entry) => /^_?parity_checksum$/.test(entry?.value));
 
-const calls = [];
-for (const [workflow, steps] of Object.entries(workflows)) {
-  for (const [endpoint, operation, params] of steps) {
-    const args = params();
-    let started = Date.now();
-    const rawResult = await raw.callTool({ name: operation, arguments: args }, undefined, CALL_OPTIONS);
-    const rawMs = Date.now() - started;
-    if (operation === "search_procedures") fixtures.procedure = findProcedure(rawResult.structuredContent);
-    started = Date.now();
-    const adapterArgs = { operation, params: args };
-    const adapterResult = await adapter.callTool({ name: `mcp_aql_${endpoint}`, arguments: adapterArgs }, undefined, CALL_OPTIONS);
-    calls.push({
-      workflow,
-      operation,
-      raw: { request_chars: chars({ name: operation, arguments: args }), ms: rawMs, ...describeRaw(rawResult) },
-      adapter: { request_chars: chars({ name: `mcp_aql_${endpoint}`, arguments: adapterArgs }), ms: Date.now() - started, ...describeAdapter(adapterResult) },
-    });
-    console.log(`[measure] ${workflow}/${operation}: raw ${calls.at(-1).raw.response_chars} chars, adapter ${calls.at(-1).adapter.response_chars} chars`);
+// Always close the session and both servers, even when a call fails partway.
+try {
+  const calls = [];
+  for (const [workflow, steps] of Object.entries(workflows)) {
+    for (const [endpoint, operation, params] of steps) {
+      const args = params();
+      let started = Date.now();
+      const rawResult = await raw.callTool({ name: operation, arguments: args }, undefined, CALL_OPTIONS);
+      const rawMs = Date.now() - started;
+      if (operation === "search_procedures") {
+        const match = findProcedure(rawResult.structuredContent);
+        fixtures.procedure = match?.value;
+        fixtures.address = match?.address;
+        if (!fixtures.procedure) throw new Error("search_procedures did not return parity_checksum; check the provider and target.");
+      }
+      started = Date.now();
+      const adapterArgs = { operation, params: args };
+      const adapterResult = await adapter.callTool({ name: `mcp_aql_${endpoint}`, arguments: adapterArgs }, undefined, CALL_OPTIONS);
+      calls.push({
+        workflow,
+        operation,
+        raw: { request_chars: chars({ name: operation, arguments: args }), ms: rawMs, ...describeRaw(rawResult) },
+        adapter: { request_chars: chars({ name: `mcp_aql_${endpoint}`, arguments: adapterArgs }), ms: Date.now() - started, ...describeAdapter(adapterResult) },
+      });
+      console.log(`[measure] ${workflow}/${operation}: raw ${calls.at(-1).raw.response_chars} chars, adapter ${calls.at(-1).adapter.response_chars} chars`);
+    }
   }
+
+  // The same native reads as one adapter batch, against the session opened above.
+  const batchOperations = workflows.native_function
+    .filter(([endpoint, operation]) => endpoint === "read" && operation !== "search_procedures")
+    .map(([, operation, params]) => ({ operation, params: params() }));
+  const batchArgs = { operations: batchOperations };
+  const batchStarted = Date.now();
+  const batchResult = await adapter.callTool({ name: "mcp_aql_read", arguments: batchArgs }, undefined, CALL_OPTIONS);
+  const batch = {
+    operations: batchOperations.map((entry) => entry.operation),
+    request_chars: chars({ name: "mcp_aql_read", arguments: batchArgs }),
+    ms: Date.now() - batchStarted,
+    ...describeAdapter(batchResult),
+    summary: (() => { try { return JSON.parse(batchResult.content[0].text).summary; } catch { return undefined; } })(),
+  };
+
+  // Introspection the model fetches before calling these operations through the adapter.
+  const introspection = {};
+  for (const operation of new Set(Object.values(workflows).flat().map(([, name]) => name))) {
+    const result = await adapter.callTool({ name: "mcp_aql_read", arguments: { operation: "introspect", params: { query: "operations", name: operation } } });
+    introspection[operation] = result.content?.[0]?.text?.length ?? 0;
+  }
+
+  writeFileSync(outPath, JSON.stringify({
+    measured_at: new Date().toISOString(),
+    method: "Serialized JSON characters of MCP tools/list entries, tools/call requests (name + arguments) and results, from a live REA 6.5.0 in an isolated VM, called directly and through the adapter.",
+    procedure: fixtures.procedure ?? null,
+    catalog,
+    up_front: upFront,
+    calls,
+    batch,
+    introspection_chars: introspection,
+  }, null, 2));
+  console.log(`[measure] wrote ${outPath}`);
+} finally {
+  await Promise.allSettled([
+    raw.callTool({ name: "close_binary", arguments: { overwrite: false } }, undefined, CALL_OPTIONS),
+    adapter.callTool({ name: "mcp_aql_create", arguments: { operation: "close_binary", params: { overwrite: false } } }, undefined, CALL_OPTIONS),
+  ]);
+  await Promise.allSettled([raw.close(), adapter.close()]);
 }
-
-// The same native reads as one adapter batch, against the session opened above.
-const batchOperations = workflows.native_function
-  .filter(([endpoint, operation]) => endpoint === "read" && operation !== "search_procedures")
-  .map(([, operation, params]) => ({ operation, params: params() }));
-const batchArgs = { operations: batchOperations };
-const batchStarted = Date.now();
-const batchResult = await adapter.callTool({ name: "mcp_aql_read", arguments: batchArgs }, undefined, CALL_OPTIONS);
-const batch = {
-  operations: batchOperations.map((entry) => entry.operation),
-  request_chars: chars({ name: "mcp_aql_read", arguments: batchArgs }),
-  ms: Date.now() - batchStarted,
-  ...describeAdapter(batchResult),
-  summary: (() => { try { return JSON.parse(batchResult.content[0].text).summary; } catch { return undefined; } })(),
-};
-
-// Introspection the model fetches before calling these operations through the adapter.
-const introspection = {};
-for (const operation of new Set(Object.values(workflows).flat().map(([, name]) => name))) {
-  const result = await adapter.callTool({ name: "mcp_aql_read", arguments: { operation: "introspect", params: { query: "operations", name: operation } } });
-  introspection[operation] = result.content?.[0]?.text?.length ?? 0;
-}
-
-await Promise.allSettled([
-  raw.callTool({ name: "close_binary", arguments: { overwrite: false } }, undefined, CALL_OPTIONS),
-  adapter.callTool({ name: "mcp_aql_create", arguments: { operation: "close_binary", params: { overwrite: false } } }, undefined, CALL_OPTIONS),
-]);
-await Promise.allSettled([raw.close(), adapter.close()]);
-
-writeFileSync(outPath, JSON.stringify({
-  measured_at: new Date().toISOString(),
-  method: "Serialized JSON characters of MCP tools/list entries, tools/call requests (name + arguments) and results, from a live REA 6.5.0 in an isolated VM, called directly and through the adapter.",
-  procedure: fixtures.procedure ?? null,
-  catalog,
-  up_front: upFront,
-  calls,
-  batch,
-  introspection_chars: introspection,
-}, null, 2));
-console.log(`[measure] wrote ${outPath}`);
