@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-18T04:56:41.198Z",
+  "checked_at": "2026-10-18T05:10:03.510Z",
   "results": {
     "handle_is_evidence_id": {
       "pass": true,
@@ -26,19 +26,27 @@
     "facets_lossless": {
       "pass": true,
       "detail": {
-        "procedure": true,
-        "pseudocode": true,
-        "assembly": true,
-        "comments": true,
-        "callers": true,
-        "callees": true,
-        "incoming_references": true,
-        "outgoing_references": true,
-        "unresolved_calls": true,
-        "referenced_strings": true,
-        "referenced_names": true,
-        "basic_blocks": true,
-        "native_api": true
+        "procedure": "lossless",
+        "pseudocode": "lossless",
+        "assembly": "lossless",
+        "comments": "lossless",
+        "callers": "lossless",
+        "callees": "lossless",
+        "incoming_references": "lossless",
+        "outgoing_references": "lossless",
+        "unresolved_calls": "lossless",
+        "referenced_strings": "lossless",
+        "referenced_names": "lossless",
+        "basic_blocks": "lossless",
+        "native_api": "lossless",
+        "value_flow_operations": "lossless",
+        "value_flow_def_use": "lossless",
+        "value_flow_effects": "lossless",
+        "value_flow_parameters": "lossless",
+        "value_flow_parameter_uses": "lossless",
+        "value_flow_summary": "lossless",
+        "swift_string_literals": "not_applicable",
+        "swift_string_literal_omissions": "not_applicable"
       }
     },
     "facet_details": {
@@ -184,12 +192,100 @@
           "exhausted": true
         },
         "lossless": true
+      },
+      "value_flow_operations": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 16,
+          "total": 16,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "value_flow_def_use": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 15,
+          "total": 15,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "value_flow_effects": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 3,
+          "total": 3,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "value_flow_parameters": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "value_flow_parameter_uses": {
+        "pages": 1,
+        "coverage": {
+          "status": "page",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "value_flow_summary": {
+        "pages": 1,
+        "coverage": {
+          "status": "complete-within-view",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "lossless": true
+      },
+      "swift_string_literals": {
+        "pages": 1,
+        "coverage": {
+          "status": "complete-within-view",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "not_applicable": true
+      },
+      "swift_string_literal_omissions": {
+        "pages": 1,
+        "coverage": {
+          "status": "complete-within-view",
+          "examined": 1,
+          "total": 1,
+          "next_offset": null,
+          "exhausted": true
+        },
+        "not_applicable": true
       }
     },
     "sizes": {
       "raw_analyze_function_chars": 64116,
       "handle_response_chars": 2913,
-      "all_facets_paged_chars": 159283
+      "all_facets_paged_chars": 235577
     },
     "drop_duplicate_text_lossless": {
       "pass": true,

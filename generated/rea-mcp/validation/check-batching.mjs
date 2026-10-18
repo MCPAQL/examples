@@ -17,7 +17,11 @@ const ajv = new Ajv2020({ strict: false, allErrors: true });
 require("ajv-formats").default(ajv);
 const validateBatch = ajv.compile(JSON.parse(readFileSync(schemaPath, "utf8")));
 // The deepest errors say where a response breaks the schema; root errors only name the oneOf branch.
-const schemaErrors = () => (validateBatch.errors ?? []).filter((error) => error.instancePath).slice(0, 5).map((error) => `${error.instancePath} ${error.message} ${JSON.stringify(error.params)}`);
+const schemaErrors = () => {
+  const errors = validateBatch.errors ?? [];
+  const deep = errors.filter((error) => error.instancePath);
+  return (deep.length ? deep : errors).slice(0, 5).map((error) => `${error.instancePath || "(root)"} ${error.message} ${JSON.stringify(error.params)}`);
+};
 
 const native = join(targets, "parity-native");
 const OPTS = { timeout: 600000, resetTimeoutOnProgress: true, onprogress: () => {} };

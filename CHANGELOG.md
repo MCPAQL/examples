@@ -15,10 +15,10 @@ This is a rolling examples collection and uses date-based versioning
   - Captured offline from REA's published tool catalog with `mcpaql-import-catalog`, without running REA; classified from REA's own effect flags
   - Exposes 131 of 207 tools (121 READ, 10 CREATE). Runtime, device, UI, foreign-code, UPDATE, DELETE and EXECUTE operations are excluded and recorded in provenance
   - `tools/list` is 4,697 characters, against 660,806 model-visible characters for the same upstream tools
-  - Regenerated with the adapter generator's batching and result-shaping runtime. Batching is available on READ and CREATE; result shaping is not configured for REA yet
+  - Regenerated with the adapter generator's batching and result-shaping runtime. Batching is available on READ and CREATE
   - Live-validation kit in `generated/rea-mcp/validation/` for an isolated VM: an `mcpaql-parity` suite (raw REA and the adapter, each with its own session), analysis targets built from source, and a harness that records tool-list, request and response sizes for both arms
-  - Result shaping on for REA: duplicate text content is dropped, and `analyze_function` results over 20,000 characters become a summary and an `inspect_analysis_view` handle. Verified lossless against a live REA
-  - Live results (2026-10-18, isolated VM): parity 23/23 identical, batching 19/19, shaping checks passing; an 11-call workflow drops from 205,983 characters (REA) to 42,667 (adapter, shaped)
+  - Result shaping on for REA: duplicate text content is dropped, and `analyze_function` results over 20,000 characters become a summary and an `inspect_analysis_view` handle. Against a live REA, 19 of the 21 native facets paged through the handle matched the full record exactly; the two Swift facets do not apply to the C test target
+  - Live results (2026-10-18, isolated VM): parity 23/23 identical, batching 19/19, shaping checks passing; an 11-call workflow takes 205,983 characters from REA (97,169 counting text content only) and 42,667 through the shaped adapter
 
 ## [2026.10.14] - 2026-10-14
 

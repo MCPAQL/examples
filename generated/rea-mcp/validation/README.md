@@ -10,7 +10,7 @@ These files check the stage-1 REA adapter against a live REA 6.5.0: adapter vs r
 | `measure-calls.mjs` | Records `tools/list`, request and response sizes for both arms, the adapter's batch form and introspection |
 | `use-local-rea.mjs` | Points the adapter at a locally installed `rea` binary, so both arms run the same REA |
 | `check-batching.mjs` | Batching checks on the adapter (spec §7 and §7.5): batch vs single calls, routing, halting, limits, progress and cancellation |
-| `check-shaping.mjs` | Result-shaping checks against raw REA: the `analyze_function` handle, lossless paging of every native facet, `_full_result`, duplicate-text dropping, retention and the budget switch |
+| `check-shaping.mjs` | Result-shaping checks against raw REA: the `analyze_function` handle, lossless paging of all 21 native facets, `_full_result`, duplicate-text dropping, retention and the budget switch |
 | `results/` | Results of live runs, one directory per date; local paths are shortened to `~/rea-eval` |
 
 ## Run only in an isolated VM

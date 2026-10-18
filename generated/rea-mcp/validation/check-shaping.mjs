@@ -1,7 +1,7 @@
 // VM-only: result-shaping checks for the REA adapter, using analysis calls only. Run it only
 // in an isolated VM: it launches REA twice. Compares the adapter (with result_shaping) against
-// raw REA, each with its own session: the analyze_function handle, lossless paging of every
-// native facet through the continuation, _full_result, duplicate-text dropping, retention.
+// raw REA, each with its own session: the analyze_function handle, lossless paging of all
+// 21 native facets through the continuation, _full_result, duplicate-text dropping, retention.
 // Usage: node validation/check-shaping.mjs <adapterDir> <native target> <out.json>
 // (`rea` must be on PATH; the adapter must launch the same rea, see use-local-rea.mjs.)
 import { writeFileSync } from "node:fs";
@@ -46,10 +46,32 @@ try {
   const fullFlag = await aql(shaped, "mcp_aql_read", "analyze_function", { procedure, _full_result: true });
   // Not a check: REA derives evidence_id from the session's call history, so a repeat differs.
   results.repeat_changes_evidence_id = { value: full.evidence_id !== fullAgainRaw.evidence_id, first_diff: firstDiff(full, fullAgainRaw) };
-  check("full_result_matches_raw", firstDiff(fullAgainRaw, fullFlag.data?.structured_content) === null && !fullFlag._meta, firstDiff(fullAgainRaw, fullFlag.data?.structured_content));
+  check("full_result_matches_raw", fullAgainRaw?.evidence_id !== undefined && fullFlag.success === true && firstDiff(fullAgainRaw, fullFlag.data?.structured_content) === null && !fullFlag._meta, firstDiff(fullAgainRaw, fullFlag.data?.structured_content));
 
-  // 2. Lossless paging: every native facet of the handle, paged to the end, equals the raw record's section.
-  const facets = ["procedure", "pseudocode", "assembly", "comments", "callers", "callees", "incoming_references", "outgoing_references", "unresolved_calls", "referenced_strings", "referenced_names", "basic_blocks", "native_api"];
+  // 2. Lossless paging: each of REA's 21 native facets, paged to the end through the handle's
+  // continuation, equals its section of the raw record. Facets named like a record section page
+  // that section; value_flow_<x> pages native_value_flow.<x>; value_flow_summary carries the
+  // value-flow flags and the size of each list; the Swift facets apply only to Swift binaries.
+  const directFacets = ["procedure", "pseudocode", "assembly", "comments", "callers", "callees", "incoming_references", "outgoing_references", "unresolved_calls", "referenced_strings", "referenced_names", "basic_blocks", "native_api"];
+  const valueFlowLists = ["operations", "def_use", "effects", "parameters", "parameter_uses"];
+  const swiftFacets = ["swift_string_literals", "swift_string_literal_omissions"];
+  const facets = [...directFacets, ...valueFlowLists.map((list) => `value_flow_${list}`), "value_flow_summary", ...swiftFacets];
+  const record = full.normalized_result;
+  const flow = record.native_value_flow ?? {};
+  const sortKeys = (value) => {
+    if (Array.isArray(value)) return value.map(sortKeys);
+    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, sortKeys(value[key])]));
+    return value;
+  };
+  const expectedFor = (facet) => {
+    if (directFacets.includes(facet)) return record[facet];
+    if (facet === "value_flow_summary") {
+      const { limitations: _limitations, ...scalars } = Object.fromEntries(Object.entries(flow).filter(([key]) => !valueFlowLists.includes(key)));
+      return { ...scalars, ...Object.fromEntries(valueFlowLists.map((list) => [list, flow[list]?.length ?? 0])) };
+    }
+    if (facet.startsWith("value_flow_")) return flow[facet.slice("value_flow_".length)];
+    return undefined;
+  };
   const facetResults = {};
   let pagedChars = 0;
   for (const facet of facets) {
@@ -74,15 +96,21 @@ try {
       offset = coverage.next_offset;
     }
     if (facetResults[facet].error) continue;
-    const expected = full.normalized_result[facet];
+    if (swiftFacets.includes(facet)) {
+      // Not applicable: the record has no Swift section, and the facet must say it was not recorded.
+      facetResults[facet].not_applicable = !Object.keys(record).some((key) => key.startsWith("swift")) && text?.available === false;
+      continue;
+    }
+    const expected = expectedFor(facet);
     const got = text !== null && !Array.isArray(expected) ? text : items;
     // Text facets return { text, unit }; compare the text itself when the raw section is a string.
     const comparable = typeof expected === "string" && got && typeof got === "object" && "text" in got ? got.text : got;
-    facetResults[facet].lossless = JSON.stringify(comparable) === JSON.stringify(expected);
+    facetResults[facet].lossless = expected !== undefined && JSON.stringify(sortKeys(comparable)) === JSON.stringify(sortKeys(expected));
     if (!facetResults[facet].lossless) facetResults[facet].diff = firstDiff(expected, comparable);
   }
-  const checked = Object.entries(facetResults).filter(([, v]) => v.lossless !== undefined);
-  check("facets_lossless", checked.length > 0 && checked.every(([, v]) => v.lossless), Object.fromEntries(Object.entries(facetResults).map(([k, v]) => [k, v.lossless ?? v.error])));
+  // Every facet must page without error and either match its section or be not applicable.
+  const outcome = (v) => (v.error ? "error" : v.lossless ? "lossless" : v.not_applicable ? "not_applicable" : "differs");
+  check("facets_lossless", facets.every((facet) => ["lossless", "not_applicable"].includes(outcome(facetResults[facet] ?? { error: "missing" }))), Object.fromEntries(facets.map((facet) => [facet, outcome(facetResults[facet] ?? { error: "missing" })])));
   results.facet_details = facetResults;
   results.sizes = { raw_analyze_function_chars: JSON.stringify(full).length, handle_response_chars: JSON.stringify(handled).length, all_facets_paged_chars: pagedChars };
 

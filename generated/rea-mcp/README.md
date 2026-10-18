@@ -131,9 +131,9 @@ The Electron saving is partly lossy. Adapter introspection currently flattens st
 
 - REA returns every record twice: its text content is exactly the JSON of its `structuredContent`, in 11 of 11 calls. Whether a host shows the model one copy or both decides which REA row applies.
 - Unshaped, the adapter carries both copies inside its JSON envelope, about 15% more than REA's full result. `drop_duplicate_text` removes the copy without loss.
-- `analyze_function` returns a 136,029-character result for one small function. Over the 20,000-character budget, the adapter returns a summary and a handle instead (3,094 characters), with a ready-to-call `inspect_analysis_view` continuation that pages the retained Evidence. All 13 native facets paged back through the continuation match REA's full record exactly. Paging every facet costs 159,283 characters, because each page repeats REA's Evidence metadata, so the handle pays off when the model needs the summary or a few facets. `params._full_result: true` returns the full record.
-- Handles are only valid while the binary is open: REA does not retain Evidence after `close_binary`. A repeated `analyze_function` also gets a new `evidence_id`.
-- Without the handle, the shaped adapter is close to REA's text-only size: 39,573 characters against 33,053 for the other 10 calls, the difference being the envelope.
+- `analyze_function` returns a 136,029-character result for one small function. Over the 20,000-character budget, the adapter returns a summary and a handle instead (3,094 characters), with a ready-to-call `inspect_analysis_view` continuation that pages the retained Evidence. REA defines 21 native facets. Paged back through the continuation, 19 match REA's full record exactly, including the six value-flow facets. The two Swift facets report "not recorded", as expected for a C binary, so they were not exercised. On this small target, four facets were empty and only the pseudocode took more than one page. Paging all 21 facets costs 235,577 characters, because each page repeats REA's Evidence metadata, so the handle pays off when the model needs the summary or a few facets. `params._full_result: true` returns the full record.
+- Handles are only valid while the binary is open: after `close_binary`, REA rejects the handle's continuation with `evidence_integrity_mismatch`. A repeated `analyze_function` also gets a new `evidence_id`.
+- Without the handle, the shaped adapter is about 20% above REA's text-only size: 39,573 characters against 33,053 for the other 10 calls. The difference is the adapter's envelope and MCP result framing.
 
 ## Endpoint Review
 
@@ -180,7 +180,7 @@ The catalog and the discovery bundle are committed gzipped because REA's full to
   - **Parity:** 23 of 23 exercised operations give results identical to REA's, byte for byte. The other 108 have no argument builder in the suite yet and are reported as skipped.
   - **Catalog:** REA's live `tools/list` matches the committed catalog (207 tools, no changed model-visible definition).
   - **Batching** (spec §7, §7.5): 19 of 19 checks pass, covering batch vs single calls, routing, halting before `close_binary`, limits, progress and cancellation. Two of them need MCPAQL/spec#281.
-  - **Result shaping:** the `analyze_function` handle, lossless paging of every native facet, `_full_result`, duplicate-text dropping and the budget switch all pass.
+  - **Result shaping:** these checks pass: the `analyze_function` handle; lossless paging of 19 of its 21 native facets (the two Swift facets do not apply to a C binary); `_full_result`; duplicate-text dropping; and the budget switch.
 - **Not done:** the host permission-layer checks (ask and deny) through a coding agent, and the other Evidence kinds `inspect_analysis_view` can page. Only `analyze_function` gets a handle until those kinds are verified the same way.
 
 ## Licenses
