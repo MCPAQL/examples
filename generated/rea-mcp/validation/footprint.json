@@ -1,5 +1,5 @@
 {
-  "measured_at": "2026-10-17",
+  "measured_at": "2026-10-18",
   "method": "Serialized JSON characters. Upstream: REA's own SDK listTools() catalog (.cache/mcp-tool-catalog.json, CI artifact rea-test-runtime, run 38565969170, release commit 3b79af28e). Adapter: tools/list and introspect served by the generated adapter with its stdio command replaced by /usr/bin/false, so REA was never run.",
   "upstream_all_tools": {
     "tools": 207,
@@ -17,8 +17,8 @@
   "adapter_stage1": {
     "tools": 2,
     "operations": 131,
-    "tools_list_chars": 4057,
-    "introspect_operation_list_chars": 72593,
+    "tools_list_chars": 4697,
+    "introspect_operation_list_chars": 72688,
     "introspect_all_operation_details_chars": 170809
   },
   "per_workflow_detail_chars": {
@@ -60,6 +60,7 @@
     "model_visible = name + description + inputSchema; hosts using the Anthropic API do not send outputSchema to the model.",
     "The electron_feature_trace saving is partly lossy: adapter introspection flattens structured params (MCPAQL/adapter-generator#55, #47, #19).",
     "A public benchmark (aicodeking/leanrea bench/BENCHMARK.md) measured about 369k tokens of extra context with all REA tools loaded in Claude Code: 792,163 model-visible characters, about 2.15 characters per token for these schemas.",
-    "Upstream wire_chars sum per-tool compact JSON without the tools/list envelope."
+    "Upstream wire_chars sum per-tool compact JSON without the tools/list envelope.",
+    "2026-10-18: regenerated with batching (adapter-generator#64) and result shaping (#65). The batch form of each endpoint's input schema adds 640 characters to tools/list; the batch capability adds 95 to the introspect operation list. Per-operation detail is unchanged."
   ]
 }
