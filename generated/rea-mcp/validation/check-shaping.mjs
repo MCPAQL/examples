@@ -1,7 +1,7 @@
 // VM-only: result-shaping checks for the REA adapter, using analysis calls only. Run it only
 // in an isolated VM: it launches REA twice. Compares the adapter (with result_shaping) against
-// raw REA, each with its own session: the analyze_function handle, lossless paging of all
-// 21 native facets through the continuation, _full_result, duplicate-text dropping, retention.
+// raw REA, each with its own session: the analyze_function handle, paging all 21 native
+// facets through the continuation, _full_result, duplicate-text dropping, retention.
 // Usage: node validation/check-shaping.mjs <adapterDir> <native target> <out.json>
 // (`rea` must be on PATH; the adapter must launch the same rea, see use-local-rea.mjs.)
 import { writeFileSync } from "node:fs";
