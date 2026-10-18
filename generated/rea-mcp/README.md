@@ -117,7 +117,7 @@ A public benchmark ([aicodeking/leanrea](https://github.com/aicodeking/leanrea),
 | Go / Rust / artifact inspection | 4,611 | 4,670 |
 | Electron feature trace | 64,601 | 14,774 |
 
-The Electron saving is partly lossy. Adapter introspection currently flattens structured parameters, such as nested objects, arrays and unions, to their top-level type (MCPAQL/adapter-generator#55, #47, #19). Per-session savings beyond the up-front list depend on batching and result shaping (MCPAQL/adapter-generator#57, #58).
+The Electron saving is partly lossy. Adapter introspection currently flattens structured parameters, such as nested objects, arrays and unions, to their top-level type (MCPAQL/adapter-generator#55, #47, #19). Per-session savings beyond the up-front list come from batching, which this adapter supports (MCPAQL/adapter-generator#64), and result shaping (#65), which is not configured for REA until it is verified against a live REA.
 
 ## Endpoint Review
 
@@ -160,7 +160,7 @@ The catalog and the discovery bundle are committed gzipped because REA's full to
 ## Validation status
 
 - **Done:** generation and the footprint figures. Both are static, measured from the published catalog. Regenerating from the catalog gives a byte-identical bundle (apart from `captured_at`) and an identical schema, and the generated adapter typechecks.
-- **Not done:** parity against a live REA (`mcpaql-parity`). It must run in an isolated VM with Ghidra and will be added under `validation/`.
+- **Not done:** parity against a live REA (`mcpaql-parity`). It must run in an isolated VM with Ghidra. The suite, the targets and a size-recording harness are in `validation/` (see `validation/README.md`); results will be added there.
 
 ## Licenses
 
