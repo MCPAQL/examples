@@ -4,10 +4,10 @@
 //          <directory with ajv and ajv-formats installed, e.g. an MCPAQL/tools checkout> <out.json>
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const [adapterDir, targets, schemaPath, ajvDir, outPath] = process.argv.slice(2);
+const [adapterDir, targets, schemaPath, ajvDir, outPath] = process.argv.slice(2).map((arg) => resolve(arg));
 const sdk = (p) => import(pathToFileURL(join(adapterDir, "node_modules/@modelcontextprotocol/sdk/dist/esm", p)).href);
 const { Client } = await sdk("client/index.js");
 const { StdioClientTransport } = await sdk("client/stdio.js");
@@ -31,16 +31,20 @@ async function adapter(extraEnv = {}) {
   await client.connect(transport);
   return { client, log: () => log };
 }
+// Found by search_procedures in check 1 and reused by the later checks.
+let procedure;
 const envelope = (result) => JSON.parse(result.content.find((item) => item.type === "text").text);
 const call = async (client, tool, args, opts = OPTS) => envelope(await client.callTool({ name: tool, arguments: args }, undefined, opts));
-const procedure = "_parity_checksum";
 
 // 1. Read batch equals the individual calls, in order.
 {
   const { client } = await adapter();
   await call(client, "mcp_aql_create", { operation: "open_binary", params: { path: native } });
   const search = await call(client, "mcp_aql_read", { operation: "search_procedures", params: { pattern: "parity_checksum", mode: "literal", case_sensitive: false } });
-  const address = search.data.structured_content.normalized_result[0].address;
+  const match = search.data?.structured_content?.normalized_result?.find?.((entry) => /^_?parity_checksum$/.test(entry?.value));
+  if (!match) throw new Error("search_procedures did not return parity_checksum; check the provider and target.");
+  procedure = match.value;
+  const address = match.address;
   const entries = [
     { operation: "binary_overview", params: {} },
     { operation: "procedure_info", params: { procedure } },
@@ -135,7 +139,8 @@ const procedure = "_parity_checksum";
   await new Promise((resolve) => setTimeout(resolve, 15000));
   const ran = [...log().matchAll(/"tool":"([a-z_]+)"[^\n]*"msg":"MCP tool execution completed"/g)].map((m) => m[1]);
   check("cancel_rejects_call", Boolean(rejected), rejected);
-  check("cancel_stops_before_next_entry", !ran.includes("procedure_info") && !ran.includes("procedure_pseudo_code"), ran);
+  // Positive control: the log must show the calls that did run, or the check proves nothing.
+  check("cancel_stops_before_next_entry", ran.includes("open_binary") && !ran.includes("procedure_info") && !ran.includes("procedure_pseudo_code"), ran);
   const after = await call(client, "mcp_aql_read", { operation: "list_architectures", params: {} });
   check("adapter_usable_after_cancel", after.success === true, after.error);
   await call(client, "mcp_aql_create", { operation: "close_binary", params: { overwrite: false } }).catch(() => undefined);

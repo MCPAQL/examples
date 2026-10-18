@@ -39,9 +39,10 @@ REA_PARITY_SESSION_REPORT=validation/parity-sessions.json \
 # 5. Sizes.
 node validation/measure-calls.mjs --rea "$REA_COMMAND" --out validation/calls.json
 
-# 6. Batching. The schema is from MCPAQL/spec; ajv comes from an MCPAQL/tools checkout.
+# 6. Batching. SPEC is an MCPAQL/spec checkout (for the batch response schema) and TOOLS an
+#    MCPAQL/tools checkout with its dependencies installed (for ajv).
 node validation/check-batching.mjs adapter validation/targets/build \
-  ../spec/schemas/batch-operation.schema.json ../tools validation/batching.json
+  "$SPEC/schemas/batch-operation.schema.json" "$TOOLS" validation/batching.json
 ```
 
 Needs Node 24.15 or later, for REA's SQLite inspection, and `mcpaql-parity` from MCPAQL/tools `develop`; stdio upstream support is not in a release yet.
