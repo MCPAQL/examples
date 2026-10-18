@@ -10,6 +10,8 @@ These files check the stage-1 REA adapter against a live REA 6.5.0: adapter vs r
 | `measure-calls.mjs` | Records `tools/list`, request and response sizes for both arms, the adapter's batch form and introspection |
 | `use-local-rea.mjs` | Points the adapter at a locally installed `rea` binary, so both arms run the same REA |
 | `check-batching.mjs` | Batching checks on the adapter (spec §7 and §7.5): batch vs single calls, routing, halting, limits, progress and cancellation |
+| `check-shaping.mjs` | Result-shaping checks against raw REA: the `analyze_function` handle, lossless paging of all 21 native facets, `_full_result`, duplicate-text dropping, retention and the budget switch |
+| `results/` | Results of live runs, one directory per date; local paths are shortened to `~/rea-eval` |
 
 ## Run only in an isolated VM
 
@@ -43,13 +45,16 @@ node validation/measure-calls.mjs --rea "$REA_COMMAND" --out validation/calls.js
 #    MCPAQL/tools checkout with its dependencies installed (for ajv).
 node validation/check-batching.mjs adapter validation/targets/build \
   "$SPEC/schemas/batch-operation.schema.json" "$TOOLS" validation/batching.json
+
+# 7. Result shaping.
+node validation/check-shaping.mjs adapter validation/targets/build/parity-native validation/shaping.json
 ```
 
 Needs Node 24.15 or later, for REA's SQLite inspection, and `mcpaql-parity` from MCPAQL/tools `develop`; stdio upstream support is not in a release yet.
 
 Both arms run REA in the adapter directory. The environments differ: the raw arm sees the harness's whole environment, while the adapter passes REA only the variables on its passthrough list.
 
-REA keeps one current binary per server process. The parity suite therefore opens the native target on each arm in `openSessions` and runs the same session-recording calls, in the same order, on both. `parity-sessions.json` records whether `open_binary`, `search_procedures` and `analyze_function` matched across arms. Operations without an argument builder in the suite are reported as SKIPPED.
+REA keeps one current binary per server process. The parity suite therefore opens the native target on each arm in `openSessions` and runs the same session-recording calls, in the same order, on both. `parity-sessions.json` records whether `open_binary`, `search_procedures` and `analyze_function` matched across arms. Operations without an argument builder in the suite are reported as SKIPPED. The adapter returns `analyze_function` as a result handle, so the suite's adapter arm passes `_full_result: true` for it; `check-shaping.mjs` checks the handle.
 
 In `calls.json`:
 

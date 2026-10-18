@@ -3615,5 +3615,41 @@
         "non_idempotent": false
       }
     ]
+  },
+  "result_shaping": {
+    "max_result_chars": 20000,
+    "drop_duplicate_text": true,
+    "handles": [
+      {
+        "operations": [
+          "analyze_function"
+        ],
+        "id_path": "evidence_id",
+        "keep_paths": [
+          "evidence_id",
+          "operation",
+          "subject",
+          "parameters",
+          "confidence",
+          "authority",
+          "limitations"
+        ],
+        "continuation": {
+          "operation": "inspect_analysis_view",
+          "params": {
+            "source": {
+              "kind": "retained-evidence",
+              "evidence_id": "${handle}"
+            },
+            "view": {
+              "kind": "native",
+              "facet": "procedure",
+              "limit": 64,
+              "offset": 0
+            }
+          }
+        }
+      }
+    ]
   }
 }

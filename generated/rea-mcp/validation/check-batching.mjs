@@ -16,6 +16,12 @@ const Ajv2020 = require("ajv/dist/2020").default;
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 require("ajv-formats").default(ajv);
 const validateBatch = ajv.compile(JSON.parse(readFileSync(schemaPath, "utf8")));
+// The deepest errors say where a response breaks the schema; root errors only name the oneOf branch.
+const schemaErrors = () => {
+  const errors = validateBatch.errors ?? [];
+  const deep = errors.filter((error) => error.instancePath);
+  return (deep.length ? deep : errors).slice(0, 5).map((error) => `${error.instancePath || "(root)"} ${error.message} ${JSON.stringify(error.params)}`);
+};
 
 const native = join(targets, "parity-native");
 const OPTS = { timeout: 600000, resetTimeoutOnProgress: true, onprogress: () => {} };
@@ -55,7 +61,7 @@ const call = async (client, tool, args, opts = OPTS) => envelope(await client.ca
   for (const entry of entries) singles.push(await call(client, "mcp_aql_read", entry));
   const batch = await call(client, "mcp_aql_read", { operations: entries });
   check("read_batch_matches_singles", batch.results?.length === 4 && batch.results.every((item, i) => item.index === i && item.operation === entries[i].operation && JSON.stringify(item.result) === JSON.stringify(singles[i])), batch.summary);
-  check("read_batch_schema_valid", validateBatch(batch), validateBatch.errors?.slice(0, 3));
+  check("read_batch_schema_valid", validateBatch(batch), schemaErrors());
   check("read_batch_summary", batch.summary?.total === 4 && batch.summary.succeeded === 4 && batch.summary.failed === 0, batch.summary);
 
   // 2. Routing: a CREATE operation inside a READ batch is refused and never runs.
@@ -70,7 +76,7 @@ const call = async (client, tool, args, opts = OPTS) => envelope(await client.ca
   ] });
   check("halt_before_confirmation_operation", halted.halted_at?.index === 1 && halted.halted_at.operation === "close_binary" && halted.halted_at.result?.error?.code === "VALIDATION_SINGLE_CALL_REQUIRED", halted.halted_at);
   check("halt_pending_operations", halted.pending_operations?.length === 1 && halted.pending_operations[0].index === 2 && halted.summary?.halted === 1 && halted.summary?.pending === 1, { pending: halted.pending_operations, summary: halted.summary });
-  check("halt_schema_valid", validateBatch(halted), validateBatch.errors?.slice(0, 3));
+  check("halt_schema_valid", validateBatch(halted), schemaErrors());
   const stillOpen = await call(client, "mcp_aql_read", { operation: "procedure_info", params: { procedure } });
   check("halt_left_session_open", stillOpen.success === true && stillOpen.data?.is_error !== true);
 

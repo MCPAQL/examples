@@ -1,0 +1,33 @@
+{
+  "open_binary": {
+    "same": true,
+    "official": {
+      "result": {
+        "path": "~/rea-eval/targets/run1/parity-native",
+        "format": "mach-o",
+        "kind": "executable",
+        "sha256": "3588a136a64588e9ff70678cd6019733a8cc0e10eaed53d2f7b80780d52be690",
+        "architecture": "arm64"
+      }
+    },
+    "mcpaql": {
+      "result": {
+        "path": "~/rea-eval/targets/run1/parity-native",
+        "format": "mach-o",
+        "kind": "executable",
+        "sha256": "3588a136a64588e9ff70678cd6019733a8cc0e10eaed53d2f7b80780d52be690",
+        "architecture": "arm64"
+      }
+    }
+  },
+  "search_procedures": {
+    "same": true
+  },
+  "analyze_function": {
+    "same": true,
+    "evidence": {
+      "official": "ev_c67b1317056ca4ccc353f0b088ef2c18380baa4f1ad52096277f3c9104baed86",
+      "mcpaql": "ev_c67b1317056ca4ccc353f0b088ef2c18380baa4f1ad52096277f3c9104baed86"
+    }
+  }
+}

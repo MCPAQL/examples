@@ -1,0 +1,294 @@
+{
+  "measured_at": "2026-10-18T04:55:31.411Z",
+  "method": "Serialized JSON characters of MCP tools/list entries, tools/call requests (name + arguments) and results, from a live REA 6.5.0 in an isolated VM, called directly and through the adapter.",
+  "procedure": "_parity_checksum",
+  "catalog": {
+    "live_tools": 207,
+    "committed_tools": 207,
+    "missing_live": [],
+    "extra_live": [],
+    "changed_model_visible": []
+  },
+  "up_front": {
+    "raw_all": {
+      "tools": 207,
+      "wire_chars": 3087933,
+      "model_visible_chars": 792133
+    },
+    "raw_stage1": {
+      "tools": 131,
+      "model_visible_chars": 660801
+    },
+    "adapter": {
+      "tools": 2,
+      "wire_chars": 4697,
+      "model_visible_chars": 4573
+    }
+  },
+  "calls": [
+    {
+      "workflow": "native_function",
+      "operation": "open_binary",
+      "raw": {
+        "request_chars": 93,
+        "ms": 157,
+        "ok": true,
+        "response_chars": 571,
+        "text_chars": 206,
+        "structured_chars": 206,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 133,
+        "ms": 2765,
+        "ok": true,
+        "response_chars": 626,
+        "text_chars": 535
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "binary_overview",
+      "raw": {
+        "request_chars": 41,
+        "ms": 10708,
+        "ok": true,
+        "response_chars": 11603,
+        "text_chars": 5484,
+        "structured_chars": 5484,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 79,
+        "ms": 9571,
+        "ok": true,
+        "response_chars": 6387,
+        "text_chars": 5820
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "search_procedures",
+      "raw": {
+        "request_chars": 110,
+        "ms": 14,
+        "ok": true,
+        "response_chars": 6881,
+        "text_chars": 3256,
+        "structured_chars": 3256,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 148,
+        "ms": 7,
+        "ok": true,
+        "response_chars": 3894,
+        "text_chars": 3593
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "procedure_info",
+      "raw": {
+        "request_chars": 70,
+        "ms": 14,
+        "ok": true,
+        "response_chars": 8923,
+        "text_chars": 4215,
+        "structured_chars": 4215,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 108,
+        "ms": 14,
+        "ok": true,
+        "response_chars": 4974,
+        "text_chars": 4549
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "analyze_function",
+      "raw": {
+        "request_chars": 72,
+        "ms": 73,
+        "ok": true,
+        "response_chars": 136029,
+        "text_chars": 64116,
+        "structured_chars": 64116,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 110,
+        "ms": 78,
+        "ok": true,
+        "response_chars": 3094,
+        "text_chars": 2913
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "procedure_pseudo_code",
+      "raw": {
+        "request_chars": 77,
+        "ms": 24,
+        "ok": true,
+        "response_chars": 7713,
+        "text_chars": 3664,
+        "structured_chars": 3664,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 115,
+        "ms": 9,
+        "ok": true,
+        "response_chars": 4322,
+        "text_chars": 4005
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "procedure_callers",
+      "raw": {
+        "request_chars": 73,
+        "ms": 7,
+        "ok": true,
+        "response_chars": 7221,
+        "text_chars": 3423,
+        "structured_chars": 3423,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 111,
+        "ms": 6,
+        "ok": true,
+        "response_chars": 4067,
+        "text_chars": 3760
+      }
+    },
+    {
+      "workflow": "native_function",
+      "operation": "xrefs",
+      "raw": {
+        "request_chars": 54,
+        "ms": 3,
+        "ok": true,
+        "response_chars": 6897,
+        "text_chars": 3266,
+        "structured_chars": 3266,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 92,
+        "ms": 5,
+        "ok": true,
+        "response_chars": 3888,
+        "text_chars": 3591
+      }
+    },
+    {
+      "workflow": "artifacts",
+      "operation": "inspect_plist",
+      "raw": {
+        "request_chars": 94,
+        "ms": 235,
+        "ok": true,
+        "response_chars": 4289,
+        "text_chars": 1975,
+        "structured_chars": 1975,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 132,
+        "ms": 106,
+        "ok": true,
+        "response_chars": 2579,
+        "text_chars": 2308
+      }
+    },
+    {
+      "workflow": "artifacts",
+      "operation": "inspect_sqlite_database",
+      "raw": {
+        "request_chars": 105,
+        "ms": 110,
+        "ok": true,
+        "response_chars": 9125,
+        "text_chars": 4393,
+        "structured_chars": 4393,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 143,
+        "ms": 113,
+        "ok": true,
+        "response_chars": 5007,
+        "text_chars": 4736
+      }
+    },
+    {
+      "workflow": "artifacts",
+      "operation": "inspect_go_binary",
+      "raw": {
+        "request_chars": 95,
+        "ms": 12,
+        "ok": true,
+        "response_chars": 6731,
+        "text_chars": 3171,
+        "structured_chars": 3171,
+        "text_is_exact_structured": true,
+        "text_is_same_record": true
+      },
+      "adapter": {
+        "request_chars": 133,
+        "ms": 13,
+        "ok": true,
+        "response_chars": 3829,
+        "text_chars": 3508
+      }
+    }
+  ],
+  "batch": {
+    "operations": [
+      "binary_overview",
+      "procedure_info",
+      "analyze_function",
+      "procedure_pseudo_code",
+      "procedure_callers",
+      "xrefs"
+    ],
+    "request_chars": 457,
+    "ms": 40,
+    "ok": true,
+    "response_chars": 27082,
+    "text_chars": 25119,
+    "summary": {
+      "total": 6,
+      "succeeded": 6,
+      "failed": 0
+    }
+  },
+  "introspection_chars": {
+    "open_binary": 2572,
+    "binary_overview": 916,
+    "search_procedures": 1229,
+    "procedure_info": 1192,
+    "analyze_function": 995,
+    "procedure_pseudo_code": 1346,
+    "procedure_callers": 992,
+    "xrefs": 1110,
+    "inspect_plist": 686,
+    "inspect_sqlite_database": 2603,
+    "inspect_go_binary": 1445
+  }
+}
