@@ -9,7 +9,7 @@ Section 5 of the [test plan](https://github.com/MCPAQL/examples/issues/55#issuec
 
 ## Policy decisions
 
-`permission-policy.tsv` has the decision for each of REA's 207 tools. The policy was confirmed in force before and after each one.
+`permission-policy.tsv` has the decision for each of REA's 207 tools. Each tool's decision was bracketed by checks that the policy was in force.
 
 | Decision | Tools | Of the adapter's 131 stage-1 operations |
 |---|---|---|
@@ -35,7 +35,7 @@ A first attempt asked the agent to run a fixed four-call script, including an in
 
 ## Shell launches
 
-The guard and the policy both match command strings. 26 variants were evaluated by the hooks and none was executed.
+The guard and the policy both match command strings. 24 launch variants, plus 2 harmless control commands that were allowed as expected, were evaluated by the hooks with the policy confirmed in force before and after each. None was executed.
 
 | Outcome | Variants |
 |---|---|

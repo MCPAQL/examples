@@ -181,7 +181,7 @@ The catalog and the discovery bundle are committed gzipped because REA's full to
   - **Catalog:** REA's live `tools/list` matches the committed catalog (207 tools, no changed model-visible definition).
   - **Batching** (spec §7, §7.5): 19 of 19 checks pass, covering batch vs single calls, routing, halting before `close_binary`, limits, progress and cancellation. Two of them need MCPAQL/spec#281.
   - **Result shaping:** these checks pass: the `analyze_function` handle; lossless paging of 19 of its 21 native facets (the two Swift facets do not apply to a C binary); `_full_result`; duplicate-text dropping; and the budget switch.
-  - **Host permission layer, raw REA tools** (`permission-layer.md`): the policy asks about the same two stage-1 operations the adapter treats as `requires_confirmation`. In a headless coding agent, allowed reads ran and asked-for calls did not. Shell-command matching caught direct REA launches but not every indirect one.
+  - **Host permission layer, raw REA tools** (`permission-layer.md`): the policy asks about the same two stage-1 operations the adapter treats as `requires_confirmation`. In a headless coding agent, the allowed read ran and the asked-for calls did not. Shell-command matching caught direct REA launches but not every indirect one.
   - **Through a coding agent:** Claude Code 2.1.292 defers MCP tool schemas, so REA's tool definitions did not reach the context up front.
 - **Not done:** the permission-layer and token checks with the adapter registered in the coding agent, and the other Evidence kinds `inspect_analysis_view` can page. Only `analyze_function` gets a handle until those kinds are verified the same way.
 
