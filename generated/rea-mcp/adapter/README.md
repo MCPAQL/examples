@@ -38,6 +38,9 @@ The child receives a minimal environment (the MCP SDK default) plus only the var
 - `REA_JADX_MCP_JAR` (optional): passed through to the upstream process.
 - `REA_OBJDUMP_COMMAND` (optional): passed through to the upstream process.
 - `REA_RIZIN_COMMAND` (optional): passed through to the upstream process.
+- `TMPDIR` (optional): passed through to the upstream process.
+- `REA_APKTOOL_COMMAND` (optional): passed through to the upstream process.
+- `REA_CAPINFOS_COMMAND` (optional): passed through to the upstream process.
 
 ```bash
 npm install
