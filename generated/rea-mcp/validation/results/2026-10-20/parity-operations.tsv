@@ -1,0 +1,132 @@
+operation	endpoint	group	profile	result	note
+inspect_native_load_image	read	native session	native	IDENTICAL	DOS MZ and COM images only; the Mach-O target is expected to be reported as unsupported
+inspect_native_data_type	read	native session	native	IDENTICAL	
+inspect_native_instruction	read	native session	native	IDENTICAL	
+resolve_native_call_targets	read	native session	native	IDENTICAL	
+address_name	read	native session	native	IDENTICAL	
+comment	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+current_address	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+current_procedure	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+current_document	read	native session	native	SAME_ERROR	not declared by the Ghidra provider; both arms are expected to return the same error; error: unsupported_provider / ghidra
+inline_comment	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+list_bookmarks	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+list_documents	read	native session	native	IDENTICAL	
+list_names	read	native session	native	IDENTICAL	
+list_procedures	read	native session	native	IDENTICAL	
+list_segments	read	native session	native	IDENTICAL	
+list_strings	read	native session	native	IDENTICAL	
+next_address	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+prev_address	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+procedure_address	read	native session	native	IDENTICAL	
+procedure_assembly	read	native session	native	IDENTICAL	
+procedure_callees	read	native session	native	IDENTICAL	
+procedure_callers	read	native session	native	IDENTICAL	
+procedure_info	read	native session	native	IDENTICAL	
+read_function_instructions	read	native session	native	IDENTICAL	
+search_bytes	read	native session	native	IDENTICAL	
+read_bytes	read	native session	native	IDENTICAL	
+address_to_file_offset	read	native session	native	IDENTICAL	
+procedure_references	read	native session	native	IDENTICAL	
+procedure_pseudo_code	read	native session	native	IDENTICAL	
+resolve_containing_procedure	read	native session	native	IDENTICAL	
+search_procedures	read	native session	native	IDENTICAL	
+search_strings	read	native session	native	IDENTICAL	
+xrefs	read	native session	native	IDENTICAL	
+inspect_native_dispatch_metadata	read	native session	native	IDENTICAL	
+get_objc_classes	read	native session	native	IDENTICAL	
+get_objc_protocols	read	native session	native	IDENTICAL	
+batch_decompile	read	native session	native	IDENTICAL	
+get_call_graph	read	native session	native	IDENTICAL	
+analyze_swift_types	read	native session	native	IDENTICAL	
+find_xrefs_to_name	read	native session	native	IDENTICAL	
+binary_overview	read	native session	native	IDENTICAL	
+analyze_function	read	native session	native	IDENTICAL	
+inspect_native_api	read	native session	native	IDENTICAL	
+trace_feature	read	native session	native	IDENTICAL	
+trace_call_path	read	native session	native	IDENTICAL	
+trace_native_ui_action	read	native session	native	IDENTICAL	
+trace_native_values	read	native session	native	IDENTICAL	
+inspect_macho	read	native session	native	IDENTICAL	
+inspect_signature	read	native session	native	IDENTICAL	
+inspect_plist	read	file formats	native	IDENTICAL	
+list_architectures	read	native session	native	IDENTICAL	
+demangle_swift	read	native session	native	IDENTICAL	
+inspect_pe_resources	read	file formats	native	IDENTICAL	
+inspect_binary_layout	read	file formats	native	SAME_ERROR	error: unsupported_provider / pwntools-elf
+inspect_recorded_crash	read	fake-device (recorded fixture)	native	SAME_ERROR	fake-device: hand-built ELF core; error: unsupported_provider / pwntools-elf
+inspect_analysis_view	read	native session	native	IDENTICAL	
+inspect_artifact	read	native session	native	IDENTICAL	
+decode_interface_builder	read	app bundle	app	IDENTICAL	hand-built nib-shaped keyed archive; no ibtool
+inspect_keyed_archive	read	app bundle	app	IDENTICAL	
+inspect_asset_catalog	read	app bundle	app	IDENTICAL	the bundle has no asset catalog (building one needs actool)
+trace_dylib_resolution	read	native session	native	IDENTICAL	
+inspect_evm_interface	read	file formats	native	SAME_ERROR	error: unsupported_provider / evmole-interface
+inspect_go_binary	read	file formats	native	IDENTICAL	needs the optional Go target
+inspect_rust_binary	read	file formats	native	IDENTICAL	hand-built: a C binary with a cargo-auditable .dep-v0 section, not Rust
+inspect_wasm_artifact	read	file formats	native	SAME_ERROR	error: unsupported_provider / wabt-artifact
+compare_wasm_interfaces	read	not run	native	SKIPPED	needs inspect_wasm_artifact evidence, which needs WABT 1.0.42
+inspect_sqlite_database	read	file formats	native	IDENTICAL	
+inspect_packet_fields	read	client discovery	native	SAME_ERROR	error: unsupported_provider / tshark-capture
+inspect_packet_capture	read	fake-device (recorded fixture)	native	SAME_ERROR	fake-device: hand-built pcap; error: unsupported_provider / tshark-capture
+inspect_signal_decoders	read	client discovery	native	SAME_ERROR	error: unsupported_provider / sigrok-recording
+decode_signal_recording	read	fake-device (recorded fixture)	native	SAME_ERROR	fake-device: hand-built sigrok recording; error: unsupported_provider / sigrok-recording
+inspect_managed_artifact	read	file formats	native	IDENTICAL	negative input: a native PE with no CLI header
+inspect_managed_members	read	file formats	native	IDENTICAL	negative input: a native PE with no CLI header
+inspect_managed_native_boundaries	read	file formats	native	IDENTICAL	negative input: a native PE with no CLI header
+inspect_android_package	read	not run	native	SKIPPED	needs an APK fixture and the jadx-headless-mcp JAR
+search_android_classes	read	not run	native	SKIPPED	needs an APK fixture and the jadx-headless-mcp JAR
+inspect_android_class	read	not run	native	SKIPPED	needs an APK fixture and the jadx-headless-mcp JAR
+inspect_android_method	read	not run	native	SKIPPED	needs an APK fixture and the jadx-headless-mcp JAR
+trace_android_references	read	not run	native	SKIPPED	needs an APK fixture and the jadx-headless-mcp JAR
+inspect_apktool_client	read	client discovery	native	SAME_ERROR	error: unsupported_provider / apktool
+decode_android_resources	read	not run	native	SKIPPED	needs an APK fixture and apktool
+inspect_pcap_client	read	client discovery	native	SAME_ERROR	error: unsupported_provider / pcap
+inspect_pcap_capture	read	fake-device (recorded fixture)	native	SAME_ERROR	fake-device: hand-built pcap; error: unsupported_provider / pcap
+identify_flutter_build	read	file formats	native	SAME_ERROR	negative input: a Go ELF, not a Flutter app; error: invalid_input
+inspect_dart_aot	read	file formats	native	SAME_ERROR	negative input: a Go ELF, not a Dart AOT snapshot; error: invalid_input
+inspect_firmware_regions	read	file formats	native	SAME_ERROR	error: unsupported_provider / binwalk
+compare_managed_members	read	compare and compose	native	IDENTICAL	negative input: two native PEs, so no managed members
+verify_managed_native_boundaries	read	compare and compose	native	IDENTICAL	negative input: a native PE
+project_managed_application_graph	read	compare and compose	native	IDENTICAL	negative input: a native PE
+compare_web_captures	read	fake-device (recorded fixture)	native	IDENTICAL	fake-device: REA's schema example of two recorded browser scenarios
+compare_web_screenshots	read	file formats	native	IDENTICAL	
+analyze_javascript_application	read	file formats	native	IDENTICAL	
+reconcile_javascript_runtime	read	not run	native	SKIPPED	needs runtime evidence from browser or Electron capture tools, which stage 1 excludes
+inspect_electron_fuses	read	file formats	native	IDENTICAL	hand-built: a C binary carrying Electron's fuse sentinel, not Electron
+trace_application_feature	read	compare and compose	native	IDENTICAL	
+trace_javascript_semantics	read	compare and compose	native	IDENTICAL	
+compare_application_versions	read	compare and compose	native	IDENTICAL	
+compare_source_to_bundle	read	bundles and unknowns	native	IDENTICAL	REA's schema example reference graph against the JavaScript fixture
+compare_javascript_export_shapes	read	compare and compose	native	IDENTICAL	
+build_reconstruction_obligation_ledger	read	bundles and unknowns	native	IDENTICAL	REA's schema example: an empty bundle
+evaluate_reconstruction_coverage	read	bundles and unknowns	native	IDENTICAL	REA's schema example: an empty bundle and one boundary
+project_android_application_graph	read	compare and compose	native	SAME_ERROR	negative input: a Mach-O inventory; error: invalid_input
+project_apple_application_graph	read	app bundle	app	IDENTICAL	
+project_harmony_application_graph	read	compare and compose	native	SAME_ERROR	negative input: a Mach-O inventory; error: invalid_input
+trace_web_source_location	read	bundles and unknowns	native	SAME_ERROR	REA's schema example; its manifest path does not exist; error: invalid_input
+inspect_web_network_capture	read	fake-device (recorded fixture)	native	IDENTICAL	fake-device: hand-built HAR
+binary_session	read	native session	native	STRUCTURAL_PARITY	
+compare_process_captures	read	not run	native	SKIPPED	needs process-capture evidence from runtime tools, which stage 1 excludes
+compare_artifacts	read	compare and compose	native	IDENTICAL	the native target's inventory compared with itself
+compare_functions	read	compare and compose	native	IDENTICAL	
+compare_bundles	read	bundles and unknowns	native	IDENTICAL	
+find_changed_behavior	read	compare and compose	native	IDENTICAL	
+build_call_path	read	compare and compose	native	IDENTICAL	
+correlate_static_and_runtime	read	not run	native	SKIPPED	needs runtime comparison evidence from tools stage 1 excludes
+verify_reconstruction	read	bundles and unknowns	native	IDENTICAL	
+list_unknowns	read	native session	native	IDENTICAL	
+verify_unknown_resolution	read	bundles and unknowns	native	IDENTICAL	
+get_evidence_bundle	read	native session	native	IDENTICAL	
+get_navigation_context	read	native session	native	SAME_ERROR	error: unsupported_provider / ghidra
+inspect_address_context	read	native session	native	IDENTICAL	
+inspect_with_objdump	read	client discovery	native	IDENTICAL	
+extract_artifact	create	app bundle	app	STRUCTURAL_PARITY	
+extract_firmware	create	create (sandboxed)	native	SAME_ERROR	error: unsupported_provider / unblob
+import_managed_reconstruction	create	not run	native	SKIPPED	needs a managed (.NET) assembly and decompiler output
+export_web_scripts	create	create (sandboxed)	native	SAME_ERROR	negative input: a HAR, not a browser capture; error: invalid_input
+recover_javascript_sources	create	create (sandboxed)	native	SAME_ERROR	error: unsupported_provider / wakaru
+open_binary	create	session	native	SESSION_SAME	opened on both arms in openSessions; parity-sessions.json: same
+close_binary	create	session	native	SKIPPED	called on both arms in closeSessions; result not compared
+export_evidence_bundle	create	create (sandboxed)	native	IDENTICAL	
+import_evidence_bundle	create	create (sandboxed)	native	IDENTICAL	
+record_unknown	create	create (sandboxed)	native	IDENTICAL	
