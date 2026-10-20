@@ -49,7 +49,7 @@ On the first call, the adapter starts `npx -y rea-agents@6.5.0 mcp` as a child p
 
 Use **Ghidra** for stage 1: `REA_ANALYSIS_PROVIDER=ghidra` with `GHIDRA_INSTALL_DIR` and `JAVA_HOME`. With the Hopper provider, `open_binary` launches the Hopper app, which may come to the foreground, and runs REA's bridge inside it. That is a UI effect stage 1 otherwise excludes.
 
-Several operations work only when REA is told where a local tool is. The adapter passes these variables through to REA when they are set:
+Several operations work only when REA is told where a local tool is. The adapter passes these variables through to REA when they are set. The `*_COMMAND`, `*_PYTHON`, `*_JAR` and `*_DIRECTORY` values name programs REA will run, so set them only from trusted configuration:
 
 | Variable | Enables |
 |---|---|
