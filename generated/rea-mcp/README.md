@@ -64,7 +64,7 @@ Several operations work only when REA is told where a local tool is. The adapter
 | `REA_APKTOOL_COMMAND` | `inspect_apktool_client`, `decode_android_resources` |
 | `REA_CAPINFOS_COMMAND` | `inspect_pcap_client`, `inspect_pcap_capture` |
 
-These are also passed through: `REA_ANALYSIS_PROVIDER`, `GHIDRA_INSTALL_DIR`, `JAVA_HOME`, `REA_GHIDRA_STARTUP_TIMEOUT_MS`, `REA_HOPPER_STARTUP_TIMEOUT_MS`, `REA_MCP_INPUT_SCHEMA_PROFILE`, `REA_LOG_LEVEL` and `TMPDIR`. Without `TMPDIR`, REA writes its byte snapshots of the target under `/tmp` instead of the user's own temporary directory. Apart from these and the MCP SDK's default set (`HOME`, `LOGNAME`, `PATH`, `SHELL`, `TERM` and `USER`), nothing from the adapter's environment reaches REA. EVM inspection works on Linux x64 only.
+These are also passed through: `REA_ANALYSIS_PROVIDER`, `GHIDRA_INSTALL_DIR`, `JAVA_HOME`, `REA_GHIDRA_STARTUP_TIMEOUT_MS`, `REA_HOPPER_STARTUP_TIMEOUT_MS`, `REA_MCP_INPUT_SCHEMA_PROFILE`, `REA_LOG_LEVEL` and `TMPDIR`. Without `TMPDIR`, REA writes its byte snapshots of the target under `/tmp` instead of the user's own temporary directory. Apart from these and the MCP SDK's default set, nothing from the adapter's environment reaches REA. On macOS and Linux that set is `HOME`, `LOGNAME`, `PATH`, `SHELL`, `TERM` and `USER`; on Windows it is larger and includes `APPDATA`, `LOCALAPPDATA`, `TEMP`, `SYSTEMROOT` and `USERPROFILE` (`getDefaultEnvironment()` in the SDK's stdio client). EVM inspection works on Linux x64 only.
 
 Some static operations parse or run more than their names suggest. All of them are fine in an isolated VM:
 
