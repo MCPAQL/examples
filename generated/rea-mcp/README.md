@@ -179,12 +179,18 @@ The catalog and the discovery bundle are committed gzipped because REA's full to
 
 - **Done, static:** generation and the up-front footprint, measured from the published catalog. Regenerating from the catalog gives a byte-identical bundle (apart from `captured_at`) and an identical schema, and the generated adapter typechecks.
 - **Done, live** (2026-10-18, REA 6.5.0 with Ghidra 12.1.4 in an isolated macOS VM; `validation/results/2026-10-18/`):
-  - **Parity:** 23 of 23 exercised operations give results identical to REA's, byte for byte. The other 108 have no argument builder in the suite yet and are reported as skipped.
+  - **Parity:** 23 of 23 exercised operations give results identical to REA's, byte for byte. Extended on 2026-10-20 below.
   - **Catalog:** REA's live `tools/list` matches the committed catalog (207 tools, no changed model-visible definition).
   - **Batching** (spec §7, §7.5): 19 of 19 checks pass, covering batch vs single calls, routing, halting before `close_binary`, limits, progress and cancellation. Two of them need MCPAQL/spec#281.
   - **Result shaping:** these checks pass: the `analyze_function` handle; lossless paging of 19 of its 21 native facets (the two Swift facets do not apply to a C binary); `_full_result`; duplicate-text dropping; and the budget switch.
   - **Host permission layer, raw REA tools** (`permission-layer.md`): the policy asks about the same two stage-1 operations the adapter treats as `requires_confirmation`. In a headless coding agent, the allowed read ran and the asked-for calls did not. Shell-command matching caught direct REA launches but not every indirect one.
   - **Through a coding agent:** Claude Code 2.1.292 defers MCP tool schemas, so REA's tool definitions did not reach the context up front.
+- **Done, live** (2026-10-20, same VM; `validation/results/2026-10-20/parity-coverage.md`):
+  - **Parity, 119 of 131 operations:** 87 identical byte for byte, 2 identical apart from per-process fields, 1 compared in session setup, and 29 `SAME_ERROR`: both arms failed and the adapter passed REA's error through unchanged. None diverged, and none failed on one arm only.
+  - The `SAME_ERROR` results are mostly operations the Ghidra provider does not declare or decoders that need Linux or an uninstalled tool, so they show error passthrough, not working operations.
+  - Inputs are hand-built fixtures. Capture-style ones are labeled fake-device (recorded fixture), not real-device parity.
+  - CREATE operations wrote only to a sandbox the suite deletes.
+  - The 12 operations not run need an Android toolchain, WABT, a managed assembly, or runtime evidence from tools stage 1 excludes.
 - **Not done:** the permission-layer and token checks with the adapter registered in the coding agent, and the other Evidence kinds `inspect_analysis_view` can page. Only `analyze_function` gets a handle until those kinds are verified the same way.
 
 ## Licenses

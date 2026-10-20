@@ -1,0 +1,39 @@
+{
+  "open_binary": {
+    "same": true,
+    "official": {
+      "result": {
+        "path": "~/rea-eval/targets/parity2/parity-native",
+        "format": "mach-o",
+        "kind": "executable",
+        "sha256": "71407b69a3d5106aefaa08fb887c20b6ac664c256cb492881fa89c00a8de7e7c",
+        "architecture": "arm64"
+      }
+    },
+    "mcpaql": {
+      "result": {
+        "path": "~/rea-eval/targets/parity2/parity-native",
+        "format": "mach-o",
+        "kind": "executable",
+        "sha256": "71407b69a3d5106aefaa08fb887c20b6ac664c256cb492881fa89c00a8de7e7c",
+        "architecture": "arm64"
+      }
+    }
+  },
+  "evidence_bundles": {
+    "same": [
+      true,
+      true
+    ]
+  },
+  "search_procedures": {
+    "same": true
+  },
+  "analyze_function": {
+    "same": true,
+    "evidence": {
+      "official": "ev_746bd091bd9a518a5e9d47135f606b702f4cb912907ca574a026c155aa135343",
+      "mcpaql": "ev_746bd091bd9a518a5e9d47135f606b702f4cb912907ca574a026c155aa135343"
+    }
+  }
+}
