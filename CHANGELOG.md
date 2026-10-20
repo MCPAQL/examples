@@ -21,6 +21,7 @@ This is a rolling examples collection and uses date-based versioning
   - Live results (2026-10-18, isolated VM): parity 23/23 identical, batching 19/19, shaping checks passing; an 11-call workflow takes 205,983 characters from REA (97,169 counting text content only) and 42,667 through the shaped adapter
   - Host permission-layer results for raw REA tools (`validation/results/2026-10-18/permission-layer.md`, `permission-policy.tsv`): the policy decision for each of REA's 207 tools, headless coding-agent runs, and which shell launches command-string matching catches
   - REA adapter passes `TMPDIR`, `REA_APKTOOL_COMMAND` and `REA_CAPINFOS_COMMAND` through to REA. Without `TMPDIR`, REA wrote its byte snapshots of the target under `/tmp`, which parity showed as a codesign output difference in `inspect_signature`
+  - REA parity suite covers 119 of the adapter's 131 operations, up from 23: native-session reads, REA's file inspectors on hand-built fixtures (`targets/fixtures.mjs`), compare and compose operations fed by each arm's own Evidence, an app-bundle profile, and the 10 CREATE operations writing only to a sandbox the suite deletes. Capture-style fixtures are labeled fake-device
 
 ## [2026.10.14] - 2026-10-14
 
