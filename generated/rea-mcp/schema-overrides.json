@@ -30,7 +30,10 @@
       "REA_WAKARU_COMMAND",
       "REA_JADX_MCP_JAR",
       "REA_OBJDUMP_COMMAND",
-      "REA_RIZIN_COMMAND"
+      "REA_RIZIN_COMMAND",
+      "TMPDIR",
+      "REA_APKTOOL_COMMAND",
+      "REA_CAPINFOS_COMMAND"
     ]
   },
   "exclude_endpoints": [

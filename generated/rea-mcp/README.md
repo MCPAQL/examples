@@ -49,7 +49,7 @@ On the first call, the adapter starts `npx -y rea-agents@6.5.0 mcp` as a child p
 
 Use **Ghidra** for stage 1: `REA_ANALYSIS_PROVIDER=ghidra` with `GHIDRA_INSTALL_DIR` and `JAVA_HOME`. With the Hopper provider, `open_binary` launches the Hopper app, which may come to the foreground, and runs REA's bridge inside it. That is a UI effect stage 1 otherwise excludes.
 
-Several operations work only when REA is told where a local tool is. The adapter passes these variables through to REA when they are set:
+Several operations work only when REA is told where a local tool is. The adapter passes these variables through to REA when they are set. The `*_COMMAND`, `*_PYTHON`, `*_JAR` and `*_DIRECTORY` values name programs REA will run, so set them only from trusted configuration:
 
 | Variable | Enables |
 |---|---|
@@ -61,8 +61,10 @@ Several operations work only when REA is told where a local tool is. The adapter
 | `REA_WAKARU_COMMAND` | `recover_javascript_sources` |
 | `REA_JADX_MCP_JAR` | the Android class, method and reference operations |
 | `REA_OBJDUMP_COMMAND`, `REA_RIZIN_COMMAND` | objdump- and rizin-based inspection |
+| `REA_APKTOOL_COMMAND` | `inspect_apktool_client`, `decode_android_resources` |
+| `REA_CAPINFOS_COMMAND` | `inspect_pcap_client`, `inspect_pcap_capture` |
 
-These are also passed through: `REA_ANALYSIS_PROVIDER`, `GHIDRA_INSTALL_DIR`, `JAVA_HOME`, `REA_GHIDRA_STARTUP_TIMEOUT_MS`, `REA_HOPPER_STARTUP_TIMEOUT_MS`, `REA_MCP_INPUT_SCHEMA_PROFILE` and `REA_LOG_LEVEL`. Nothing else from the adapter's environment reaches REA. EVM inspection works on Linux x64 only.
+These are also passed through: `REA_ANALYSIS_PROVIDER`, `GHIDRA_INSTALL_DIR`, `JAVA_HOME`, `REA_GHIDRA_STARTUP_TIMEOUT_MS`, `REA_HOPPER_STARTUP_TIMEOUT_MS`, `REA_MCP_INPUT_SCHEMA_PROFILE`, `REA_LOG_LEVEL` and `TMPDIR`. Without `TMPDIR`, REA writes its byte snapshots of the target under `/tmp` instead of the user's own temporary directory. Apart from these and the MCP SDK's default set, nothing from the adapter's environment reaches REA. On macOS and Linux that set is `HOME`, `LOGNAME`, `PATH`, `SHELL`, `TERM` and `USER`; on Windows it is larger and includes `APPDATA`, `LOCALAPPDATA`, `TEMP`, `SYSTEMROOT` and `USERPROFILE` (`getDefaultEnvironment()` in the SDK's stdio client). EVM inspection works on Linux x64 only.
 
 Some static operations parse or run more than their names suggest. All of them are fine in an isolated VM:
 
