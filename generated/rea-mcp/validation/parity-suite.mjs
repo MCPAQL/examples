@@ -15,7 +15,8 @@
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { homedir } from "node:os";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, deflateSync, gunzipSync } from "node:zlib";
 
@@ -29,6 +30,17 @@ const reaTools = JSON.parse(gunzipSync(readFileSync(join(here, "..", "capture", 
 // CREATE operations write only here, one directory per arm; teardown deletes it.
 const sandbox = join(targets, "parity-sandbox");
 const inSandbox = (variant, name) => join(sandbox, variant, name);
+// REA_PARITY_TARGETS can move the sandbox, and setup and teardown delete it, so refuse any
+// location outside this checkout or ~/rea-eval.
+function assertSandboxIsSafe() {
+  const inside = (root) => {
+    const rel = relative(resolve(root), resolve(sandbox));
+    return rel !== "" && !rel.startsWith("..") && !rel.startsWith(sep) && rel.split(sep).at(-1) === "parity-sandbox";
+  };
+  if (!inside(join(here, "..", "..", "..")) && !inside(join(homedir(), "rea-eval"))) {
+    throw new Error(`Refusing to use ${sandbox} as the CREATE sandbox: it must be under this checkout or ~/rea-eval.`);
+  }
+}
 const SESSION_CALL_OPTIONS = { timeout: 600_000, resetTimeoutOnProgress: true, maxTotalTimeout: 1_800_000, onprogress: () => undefined };
 
 const target = (name) => join(targets, name);
@@ -326,6 +338,7 @@ export const suite = {
   async setupFixtures() {
     if (!reaCommand) throw new Error("Set REA_COMMAND to the installed rea binary (npm install --omit=optional rea-agents@6.5.0).");
     if (!existsSync(target("parity-native"))) throw new Error(`No parity targets in ${targets}; run validation/targets/build.sh first.`);
+    assertSandboxIsSafe();
     rmSync(sandbox, { recursive: true, force: true });
     for (const variant of ["official", "mcpaql"]) mkdirSync(join(sandbox, variant), { recursive: true });
     return { sessions: [] };
@@ -411,6 +424,7 @@ export const suite = {
   },
 
   async teardownFixtures() {
+    assertSandboxIsSafe();
     rmSync(sandbox, { recursive: true, force: true });
   },
 };
