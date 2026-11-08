@@ -92,9 +92,9 @@ Pose units: radians. Convention: positive yaw = head turned **left**, positive p
 ### Option A — download prebuilt binaries
 
 Prebuilt, ad-hoc-signed **Apple Silicon (arm64), macOS 14+** binaries are
-attached to each release:
+attached to the v2026.05.15 release:
 
-**https://github.com/MCPAQL/examples/releases/latest**
+**https://github.com/MCPAQL/examples/releases/tag/v2026.05.15**
 
 - `airpods-mcp-server.app.zip` — the motion-source `.app`
 - `airpods-mcp-sidecar-binaries.tar.gz` — `window-at-point`, `dwell-blob`, `move-cursor`, `speak-pan`
