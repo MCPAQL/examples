@@ -24,6 +24,10 @@ This is a rolling examples collection and uses date-based versioning
   - REA parity suite covers 119 of the adapter's 131 operations, up from 23: native-session reads, REA's file inspectors on hand-built fixtures (`targets/fixtures.mjs`), compare and compose operations fed by each arm's own Evidence, an app-bundle profile, and the 10 CREATE operations writing only to a sandbox the suite deletes. Capture-style fixtures are labeled fake-device
   - REA parity results (2026-10-20, isolated VM; `validation/results/2026-10-20/`): of 131 operations, 87 identical, 2 identical apart from per-process fields, 1 matched in session setup, 29 `SAME_ERROR` and 12 not run; none divergent
 
+### Fixed
+
+- AirPods adapter README: the prebuilt-binaries link now points to the `v2026.05.15` release; `releases/latest` resolved to a release with no AirPods assets
+
 ## [2026.10.14] - 2026-10-14
 
 ### Added
