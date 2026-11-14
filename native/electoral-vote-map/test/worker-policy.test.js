@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker from '../src/worker.js';
+import worker, { ElectoralCoordinator } from '../src/worker.js';
 import { readWorkerConfig, authenticatedClient, networkIdentity, boundedBody, takeBudget, readUsage, MAX_WORKER_BODY } from '../src/worker-policy.js';
 import { memoryStorage } from './helpers/storage.js';
 
@@ -112,7 +112,7 @@ test('kill switch, wrong origins, missing bindings and invalid auth fail closed 
   assert.equal((await worker.fetch(request(), env)).status, 503);
   const calls = [];
   const bindings = { ...env, MCP_RATE_LIMITER: { limit: async () => ({ success: true }) }, ELECTORAL_COORDINATOR: {
-    idFromName(name) { assert.equal(name, 'global-v1'); return 'id'; }, get() { return { async fetch(req) { calls.push(req); return new Response('{}'); } }; },
+    idFromName(name) { assert.equal(name, 'global-v1'); return 'id'; }, get() { return { async fetch(req) { calls.push(req); return Response.json(req.url.endsWith('/admit') ? { admission_id: '00000000-0000-4000-8000-000000000000' } : {}); } }; },
   } };
   assert.equal((await worker.fetch(request(a, { origin: 'https://attacker.example' }), bindings)).status, 403);
   const invalid = await worker.fetch(request('wrong'), bindings);
@@ -120,7 +120,30 @@ test('kill switch, wrong origins, missing bindings and invalid auth fail closed 
   assert.ok(invalid.headers.has('www-authenticate'));
   const response = await worker.fetch(new Request('https://electoral.example/mcp', { method: 'POST', headers: { authorization: `Bearer ${a}`, 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'cf-connecting-ip': '192.0.2.1', 'x-evm-client-id': 'bob', 'x-forwarded-for': '203.0.113.1' }, body: '{}' }), bindings);
   assert.equal(response.status, 200);
-  assert.equal(calls[0].headers.get('x-evm-client-id'), 'alice');
-  for (const header of ['authorization', 'cf-connecting-ip', 'x-forwarded-for']) assert.equal(calls[0].headers.has(header), false);
+  assert.equal(calls.length, 2);
+  for (const forwarded of calls) {
+    assert.equal(forwarded.headers.get('x-evm-client-id'), 'alice');
+    for (const header of ['authorization', 'cf-connecting-ip', 'x-forwarded-for']) assert.equal(forwarded.headers.has(header), false);
+  }
   assert.doesNotMatch(await invalid.text(), new RegExp(a));
+});
+
+test('admission reservations expire, reject replay and cannot be consumed or released by another client', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const coordinator = new ElectoralCoordinator({ storage: memoryStorage() }, { ...env, EVM_MAX_CONCURRENT: '1' });
+  const internal = (path, id = 'alice', admissionId) => new Request('https://coordinator/' + path, { method: 'POST', headers: { 'x-evm-client-id': id, ...(admissionId ? { 'x-evm-admission-id': admissionId } : {}) }, ...(path === 'mcp' ? { body: '{}' } : {}) });
+  const first = await coordinator.fetch(internal('admit'));
+  const { admission_id: id } = await first.json();
+  assert.equal(coordinator.active, 1);
+  assert.equal((await coordinator.fetch(internal('mcp', 'bob', id))).status, 503);
+  await coordinator.fetch(internal('release', 'bob', id));
+  assert.equal(coordinator.active, 1);
+  t.mock.timers.tick(10_001);
+  assert.equal(coordinator.active, 0);
+  assert.equal((await coordinator.fetch(internal('mcp', 'alice', id))).status, 503);
+  const second = await coordinator.fetch(internal('admit'));
+  const { admission_id: secondId } = await second.json();
+  await coordinator.fetch(internal('release', 'alice', secondId));
+  assert.equal(coordinator.active, 0);
+  assert.equal((await coordinator.fetch(internal('mcp', 'alice', secondId))).status, 503);
 });
