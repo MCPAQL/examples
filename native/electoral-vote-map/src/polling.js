@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { AdapterError, requireValue, knownFields, baseMap, describeMap, changesBetween } from './map.js';
 import { createSourceCache } from './source-cache.js';
+import { sourceTime } from './source-timing.js';
 
 const ORIGIN = 'https://www.electoral-vote.com';
 export const DATASETS = [
@@ -162,10 +163,11 @@ export function parsePollingCsv(text, dataset, source, { row_policy = 'strict' }
 export function createPollingClient({ fetchImpl = fetch, fixtureCsv, now = () => new Date(), ttlMs = 300000, failureTtlMs = 30000 } = {}) {
   const load = createSourceCache(async id => {
     const dataset = DATASETS.find(d => d.id === id);
-    let text = fixtureCsv;
+    let text = fixtureCsv, retrievedAt;
     if (text === undefined) {
       try {
         const response = await fetchImpl(dataset.url, { signal: AbortSignal.timeout(15000), redirect: 'error', headers: { accept: 'text/csv,text/plain,application/octet-stream', 'user-agent': 'MCPAQL-ElectoralVoteMap-Demo/0.2' } });
+        retrievedAt = sourceTime(response);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const reader = response.body.getReader(), decoder = new TextDecoder('utf-8', { fatal: true }); let bytes = 0; text = '';
         try {
@@ -180,8 +182,8 @@ export function createPollingClient({ fetchImpl = fetch, fixtureCsv, now = () =>
     }
     // Parse once per download. Policy changes reuse the same data and never
     // multiply upstream reads. Strict callers still fail on any rejected row.
-    return parsePollingCsv(text, dataset, { url: dataset.url, retrieved_at: now().toISOString(), mode: fixtureCsv === undefined ? 'live' : 'test_fixture' }, { row_policy: 'quarantine' });
-  }, { now, ttlMs, failureTtlMs });
+    return parsePollingCsv(text, dataset, { url: dataset.url, retrieved_at: retrievedAt ?? now().toISOString(), mode: fixtureCsv === undefined ? 'live' : 'test_fixture' }, { row_policy: 'quarantine' });
+  }, { now, ttlMs, failureTtlMs, expiresAt: data => Date.parse(data.source.retrieved_at) + ttlMs });
   return async (id, { row_policy = 'strict' } = {}) => {
     if (!DATASETS.some(d => d.id === id)) throw new AdapterError('NOT_FOUND_RESOURCE', `Unknown polling dataset: ${id}; use list_poll_datasets`);
     requireValue(['strict', 'quarantine'].includes(row_policy), 'Invalid row_policy');

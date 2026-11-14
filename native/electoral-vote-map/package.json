@@ -12,6 +12,8 @@
     "start": "node src/server.js",
     "start:http": "node src/server.js --transport=http",
     "start:https": "node src/server.js --transport=https",
+    "build:worker": "WRANGLER_SEND_METRICS=false wrangler deploy --dry-run --outdir .worker-build",
+    "test:worker": "npm run build:worker && node --test --test-concurrency=1 test/workers/*.test.js",
     "test": "node --test test/*.test.js",
     "smoke:live": "node scripts/live-smoke.js",
     "smoke:polling": "node scripts/polling-live-smoke.js"
@@ -21,6 +23,9 @@
   },
   "devDependencies": {
     "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "esbuild": "0.28.2",
+    "miniflare": "5.20261113.0-beta",
+    "wrangler": "4.162.0"
   }
 }

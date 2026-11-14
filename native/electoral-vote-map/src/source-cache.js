@@ -4,7 +4,7 @@
 // All loader rejections, including contract and programmer errors, share the short
 // cooldown. The original error is rethrown; failures never become successful data.
 // This is intentional for the four fixed source keys, not a general-purpose cache.
-export function createSourceCache(load, { now = () => new Date(), ttlMs = 300_000, failureTtlMs = 30_000 } = {}) {
+export function createSourceCache(load, { now = () => new Date(), ttlMs = 300_000, failureTtlMs = 30_000, expiresAt } = {}) {
   const cache = new Map(), pending = new Map();
   return async key => {
     const entry = cache.get(key);
@@ -14,7 +14,7 @@ export function createSourceCache(load, { now = () => new Date(), ttlMs = 300_00
     }
     if (pending.has(key)) return pending.get(key);
     const request = Promise.resolve().then(() => load(key)).then(data => {
-      cache.set(key, { data, expires: now().getTime() + ttlMs });
+      cache.set(key, { data, expires: Math.min(now().getTime() + ttlMs, expiresAt?.(data) ?? Infinity) });
       return data;
     }, error => {
       cache.set(key, { error, expires: now().getTime() + failureTtlMs });

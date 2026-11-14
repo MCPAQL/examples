@@ -45,6 +45,9 @@ jobs:
       - name: Test domain and MCP behavior
         working-directory: native/electoral-vote-map
         run: npm test
+      - name: Qualify the Worker in the real local Cloudflare runtime
+        working-directory: native/electoral-vote-map
+        run: npm run test:worker
       - name: Validate all introspection variants against pinned spec schemas
         working-directory: native/electoral-vote-map
         run: node scripts/check-schemas.js ../../.mcpaql-spec/schemas
