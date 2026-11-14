@@ -7,8 +7,9 @@
   "workers_dev": false,
   "preview_urls": false,
   "observability": { "enabled": false },
-  // Proposed dedicated hostname. Enable only after budget/route qualification.
-  "routes": [{ "pattern": "electoral.mcpaql.com", "custom_domain": true }],
+  // Add electoral.mcpaql.com only after account/quota and routing qualification.
+  // Keep the initial deployment unreachable, including while EVM_ENABLED=false.
+  "routes": [],
   "vars": {
     "EVM_ENABLED": "false",
     "EVM_PUBLIC_ORIGIN": "https://electoral.mcpaql.com",
@@ -27,6 +28,7 @@
     "name": "MCP_RATE_LIMITER",
     "namespace_id": "7201",
     "simple": { "limit": 60, "period": 60 }
-  }],
-  "limits": { "cpu_ms": 50 }
+  }]
+  // Workers Free enforces its 10 ms edge CPU allowance. Qualify that plan before
+  // adding traffic; a paid-plan CPU override does not raise the free allowance.
 }
