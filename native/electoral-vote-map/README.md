@@ -52,6 +52,12 @@ All operations are discoverable through `mcp_aql_read`:
 | `compare_maps` | Separate rating changes from electoral-allocation changes |
 | `get_research_brief` | Prepare a scoped congressional-results research handoff for the connected AI |
 | `apply_election_results` | Calculate a hypothetical map from sourced, client-supplied congressional counts |
+| `list_poll_datasets` | Probe configured electoral-vote.com datasets; discover races, record types, and unavailable sources |
+| `get_state_polls` | Retrieve dated records, distinguishing polls, historical results, calls and uncalled races |
+| `get_poll_average` | Average actual polls and report freshness independently of race outcome evidence |
+| `build_polling_scenario` | Generate a map with explicit thresholds, swings, stale/missing-data policies and cross-election assumptions |
+
+See [Polling sources and interpretation](POLLING.md) for source formats, election phases and complete examples. The AI can now retrieve polling data directly; general congressional research still uses the client's search tools.
 
 Discovery:
 
@@ -106,7 +112,7 @@ The normative baseline is [spec v1.0.0-draft](https://github.com/MCPAQL/spec/blo
 - Documented fully concurrent requests, coalesced source reads, size/depth limits, and an explicit unsupported-capability declaration for optional batching, field selection and the execution safety loop.
 - An optional `parameters` compatibility alias, with `params` values taking precedence. Omit optional parameters; explicit null is rejected.
 
-The sole upstream request is a fixed-origin GET to the public homepage. Supplied map and research URLs are never fetched. The source response is limited to 2 MiB, has a 15-second timeout and a five-minute cache, and rejects redirects. Payload/ordering drift fails explicitly. No JavaScript from the site is executed. Site descriptions and research content are untrusted external data, not agent instructions.
+Map discovery uses a fixed-origin GET to the public homepage. Polling uses only the three cataloged electoral-vote.com CSV URLs described in [POLLING.md](POLLING.md). Supplied map and research URLs are never fetched. Each source response is limited to 2 MiB, has a 15-second timeout and a five-minute cache, and rejects redirects. Payload/ordering/header drift fails explicitly. No JavaScript from either site is executed. Site descriptions and research content are untrusted external data, not agent instructions.
 
 The codec follows the published `evm-map` 1.29 format: 56 ordered electoral units, seven Democratic/Republican/toss-up rating positions, and additional party codes preserved on round-trip. This demo supports full homepage `?map=YEAR:CODE` share URLs with optional `&ev=2032`. Embed hashes, short links, historical pages, nominee suffixes and additional presentation parameters are rejected explicitly. County data and probability simulations are outside this first version.
 
@@ -115,6 +121,7 @@ The codec follows the published `evm-map` 1.29 format: 56 ordered electoral unit
 ```sh
 npm test
 npm run smoke:live
+npm run smoke:polling
 npm audit --audit-level=low
 node scripts/check-schemas.js /path/to/MCPAQL/spec/schemas
 ```
@@ -130,6 +137,8 @@ node tools/dist/conformance-cli.js \
 ```
 
 `EVM_TEST_FIXTURE` is only for offline verification; all data responses clearly label fixture mode. Leave it unset for real use. The fixture is a minimal extract of public map data retrieved on November 14, 2026, attributed to Electoral Vote Map, and is not a live forecast feed.
+
+`EVM_POLL_TEST_FIXTURE` optionally supplies a synthetic source-format CSV for offline polling tests; it also labels responses as fixture mode. The committed polling fixture is entirely illustrative, with test figures rather than actual observations. It is built for the 2024 Senate schema, including a special race; other cycle/office parsers may reject it. Leave both fixture variables unset for live use.
 
 The MCPAQL tools validator currently checks registration, the request envelope, and introspection schemas. The example's tests additionally exercise a real MCP stdio connection, both supplied map URLs, every published scenario, district accounting, edits, research conversion, validation errors and upstream failures. `check-schemas.js` checks every operation/type introspection variant against the supplied normative schemas. The live smoke test discovers scenarios from the actual site and round-trips their URLs.
 

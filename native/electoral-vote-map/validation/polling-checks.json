@@ -1,0 +1,284 @@
+{
+  "checked_at": "2026-11-14T18:07:42.729Z",
+  "adapter_version": "0.2.0",
+  "tests": {
+    "passed": 30,
+    "failed": 0
+  },
+  "spec": {
+    "commit": "52640154fc9d9594f1991101dd7a44a9fad3722a",
+    "introspection_variants_checked": 31,
+    "passed": true
+  },
+  "mcpaql_tools": {
+    "passed": true,
+    "checks": [
+      "tool-registration",
+      "operation-input-schema",
+      "operation-result-schema",
+      "introspection-response-schema"
+    ]
+  },
+  "datasets": [
+    {
+      "id": "president_2024",
+      "source": {
+        "url": "https://www.electoral-vote.com/evp2024/Pres/pres_polls.csv",
+        "retrieved_at": "2026-11-14T18:07:42.557Z",
+        "mode": "live"
+      },
+      "status": "available",
+      "counts": {
+        "poll": 891,
+        "historical_result": 51,
+        "election_call": 0,
+        "uncalled": 0,
+        "unknown": 0
+      },
+      "race_ids": [
+        "AL",
+        "AK",
+        "AZ",
+        "AR",
+        "CA",
+        "CO",
+        "CT",
+        "DC",
+        "DE",
+        "FL",
+        "GA",
+        "HI",
+        "ID",
+        "IL",
+        "IN",
+        "IA",
+        "KS",
+        "KY",
+        "LA",
+        "ME",
+        "MD",
+        "MA",
+        "MI",
+        "MN",
+        "MS",
+        "MO",
+        "MT",
+        "NE",
+        "NV",
+        "NH",
+        "NJ",
+        "NM",
+        "NY",
+        "NC",
+        "ND",
+        "OH",
+        "OK",
+        "OR",
+        "PA",
+        "RI",
+        "SC",
+        "SD",
+        "TN",
+        "TX",
+        "UT",
+        "VT",
+        "VA",
+        "WA",
+        "WV",
+        "WI",
+        "WY"
+      ]
+    },
+    {
+      "id": "senate_2024",
+      "source": {
+        "url": "https://www.electoral-vote.com/evp2024/Senate/senate_polls.csv",
+        "retrieved_at": "2026-11-14T18:07:42.531Z",
+        "mode": "live"
+      },
+      "status": "available",
+      "counts": {
+        "poll": 412,
+        "historical_result": 39,
+        "election_call": 0,
+        "uncalled": 0,
+        "unknown": 0
+      },
+      "race_ids": [
+        "AZ",
+        "CA",
+        "CT",
+        "DE",
+        "FL",
+        "HI",
+        "IN",
+        "ME",
+        "MD",
+        "MA",
+        "MI",
+        "MN",
+        "MS",
+        "MO",
+        "MT",
+        "NE",
+        "NE-special",
+        "NV",
+        "NJ",
+        "NM",
+        "NY",
+        "ND",
+        "OH",
+        "PA",
+        "RI",
+        "TN",
+        "TX",
+        "UT",
+        "VT",
+        "VA",
+        "WA",
+        "WV",
+        "WI",
+        "WY"
+      ]
+    },
+    {
+      "id": "senate_2026",
+      "source": {
+        "url": "https://www.electoral-vote.com/evp2026/Senate/senate_polls.csv",
+        "retrieved_at": "2026-11-14T18:07:42.521Z",
+        "mode": "live"
+      },
+      "status": "available",
+      "counts": {
+        "poll": 0,
+        "historical_result": 0,
+        "election_call": 34,
+        "uncalled": 1,
+        "unknown": 0
+      },
+      "race_ids": [
+        "AL",
+        "AK",
+        "AR",
+        "CO",
+        "DE",
+        "FL",
+        "GA",
+        "ID",
+        "IL",
+        "IA",
+        "KS",
+        "KY",
+        "LA",
+        "ME",
+        "MA",
+        "MI",
+        "MN",
+        "MS",
+        "MT",
+        "NE",
+        "NH",
+        "NJ",
+        "NM",
+        "NC",
+        "OH",
+        "OK",
+        "OR",
+        "RI",
+        "SC",
+        "SD",
+        "TN",
+        "TX",
+        "VA",
+        "WV",
+        "WY"
+      ]
+    }
+  ],
+  "historical_poll_example": {
+    "dataset": {
+      "id": "president_2024",
+      "office": "president",
+      "election_year": 2024,
+      "url": "https://www.electoral-vote.com/evp2024/Pres/pres_polls.csv"
+    },
+    "as_of": "2024-11-04",
+    "race_id": "PA",
+    "poll_count": 10,
+    "average": {
+      "dem": 48.9,
+      "rep": 47.9,
+      "margin_dem_minus_rep": 1
+    },
+    "included_source_rows": [
+      646,
+      647,
+      648,
+      649,
+      650,
+      651,
+      652,
+      653,
+      654,
+      655
+    ]
+  },
+  "senate_current_example": {
+    "dataset": {
+      "id": "senate_2026",
+      "office": "senate",
+      "election_year": 2026,
+      "url": "https://www.electoral-vote.com/evp2026/Senate/senate_polls.csv"
+    },
+    "race_id": "AK",
+    "as_of": "2026-11-14",
+    "phase": "post_election",
+    "latest_record_kinds": [
+      "uncalled"
+    ],
+    "polling_status": "no_usable_polls"
+  },
+  "scenario": {
+    "map_url": "https://electoralvotemap.com/?map=2028:SRR_DEEDDS_DTRERRRRDDFDT_FRRR_RRRFR_EF_DTRDTDRRRTRFDD_RR",
+    "totals": {
+      "dem": 222,
+      "rep": 238,
+      "other": 0,
+      "alt": 0,
+      "alt2": 0,
+      "toss_up": 78
+    },
+    "changes": [
+      {
+        "unit": "PA",
+        "from": "toss_up",
+        "to": "lean_rep"
+      }
+    ],
+    "comparison_mode": "hypothetical_cross_election",
+    "rating_thresholds": {
+      "toss_up_below": 2,
+      "likely_from": 5,
+      "safe_from": 10
+    },
+    "swing_points": -3,
+    "source_dataset": {
+      "id": "president_2024",
+      "office": "president",
+      "election_year": 2024,
+      "url": "https://www.electoral-vote.com/evp2024/Pres/pres_polls.csv"
+    },
+    "as_of": "2024-11-04",
+    "stale_policy": "error",
+    "unavailable_policy": "error",
+    "district_policy": "preserve_districts"
+  },
+  "dependency_audit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  }
+}

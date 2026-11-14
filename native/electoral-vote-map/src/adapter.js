@@ -2,6 +2,7 @@
 import { AdapterError, RATINGS, object, requireValue, baseMap, describeMap, modifyMap, changesBetween } from './map.js';
 import { createSiteClient } from './site.js';
 import { researchBrief, applyResults, METRICS } from './research.js';
+import { DATASETS, RECORD_KINDS, createPollingClient, pollRecords, pollAverage, pollingScenario } from './polling.js';
 
 const p = (type, description, required = false, extra = {}) => ({ type, description, required, ...extra });
 const baseParams = {
@@ -12,6 +13,15 @@ const baseParams = {
 const metricParams = {
   metric: p('string', 'Congressional measure; races won and sitting delegations have distinct meanings.', true, { enum: METRICS }),
   election_year: p('integer', 'Year of researched election or delegation snapshot; does not change presidential map year.', true, { minimum: 1789, maximum: 2100 }),
+};
+const pollingParams = {
+  dataset_id: p('string', 'Verified source dataset ID from list_poll_datasets. Race and election year remain distinct from the map.', true),
+  as_of: p('string', 'Required YYYY-MM-DD UTC cutoff on source/fieldwork dates. Publication timestamps are unavailable; this is not a point-in-time archive.', true),
+};
+const averageParams = {
+  ...pollingParams,
+  race_id: p('string', 'Two-letter state ID; -special identifies a separate Senate race. Discover race_ids with list_poll_datasets.', true),
+  max_age_days: p('integer', 'Maximum age since the latest included poll ended. Default 30; freshness is independent of the seven-day averaging window.', false, { minimum: 0, maximum: 3650 }),
 };
 const definitions = [
   ['introspect', 'Discover operations, parameters, examples and domain types without contacting the website.', {
@@ -38,6 +48,21 @@ const definitions = [
     tie_policy: p('string', 'How to treat tied supplied counts.', true, { enum: ['error', 'keep', 'toss_up'] }),
     district_policy: p('string', 'state_sweep assigns all ME/NE units; preserve_districts changes only statewide units.', true, { enum: ['state_sweep', 'preserve_districts'] }),
   }, 'ResearchScenario', { scenario_id: 'current', metric: 'senate_delegation', election_year: 2026, rows: [{ state: 'MA', dem: 2, rep: 0, other: 0, status: 'certified', source_urls: ['https://www.senate.gov/'] }], as_of: '2026-11-14T00:00:00Z', mapping_rule: 'state_plurality', tie_policy: 'error', district_policy: 'preserve_districts' }],
+  ['list_poll_datasets', 'Probe the three configured electoral-vote.com CSV datasets independently; discover race IDs, record kinds and availability. Unavailable sources return explicit errors, never empty polling data.', {}, 'PollDatasetCatalog', {}],
+  ['get_state_polls', 'Retrieve dated source records for one state/race, preserving polls, historical results, calls, uncalled and unknown records separately. Missing records do not prove no race occurred.', {
+    ...pollingParams, race_id: averageParams.race_id,
+  }, 'PollRecords', { dataset_id: 'president_2024', race_id: 'PA', as_of: '2024-11-04' }],
+  ['get_poll_average', 'Average actual D/R poll rows only using the site midpoint-based seven-day window. Report freshness and other evidence separately. Results/calls never enter the average.', averageParams, 'PollAverage', { dataset_id: 'president_2024', race_id: 'PA', as_of: '2024-11-04', max_age_days: 30 }],
+  ['build_polling_scenario', 'Generate a clickable hypothetical map from polling averages with explicit thresholds and policies for stale/missing data, districts and cross-election comparisons. Call/result records are inspected separately, never substituted for polls.', {
+    ...baseParams, ...pollingParams, max_age_days: averageParams.max_age_days,
+    race_ids: p('array', '1–51 unique race IDs. Choose only one regular/special race per state.', true, { items: { type: 'string' } }),
+    comparison_mode: p('string', 'same_race_year requires presidential polls from the map year; otherwise explicitly select hypothetical_cross_election.', true, { enum: ['same_race_year', 'hypothetical_cross_election'] }),
+    rating_thresholds: p('object', 'Required {toss_up_below, likely_from, safe_from} margin-point thresholds, ascending from 0 to 100. Between toss and likely is Lean.', true),
+    swing_points: p('number', 'Add to the D-minus-R margin: positive favors Democrats, negative Republicans. Default zero.', false, { minimum: -100, maximum: 100 }),
+    stale_policy: p('string', 'Explicit handling of old polls.', true, { enum: ['error', 'keep', 'toss_up', 'use'] }),
+    unavailable_policy: p('string', 'Explicit handling of missing actual polls, including result-only files.', true, { enum: ['error', 'keep', 'toss_up'] }),
+    district_policy: p('string', 'state_sweep assigns ME/NE districts too; preserve_districts changes statewide units only.', true, { enum: ['state_sweep', 'preserve_districts'] }),
+  }, 'PollingScenario', { dataset_id: 'president_2024', as_of: '2024-11-04', scenario_id: 'current', race_ids: ['PA', 'MI', 'WI'], comparison_mode: 'hypothetical_cross_election', rating_thresholds: { toss_up_below: 2, likely_from: 5, safe_from: 10 }, swing_points: -2, stale_policy: 'error', unavailable_policy: 'keep', district_policy: 'preserve_districts' }],
 ];
 export const OPERATIONS = definitions.map(([name, description, parameters, returns, example]) => ({
   name, endpoint: 'READ', mcpTool: 'mcp_aql_read', description,
@@ -48,6 +73,12 @@ export const OPERATIONS = definitions.map(([name, description, parameters, retur
 const field = (name, type, description, required = true) => ({ name, type, description, required });
 export const TYPES = [
   { name: 'Rating', kind: 'enum', values: Object.keys(RATINGS), description: 'Categorical assignment; ratings are not numeric probabilities.' },
+  { name: 'PollRecordKind', kind: 'enum', values: RECORD_KINDS, description: 'Only poll records enter polling averages; no other kind is a fresh poll.' },
+  { name: 'PollRecord', kind: 'object', fields: [field('state', 'string', 'Two-letter state ID.'), field('race_id', 'string', 'State plus optional -special suffix.'), field('race_type', 'string', 'regular or special.'), field('office', 'string', 'president or senate.'), field('election_year', 'integer', 'Source dataset cycle.'), field('kind', 'PollRecordKind', 'Poll, historical result, call, uncalled or unknown.'), field('source_date', 'string', 'YYYY-MM-DD source marker, not a publication timestamp.'), field('fieldwork_start', 'string|null', 'Poll start date; null for non-polls.'), field('fieldwork_end', 'string|null', 'Poll end date; null for non-polls.'), field('midpoint_day', 'number', 'Midpoint relative to Jan 1 = 1; may be zero or negative for year-crossing fieldwork.'), field('poll_length_days', 'integer|null', 'Poll duration; null for non-polls.'), field('shares', 'object', 'dem/rep/ind percentages; missing shares stay null.'), field('margin_dem_minus_rep', 'number|null', 'D minus R; null if either is missing.'), field('label', 'string', 'Original source label without repeated duration suffix.'), field('pollster', 'string|null', 'Pollster only for poll rows.'), field('result_year', 'integer|null', 'Referenced historical result year, which can differ from dataset year.'), field('candidate_matchup', 'null', 'Not provided by CSV; not inferred.'), field('sample_size', 'null', 'Not provided by CSV; not inferred.'), field('margin_of_error', 'null', 'Not provided by CSV; not inferred.'), field('source_row', 'integer', 'Original CSV line/record position including header.')] },
+  { name: 'PollDatasetCatalog', kind: 'object', fields: [field('datasets', 'array', 'Each entry includes dataset identity, status, source metadata, race_ids and kind counts; failed probes include an explicit error.') ] },
+  { name: 'PollRecords', kind: 'object', fields: [field('dataset', 'object', 'Dataset ID, office, year and URL.'), field('race_id', 'string', 'Selected state/race.'), field('as_of', 'string', 'UTC date cutoff.'), field('election_day', 'string', 'Federal general-election calendar date.'), field('phase', 'string', 'pre_election, election_day or post_election relative to as_of.'), field('counts', 'object', 'Record counts by kind.'), field('coverage', 'string', 'records_available or no_records_as_of; does not infer no election.'), field('records', 'array', 'PollRecord observations at or before cutoff.'), field('source', 'object', 'Dataset URL, retrieved_at and live/test_fixture mode.'), field('dataset_duplicate_rows_removed', 'integer', 'Dataset-wide count of collapsed indistinguishable rows.'), field('notes', 'array', 'Data interpretation and missing metadata.')] },
+  { name: 'PollAverage', kind: 'object', fields: [field('dataset', 'object', 'Dataset identity.'), field('race_id', 'string', 'Selected race.'), field('as_of', 'string', 'UTC date cutoff.'), field('phase', 'string', 'Calendar phase.'), field('election_day', 'string', 'Election calendar date.'), field('counts', 'object', 'Available records by kind.'), field('coverage', 'string', 'Records available or no records as of.'), field('polling_status', 'string', 'fresh, stale or no_usable_polls.'), field('latest_record_kinds', 'array', 'Kinds on the latest visible source marker date, independently of polling status.'), field('latest_poll_end', 'string|null', 'End date of latest included fieldwork.'), field('age_days', 'number|null', 'Days from latest included fieldwork end to as_of.'), field('max_age_days', 'integer', 'Freshness cutoff.'), field('poll_count', 'integer', 'Actual polls used.'), field('average', 'object|null', 'Average D/R shares and D-minus-R margin, or null.'), field('method', 'string', 'Averaging rule.'), field('context_note', 'string', 'Distinguishes a polls-only summary from later outcome evidence.'), field('included_polls', 'array', 'Exact contributing PollRecord observations.'), field('excluded_record_count', 'integer', 'Available rows outside averaging window or not usable polls.'), field('excluded_unknown_labels', 'array', 'Unknown source labels excluded for this race/cutoff; inspect for false-positive keyword matches.'), field('dataset_duplicate_rows_removed', 'integer', 'Dataset-wide count of collapsed indistinguishable rows.'), field('source', 'object', 'Download metadata.'), field('notes', 'array', 'Source limitations.')] },
+  { name: 'PollingScenario', kind: 'object', fields: [field('map', 'Map', 'Generated map.'), field('base_url', 'string', 'Starting map.'), field('changes', 'array', 'Rating changes.'), field('polling', 'object', 'Per-race PollAverage evidence, applied decisions, dataset, assumptions, thresholds and policies.')] },
   { name: 'MapEdit', kind: 'object', description: 'Exactly one of rating or flip must be supplied. Unit IDs come from list_units.', fields: [field('unit', 'string', 'Electoral unit ID.'), field('rating', 'Rating', 'Explicit target rating.', false), field('flip', 'boolean', 'Must be true; swaps Democratic/Republican while preserving strength.', false)] },
   { name: 'ElectionResult', kind: 'object', description: 'Client-researched state counts, with sources. State IDs exclude DC and congressional district IDs.', fields: [field('state', 'string', 'Two-letter state ID.'), field('dem', 'integer', 'Democratic seat/race count.'), field('rep', 'integer', 'Republican seat/race count.'), field('other', 'integer', 'Other party seat/race count; resolve independents explicitly.'), field('status', 'string', 'certified, projected or partial.'), field('source_urls', 'array', 'One to ten HTTPS source URLs, recorded but not fetched.')] },
   { name: 'Map', kind: 'object', fields: [field('map_url', 'string', 'Clickable site map.'), field('election_year', 'integer', 'Presidential map year.'), field('electoral_allocation', 'string', 'current or projected_2032.'), field('totals', 'object', 'Electoral votes by dem, rep, other, alt, alt2, toss_up.'), field('to_win', 'integer', 'Winning threshold.'), field('winner', 'string|null', 'Party at threshold or null.'), field('ratings', 'object', 'Electoral unit ID to Rating.'), field('source', 'object', 'Site URL, UTC retrieved_at, live/test_fixture mode and source contract.'), field('allocation_note', 'string', 'Allocation interpretation.')] },
@@ -85,7 +116,7 @@ function validateParams(params, definition) {
     if (spec.items?.type === 'string') requireValue(value.every(v => typeof v === 'string'), `${spec.name} must contain strings`);
   }
 }
-export function createAdapter({ loadSite = createSiteClient() } = {}) {
+export function createAdapter({ loadSite = createSiteClient(), loadPolling = createPollingClient() } = {}) {
   return async function dispatch(tool, request) {
     try {
       requireValue(tool === 'mcp_aql_read', 'All demo operations are READ; use mcp_aql_read', 'VALIDATION_WRONG_ENDPOINT');
@@ -113,6 +144,19 @@ export function createAdapter({ loadSite = createSiteClient() } = {}) {
           },
           operations: OPERATIONS.map(({ name, endpoint, description }) => ({ name, endpoint, description })),
         };
+      } else if (request.operation === 'list_poll_datasets') {
+        // Each source failure becomes a dataset result, preserving partial availability.
+        result = { datasets: await Promise.all(DATASETS.map(async dataset => {
+          try {
+            const data = await loadPolling(dataset.id);
+            return { ...data.dataset, status: 'available', source: data.source, race_ids: [...new Set(data.records.map(r => r.race_id))], counts: Object.fromEntries(RECORD_KINDS.map(kind => [kind, data.records.filter(r => r.kind === kind).length])), duplicate_rows_removed: data.duplicate_rows_removed, notes: data.notes };
+          } catch (error) { return { id: dataset.id, office: dataset.office, election_year: dataset.election_year, url: dataset.url, status: 'unavailable', error: { code: error?.code || 'UPSTREAM_UNAVAILABLE', message: error?.message || 'Polling source unavailable' } }; }
+        })) };
+      } else if (['get_state_polls', 'get_poll_average', 'build_polling_scenario'].includes(request.operation)) {
+        const data = await loadPolling(params.dataset_id);
+        if (request.operation === 'get_state_polls') result = pollRecords(data, params);
+        if (request.operation === 'get_poll_average') result = pollAverage(data, params);
+        if (request.operation === 'build_polling_scenario') result = pollingScenario(data, params, await loadSite());
       } else {
         const data = await loadSite();
         if (request.operation === 'list_scenarios') result = { scenarios: data.scenarios.map(s => ({ id: s.id, name: s.name, description: s.description, ...describeMap(baseMap({ scenario_id: s.id }, data), data) })), source: data.source };
@@ -137,7 +181,7 @@ export function createAdapter({ loadSite = createSiteClient() } = {}) {
       requireValue(Buffer.byteLength(JSON.stringify(response)) <= LIMITS.max_response_size, 'Response exceeds 10 MiB', 'VALIDATION_PAYLOAD_TOO_LARGE');
       return response;
     } catch (error) {
-      return { success: false, error: { code: error instanceof AdapterError ? error.code : 'INTERNAL_ERROR', message: error instanceof AdapterError ? error.message : 'Unexpected adapter error', ...(error.details ? { details: error.details } : {}) } };
+      return { success: false, error: { code: error instanceof AdapterError ? error.code : 'INTERNAL_ERROR', message: error instanceof AdapterError ? error.message : 'Unexpected adapter error', ...(error?.details ? { details: error.details } : {}) } };
     }
   };
 }

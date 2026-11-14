@@ -1,0 +1,183 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { createAdapter } from '../src/adapter.js';
+import { createSiteClient } from '../src/site.js';
+import { DATASETS, parsePollingCsv, createPollingClient, pollAverage, pollRecords } from '../src/polling.js';
+
+const fixture = await readFile(new URL('./fixtures/polling.csv', import.meta.url), 'utf8');
+const fixtureHtml = await readFile(new URL('./fixtures/site.html', import.meta.url), 'utf8');
+const dataset = DATASETS[1], parsed = parsePollingCsv(fixture, dataset, { mode: 'test_fixture' });
+const baseQuery = { dataset_id: dataset.id, race_id: 'PA', as_of: '2024-11-02' };
+const dispatch = createAdapter({ loadSite: createSiteClient({ fixtureHtml }), loadPolling: createPollingClient({ fixtureCsv: fixture }) });
+const invoke = (operation, params) => dispatch('mcp_aql_read', { operation, params });
+const scenario = {
+  dataset_id: 'senate_2024', as_of: '2024-11-02', race_ids: ['PA', 'MI', 'WI', 'ME'],
+  comparison_mode: 'hypothetical_cross_election', rating_thresholds: { toss_up_below: 2, likely_from: 5, safe_from: 10 },
+  swing_points: -2, stale_policy: 'error', unavailable_policy: 'keep', district_policy: 'preserve_districts', scenario_id: 'blue-wall',
+};
+test('parser preserves record kinds, blanks, historical year and regular/special race identity', () => {
+  assert.equal(parsed.records.length, 13);
+  assert.equal(parsed.records.find(r => r.race_id === 'MI').kind, 'uncalled');
+  assert.equal(parsed.records.find(r => r.race_id === 'WI').kind, 'election_call');
+  assert.equal(parsed.records.find(r => r.race_id === 'DE').result_year, 2018);
+  assert.equal(parsed.records.find(r => r.race_id === 'GA').shares.dem, null);
+  assert.equal(parsed.records[0].shares.ind, null);
+  assert.equal(parsed.records[0].candidate_matchup, null);
+  assert.equal(parsed.records.find(r => r.race_id === 'NE-special').race_type, 'special');
+  assert.equal(parsed.records.find(r => r.race_id === 'TX').kind, 'unknown');
+  assert.equal(parsed.records[1].pollster, 'Example, University');
+});
+test('seven-day midpoint window includes boundary and excludes old/future polls and results', () => {
+  const result = pollAverage(parsed, baseQuery);
+  assert.equal(result.poll_count, 2);
+  assert.deepEqual(result.average, { dem: 51, rep: 47, margin_dem_minus_rep: 4 });
+  assert.equal(result.phase, 'pre_election');
+  assert.equal(result.election_day, '2024-11-05');
+  assert.equal(result.polling_status, 'fresh');
+  assert.equal(result.age_days, 0);
+  assert.deepEqual(result.included_polls.map(r => r.midpoint_day), [306, 299]);
+  assert.equal(pollAverage(parsed, { ...baseQuery, as_of: '2024-11-05' }).phase, 'election_day');
+});
+test('post-election result does not replace or contaminate polling average', () => {
+  const result = pollAverage(parsed, { ...baseQuery, as_of: '2024-11-20' });
+  assert.equal(result.phase, 'post_election');
+  assert.deepEqual(result.latest_record_kinds, ['historical_result']);
+  assert.equal(result.counts.historical_result, 1);
+  assert.equal(result.included_polls.every(r => r.kind === 'poll'), true);
+  assert.equal(result.polling_status, 'fresh');
+  assert.match(result.notes.join(' '), /not a point-in-time archive/);
+});
+test('staleness uses as-of minus fieldwork end, not distance between polls or retrieval time', () => {
+  const result = pollAverage(parsed, { ...baseQuery, as_of: '2026-11-14', max_age_days: 30 });
+  assert.equal(result.polling_status, 'stale');
+  assert.ok(result.age_days > 700);
+  assert.equal(result.poll_count, 2);
+});
+test('call-only, uncalled, fallback, missing shares and absent races never become polls', () => {
+  for (const race_id of ['WI', 'MI', 'DE', 'GA', 'CA', 'TX']) {
+    const result = pollAverage(parsed, { ...baseQuery, race_id });
+    assert.equal(result.polling_status, 'no_usable_polls', race_id);
+    assert.equal(result.average, null, race_id);
+  }
+  const missing = pollRecords(parsed, { ...baseQuery, race_id: 'CA' });
+  assert.equal(missing.coverage, 'no_records_as_of');
+});
+test('invalid dates, malformed CSV, source header drift and invalid fieldwork fail explicitly', () => {
+  for (const as_of of ['2024-02-30', '2024-1-01', 'yesterday']) assert.throws(() => pollRecords(parsed, { ...baseQuery, as_of }));
+  for (const csv of [fixture.replace('Day,Len,State', 'Date,Length,State'), fixture.replace('306,3,Pennsylvania', '303,3,Pennsylvania'), fixture.replace('52,46', '101,46'), fixture.replace('Pennsylvania', 'Imaginary State'), fixture + '"unterminated']) {
+    assert.throws(() => parsePollingCsv(csv, dataset, {}), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+  }
+});
+test('exact duplicate observations are removed and counted once; different races remain separate', () => {
+  const duplicate = parsePollingCsv(fixture + fixture.split('\n')[1] + '\n', dataset, {});
+  assert.equal(duplicate.records.length, parsed.records.length);
+  assert.equal(duplicate.duplicate_rows_removed, 1);
+  assert.equal(pollAverage(duplicate, baseQuery).poll_count, 2);
+  assert.equal(pollAverage(duplicate, baseQuery).dataset_duplicate_rows_removed, 1);
+});
+test('year-crossing fieldwork preserves zero/negative midpoints and cutoff filtering', () => {
+  const winter = fixture.split('\n')[0] + '\n' + [
+    '-1,5,Pennsylvania,,50,48,,Jan 01,,,,,,,,Winter One-5',
+    '0,7,Pennsylvania,,51,47,,Jan 03,,,,,,,,Winter Two-7',
+    '4,3,Pennsylvania,,52,46,,Jan 05,,,,,,,,Winter Three-3',
+  ].join('\n');
+  const data = parsePollingCsv(winter, dataset, {});
+  assert.equal(data.records[0].fieldwork_start, '2023-12-28');
+  assert.equal(data.records[0].fieldwork_end, '2024-01-01');
+  assert.deepEqual(data.records.map(r => r.midpoint_day), [-1, 0, 4]);
+  assert.equal(pollAverage(data, { ...baseQuery, as_of: '2024-01-05' }).poll_count, 3);
+  assert.equal(pollAverage(data, { ...baseQuery, as_of: '2024-01-05' }).average.margin_dem_minus_rep, 4);
+  assert.equal(pollAverage(data, { ...baseQuery, as_of: '2024-01-01' }).poll_count, 1);
+  assert.throws(() => parsePollingCsv(winter.replace('-1,5', '-2,5'), dataset, {}), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+});
+test('source state identities are explicit for names that differ from postal-code order', () => {
+  const cases = [['Alaska', 'AK'], ['Alabama', 'AL'], ['Pennsylvania', 'PA'], ['D.C.', 'DC'], ['District of Columbia', 'DC'], ['Wyoming', 'WY']];
+  for (const [name, code] of cases) {
+    const data = parsePollingCsv(fixture.replace('Pennsylvania', name), dataset, {});
+    assert.equal(data.records.find(r => r.source_row === 2).state, code, name);
+  }
+});
+test('averages expose unknown labels, including conservative keyword false positives', () => {
+  const data = parsePollingCsv(fixture.replace('Example Research-3', 'Election Data Services-3'), dataset, {});
+  const summary = pollAverage(data, baseQuery);
+  assert.deepEqual(summary.excluded_unknown_labels, ['Election Data Services']);
+  assert.equal(summary.counts.unknown, 1);
+  assert.equal(summary.poll_count, 2);
+  assert.equal(summary.included_polls.some(r => r.label === 'Election Data Services'), false);
+});
+test('CSV supports quoted newlines and doubled quotes without dropping record identity', () => {
+  const modified = fixture.replace('"Example, University-3"', '"Example, ""Quoted""\nUniversity-3"');
+  const parsed = parsePollingCsv(modified, dataset, {});
+  assert.equal(parsed.records[1].pollster, 'Example, "Quoted"\nUniversity');
+});
+test('catalog reports per-source failure, rather than silently returning no polls', async () => {
+  const local = createAdapter({ loadPolling: async id => { if (id === 'senate_2026') throw new Error('source offline'); return parsed; } });
+  const result = await local('mcp_aql_read', { operation: 'list_poll_datasets' });
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.datasets.map(d => d.status), ['available', 'available', 'unavailable']);
+  assert.match(result.data.datasets[2].error.message, /offline/);
+});
+test('poll queries operate independently of the map site and reject unknown parameters', async () => {
+  const local = createAdapter({ loadSite: () => { throw new Error('map offline'); }, loadPolling: async () => parsed });
+  assert.equal((await local('mcp_aql_read', { operation: 'get_poll_average', params: baseQuery })).success, true);
+  assert.equal((await invoke('get_poll_average', { ...baseQuery, arbitrary: true })).error.code, 'VALIDATION_UNKNOWN_PARAM');
+  assert.equal((await invoke('get_state_polls', { dataset_id: 'president_2024', race_id: 'PA' })).error.code, 'VALIDATION_MISSING_PARAM');
+});
+test('scenario requires cross-election acknowledgment and explicit policy choices', async () => {
+  const result = await invoke('build_polling_scenario', { ...scenario, comparison_mode: 'same_race_year' });
+  assert.equal(result.success, false);
+  for (const key of ['rating_thresholds', 'stale_policy', 'unavailable_policy', 'district_policy']) {
+    const params = { ...scenario }; delete params[key];
+    assert.equal((await invoke('build_polling_scenario', params)).error.code, 'VALIDATION_MISSING_PARAM');
+  }
+});
+test('scenario applies swing/thresholds and leaves result-only states and districts unchanged', async () => {
+  const result = await invoke('build_polling_scenario', scenario);
+  assert.equal(result.success, true, JSON.stringify(result));
+  assert.equal(result.data.map.ratings.PA, 'lean_dem');
+  assert.equal(result.data.polling.evidence.find(e => e.race_id === 'PA').applied_margin, 2);
+  assert.equal(result.data.polling.evidence.find(e => e.race_id === 'MI').decision, 'kept_base');
+  assert.equal(result.data.map.ratings['ME-1'], 'safe_dem');
+  assert.equal(result.data.polling.hypothetical, true);
+  assert.match(result.data.map.map_url, /^https:\/\/electoralvotemap.com/);
+  assert.match(result.data.polling.interpretation, /never substitute/);
+});
+test('missing data can explicitly become toss-up, but cannot acquire a poll margin', async () => {
+  const result = await invoke('build_polling_scenario', { ...scenario, unavailable_policy: 'toss_up', district_policy: 'state_sweep' });
+  assert.equal(result.success, true);
+  assert.equal(result.data.map.ratings.WI, 'toss_up');
+  assert.equal(result.data.polling.evidence.find(e => e.race_id === 'WI').applied_margin, null);
+  assert.equal(result.data.map.ratings['ME-2'], result.data.map.ratings.ME);
+  assert.equal((await invoke('build_polling_scenario', { ...scenario, unavailable_policy: 'error' })).success, false);
+});
+test('stale polls require explicit use; keep/toss/error decisions stay distinct', async () => {
+  const params = { ...scenario, race_ids: ['PA'], as_of: '2026-11-14' };
+  assert.equal((await invoke('build_polling_scenario', params)).success, false);
+  const kept = await invoke('build_polling_scenario', { ...params, stale_policy: 'keep' });
+  assert.equal(kept.data.polling.evidence[0].decision, 'kept_base');
+  const tossed = await invoke('build_polling_scenario', { ...params, stale_policy: 'toss_up' });
+  assert.equal(tossed.data.polling.evidence[0].applied_margin, null);
+  const used = await invoke('build_polling_scenario', { ...params, stale_policy: 'use' });
+  assert.equal(used.data.polling.evidence[0].decision, 'explicitly_used_stale_poll_average');
+});
+test('special races cannot be merged into one state and thresholds/units are validated', async () => {
+  for (const patch of [
+    { race_ids: ['NE', 'NE-special'] }, { race_ids: [] }, { race_ids: ['XX'] },
+    { rating_thresholds: { toss_up_below: 5, likely_from: 2, safe_from: 10 } },
+    { rating_thresholds: { toss_up_below: 2, likely_from: 5, safe_from: 10, unknown: 1 } },
+    { swing_points: 101 },
+  ]) assert.equal((await invoke('build_polling_scenario', { ...scenario, ...patch })).success, false, JSON.stringify(patch));
+});
+test('source client uses only fixed catalog URLs, coalesces reads and expires cache', async () => {
+  let calls = 0, clock = new Date('2026-11-14T00:00:00Z');
+  const load = createPollingClient({ now: () => clock, ttlMs: 1000, fetchImpl: async (url, options) => {
+    calls++; assert.equal(url, dataset.url); assert.equal(options.redirect, 'error'); return new Response(fixture);
+  } });
+  await Promise.all([load(dataset.id), load(dataset.id)]); assert.equal(calls, 1);
+  clock = new Date(clock.getTime() + 1001); await load(dataset.id); assert.equal(calls, 2);
+  await assert.rejects(load('https://evil.example'), { code: 'NOT_FOUND_RESOURCE' });
+  const failed = createPollingClient({ fetchImpl: async () => new Response('offline', { status: 503 }) });
+  await assert.rejects(failed(dataset.id), { code: 'UPSTREAM_UNAVAILABLE' });
+});
