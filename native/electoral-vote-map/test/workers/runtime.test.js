@@ -119,6 +119,23 @@ test('source outages fail explicitly, coalesce and keep the cooldown across recr
   assert.equal(restarted.requests.length, 0);
 });
 
+test('workerd concurrency rejection does not consume daily quota and recovers after a shared fetch finishes', { timeout: 60_000 }, async t => {
+  let release, entered;
+  const blocked = new Promise(resolve => { release = resolve; });
+  const started = new Promise(resolve => { entered = resolve; });
+  t.after(() => release());
+  const app = await runtime(t, { vars: { EVM_MAX_CONCURRENT: '1', EVM_DAILY_REQUEST_LIMIT: '2' }, outbound: async () => { entered(); await blocked; return new RuntimeResponse(html); } });
+  const first = app.tool('get_map');
+  await started;
+  const busy = await app.rpc('tools/list');
+  assert.equal(busy.status, 503);
+  assert.equal(busy.headers.get('retry-after'), '1');
+  release();
+  assert.equal((await first).isError, false);
+  assert.equal((await app.rpc('tools/list')).status, 200);
+  assert.equal((await app.rpc('tools/list')).status, 429);
+});
+
 test('workerd rejects disabled service, bad credentials, origins, methods, encoding and oversized requests', { timeout: 60_000 }, async t => {
   const disabled = await runtime(t, { vars: { EVM_ENABLED: 'false' } });
   assert.equal((await disabled.rpc('tools/list')).status, 503);

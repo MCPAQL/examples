@@ -38,6 +38,10 @@ For an MCP client supporting local stdio servers, add this entry to its MCP conf
 
 Stdio is the default. `--transport=stdio` selects it explicitly. The server returns URLs for people to open; it does not navigate or synchronize a browser.
 
+### Cloudflare Workers
+
+The adapter also has an isolated Worker implementation with coordinated admission quotas and source caching. Its configuration starts disabled; no public endpoint is deployed yet. See [Hosting and abuse controls](HOSTING.md) for the pilot profile, credential setup, real-runtime tests and remaining deployment steps.
+
 ### HTTP and HTTPS
 
 The same adapter also serves MCP over [Streamable HTTP](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#streamable-http) at `/mcp`, using the installed MCP SDK's supported protocol versions. Choose one transport per process; run separate processes if both are needed simultaneously. The tool catalog, MCP-AQL envelopes, introspection, and operation behavior are identical in each mode.
