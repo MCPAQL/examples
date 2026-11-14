@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createAdapter } from '../src/adapter.js';
 import { createSiteClient } from '../src/site.js';
-import { DATASETS, parsePollingCsv, createPollingClient, pollAverage, pollRecords } from '../src/polling.js';
+import { DATASETS, parsePollingCsv, createPollingClient, pollAverage, pollRecords, classifyLabel } from '../src/polling.js';
 
 const fixture = await readFile(new URL('./fixtures/polling.csv', import.meta.url), 'utf8');
 const fixtureHtml = await readFile(new URL('./fixtures/site.html', import.meta.url), 'utf8');
@@ -99,13 +99,22 @@ test('source state identities are explicit for names that differ from postal-cod
     assert.equal(data.records.find(r => r.source_row === 2).state, code, name);
   }
 });
-test('averages expose unknown labels, including conservative keyword false positives', () => {
-  const data = parsePollingCsv(fixture.replace('Example Research-3', 'Election Data Services-3'), dataset, {});
+test('reviewed keyword-collision labels remain polls while ambiguous/status labels stay excluded', () => {
+  for (const label of ['Election Data Services', 'Primary Source Research']) {
+    const data = parsePollingCsv(fixture.replace('Example Research-3', `${label}-3`), dataset, {});
+    const summary = pollAverage(data, baseQuery);
+    assert.equal(summary.poll_count, 2);
+    assert.equal(summary.included_polls[0].classification_reason, 'reviewed_pollster_label');
+    assert.equal(summary.included_polls[0].raw_label, `${label}-3`);
+  }
+  for (const label of ['Election estimate', 'Primary forecast', 'Average', 'Model', 'Exit poll estimate', 'Unofficial results', 'Unopposed', 'Runoff result']) assert.equal(classifyLabel(label).kind, 'unknown', label);
+  for (const [label, kind] of [['Election 2024', 'historical_result'], ['Called for Example (D)', 'election_call'], ['Not called', 'uncalled'], ['Too close to call', 'uncalled']]) assert.equal(classifyLabel(label).kind, kind);
+  const data = parsePollingCsv(fixture.replace('Example Research-3', 'Election Something Ambiguous-3'), dataset, {});
   const summary = pollAverage(data, baseQuery);
-  assert.deepEqual(summary.excluded_unknown_labels, ['Election Data Services']);
-  assert.equal(summary.counts.unknown, 1);
-  assert.equal(summary.poll_count, 2);
-  assert.equal(summary.included_polls.some(r => r.label === 'Election Data Services'), false);
+  assert.deepEqual(summary.excluded_unknown_labels, ['Election Something Ambiguous']);
+  assert.equal(summary.excluded_unknown_records[0].classification_reason, 'ambiguous_non_poll_keyword');
+  assert.equal(summary.excluded_unknown_records[0].classification_confidence, 'unresolved');
+  assert.equal(summary.excluded_unknown_records[0].source_row, 2);
 });
 test('CSV supports quoted newlines and doubled quotes without dropping record identity', () => {
   const modified = fixture.replace('"Example, University-3"', '"Example, ""Quoted""\nUniversity-3"');
@@ -180,4 +189,110 @@ test('source client uses only fixed catalog URLs, coalesces reads and expires ca
   await assert.rejects(load('https://evil.example'), { code: 'NOT_FOUND_RESOURCE' });
   const failed = createPollingClient({ fetchImpl: async () => new Response('offline', { status: 503 }) });
   await assert.rejects(failed(dataset.id), { code: 'UPSTREAM_UNAVAILABLE' });
+});
+
+test('quarantine preserves accepted rows and bounded rejection reasons without claiming complete race coverage', () => {
+  const damaged = fixture.replace('52,46', '101,46').replace('Michigan', 'Imaginary State');
+  assert.throws(() => parsePollingCsv(damaged, dataset, {}), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+  const data = parsePollingCsv(damaged, dataset, {}, { row_policy: 'quarantine' });
+  assert.equal(data.quality.accepted_row_count, 11);
+  assert.equal(data.quality.rejected_row_count, 2);
+  assert.equal(data.quality.total_row_count, 13);
+  assert.deepEqual(data.quality.rejected_rows, [
+    { source_row: 2, race_id: 'PA', reason: 'invalid_percentage' },
+    { source_row: 7, race_id: null, reason: 'unknown_state_or_race' },
+  ]);
+  const view = pollRecords(data, { ...baseQuery, race_id: 'CA' });
+  assert.equal(view.coverage, 'partial_dataset');
+  assert.equal(view.quality.selected_race_coverage, 'uncertain');
+  assert.throws(() => pollAverage(data, baseQuery), /incomplete_policy/);
+  assert.equal(pollAverage(data, { ...baseQuery, incomplete_policy: 'use_accepted' }).poll_count, 2);
+  // Reject diagnostics count all bad records but disclose only the first 100 references.
+  const line = fixture.split('\n')[1].replace('52,46', '101,46');
+  const many = parsePollingCsv(fixture + (line + '\n').repeat(110), dataset, {}, { row_policy: 'quarantine' });
+  assert.equal(many.quality.rejected_row_count, 110);
+  assert.equal(many.quality.rejected_rows.length, 100);
+  assert.equal(many.quality.rejections_truncated, true);
+});
+
+test('quarantine never masks structural errors, limits or invalid UTF-8 downloads', async () => {
+  for (const text of [fixture + '\n"unterminated', fixture.replace('Day,Len', 'Date,Length'), fixture + '\n1,2,3', 'x'.repeat(2097153)]) {
+    assert.throws(() => parsePollingCsv(text, dataset, {}, { row_policy: 'quarantine' }), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+  }
+  const load = createPollingClient({ fetchImpl: async () => new Response(new Uint8Array([0xff, 0xfe])) });
+  await assert.rejects(load(dataset.id, { row_policy: 'quarantine' }), { code: 'UPSTREAM_UNAVAILABLE' });
+});
+
+test('partial polling maps require explicit use, keep or toss and preserve quality in evidence', async () => {
+  const local = createAdapter({ loadSite: createSiteClient({ fixtureHtml }), loadPolling: createPollingClient({ fixtureCsv: fixture.replace('52,46', '101,46') }) });
+  const call = (operation, params) => local('mcp_aql_read', { operation, params });
+  const params = { ...scenario, row_policy: 'quarantine', race_ids: ['PA'] };
+  assert.equal((await call('get_state_polls', baseQuery)).error.code, 'UPSTREAM_CONTRACT_CHANGED');
+  const catalog = await call('list_poll_datasets', { row_policy: 'quarantine' });
+  assert.equal(catalog.data.datasets[1].status, 'partial');
+  assert.equal((await call('get_state_polls', { ...baseQuery, row_policy: 'quarantine' })).data.quality.coverage, 'partial');
+  assert.equal((await call('get_poll_average', { ...baseQuery, row_policy: 'quarantine' })).success, false);
+  assert.equal((await call('build_polling_scenario', params)).success, false);
+  for (const incomplete_policy of ['keep', 'toss_up', 'use_accepted']) {
+    const result = await call('build_polling_scenario', { ...params, incomplete_policy });
+    assert.equal(result.success, true, JSON.stringify(result));
+    const evidence = result.data.polling.evidence[0];
+    assert.equal(evidence.quality.rejected_row_count, 1);
+    assert.equal(result.data.polling.incomplete_policy, incomplete_policy);
+    if (incomplete_policy === 'use_accepted') assert.ok(evidence.average);
+    else { assert.equal(evidence.average, null); assert.equal(evidence.applied_margin, null); }
+    if (incomplete_policy === 'keep') assert.equal(result.data.changes.length, 0);
+    if (incomplete_policy === 'toss_up') assert.equal(result.data.map.ratings.PA, 'toss_up');
+  }
+});
+
+test('duplicate policies preserve every row reference and separate dataset, race and window counts', async () => {
+  const lines = fixture.split('\n');
+  const repeated = fixture + lines[1] + '\n' + lines[1] + '\n' + lines[7] + '\n';
+  const data = parsePollingCsv(repeated, dataset, {});
+  const collapsed = pollAverage(data, baseQuery);
+  assert.equal(collapsed.poll_count, 2);
+  assert.equal(collapsed.average.margin_dem_minus_rep, 4);
+  assert.equal(collapsed.dataset_indistinguishable_rows, 3);
+  assert.equal(collapsed.race_duplicate_rows, 2);
+  assert.equal(collapsed.included_duplicate_rows, 2);
+  assert.deepEqual(collapsed.included_polls[0].source_rows, [2, 15, 16]);
+  assert.deepEqual(collapsed.duplicate_groups[0].source_rows, [2, 15, 16]);
+  const kept = pollAverage(data, { ...baseQuery, duplicate_policy: 'keep_all' });
+  assert.equal(kept.poll_count, 4);
+  assert.equal(kept.average.margin_dem_minus_rep, 5);
+  assert.equal(kept.dataset_duplicate_rows_removed, 0);
+  assert.equal(kept.included_duplicate_rows, 2);
+  assert.deepEqual(kept.included_polls.map(r => r.source_row), [2, 15, 16, 3]);
+  const earlier = pollAverage(data, { ...baseQuery, as_of: '2024-10-26', duplicate_policy: 'keep_all' });
+  assert.equal(earlier.race_duplicate_rows, 0);
+  assert.equal(earlier.included_duplicate_rows, 0);
+  assert.equal(earlier.dataset_indistinguishable_rows, 3);
+  assert.equal(pollRecords(data, { ...baseQuery, race_id: 'NE-special' }).race_duplicate_rows, 0);
+  const local = createAdapter({ loadSite: createSiteClient({ fixtureHtml }), loadPolling: createPollingClient({ fixtureCsv: repeated }) });
+  const result = await local('mcp_aql_read', { operation: 'build_polling_scenario', params: { ...scenario, race_ids: ['PA'], duplicate_policy: 'keep_all' } });
+  assert.equal(result.data.polling.duplicate_policy, 'keep_all');
+  assert.equal(result.data.polling.evidence[0].poll_count, 4);
+});
+
+test('source references survive blank records and quoted multiline CSV fields', () => {
+  const data = parsePollingCsv(fixture.replace('306,3,Pennsylvania', '\n306,3,Pennsylvania'), dataset, {});
+  assert.equal(data.records[0].source_row, 3);
+  assert.deepEqual(data.records[0].source_rows, [3]);
+});
+
+test('polling failures cool down and strict/quarantine policy changes share one fetch', async () => {
+  let calls = 0, clock = new Date('2026-11-14T00:00:00Z');
+  const load = createPollingClient({ now: () => clock, failureTtlMs: 1000, fetchImpl: async () => { calls++; return new Response('offline', { status: 503 }); } });
+  for (let i = 0; i < 5; i++) await assert.rejects(load(dataset.id));
+  assert.equal(calls, 1);
+  clock = new Date(clock.getTime() + 1001);
+  await assert.rejects(load(dataset.id));
+  assert.equal(calls, 2);
+  calls = 0;
+  const partial = createPollingClient({ fetchImpl: async () => { calls++; return new Response(fixture.replace('52,46', '101,46')); } });
+  await assert.rejects(partial(dataset.id));
+  assert.equal((await partial(dataset.id, { row_policy: 'quarantine' })).quality.rejected_row_count, 1);
+  await assert.rejects(partial(dataset.id));
+  assert.equal(calls, 1);
 });

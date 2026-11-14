@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Electoral Vote Map polling hardening: explicit quarantine and incomplete-data policies, bounded classification diagnostics, duplicate-row provenance and weighting choices, HTTP admission limits, and source-failure cooldowns. Documents Cloudflare Workers hosting follow-up.
+
 - Electoral Vote Map example now supports stdio and stateless Streamable HTTP, including direct HTTPS with supplied TLS files, proxy hosting instructions, request limits, Host/Origin validation, optional bearer authentication, and transport integration tests.
 
 - Polling review hardening: year-crossing fieldwork, explicit state identities, and visible unknown-label and dataset-duplicate exclusions, with documented fail-closed and duplicate-identity limitations.

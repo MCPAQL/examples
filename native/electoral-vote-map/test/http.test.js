@@ -61,6 +61,8 @@ test('transport configuration keeps stdio default and requires explicit, complet
     { EVM_TRANSPORT: 'http', EVM_ALLOWED_HOSTS: 'https://evil.example/' },
     { EVM_TRANSPORT: 'http', EVM_ALLOWED_ORIGINS: '*' },
     { EVM_TRANSPORT: 'http', EVM_HTTP_BEARER_TOKEN: '' },
+    { EVM_TRANSPORT: 'http', EVM_HTTP_REQUESTS_PER_MINUTE: '0' },
+    { EVM_TRANSPORT: 'http', EVM_HTTP_MAX_CONCURRENT: 'unlimited' },
   ]) assert.throws(() => readTransportConfig(env));
   assert.throws(() => readTransportConfig({}, ['--unknown']));
 });
@@ -186,4 +188,29 @@ test('CLI starts HTTP from environment and closes cleanly on SIGTERM', { timeout
   child.kill('SIGTERM');
   assert.deepEqual(await exit, [0, null]);
   assert.equal(stdout, '', 'HTTP diagnostics never write to stdout');
+});
+
+test('HTTP counts failed authentication attempts and ignores spoofed proxy identities', { timeout: 10_000 }, async t => {
+  const { url } = await start(t, { bearerToken: 'test-only-secret', perIpPerMinute: 2 });
+  for (let i = 0; i < 2; i++) assert.equal((await fetch(url, { headers: { 'X-Forwarded-For': `192.0.2.${i}` } })).status, 401);
+  const response = await fetch(url, { headers: { Authorization: 'Bearer test-only-secret', 'X-Forwarded-For': '192.0.2.99' } });
+  assert.equal(response.status, 429);
+  assert.ok(Number(response.headers.get('retry-after')) > 0);
+  assert.doesNotMatch(await response.text(), /test-only-secret/);
+});
+
+test('HTTP rejects work over the concurrency bound and recovers when the active response finishes', { timeout: 10_000 }, async t => {
+  let release, entered;
+  const blocked = new Promise(resolve => { release = resolve; });
+  const started = new Promise(resolve => { entered = resolve; });
+  t.after(() => release());
+  const { url } = await start(t, { maxConcurrent: 1, dispatch: async () => { entered(); await blocked; return { success: true, data: {} }; } });
+  const request = fetch(url, { method: 'POST', headers, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'mcp_aql_read', arguments: { operation: 'introspect' } } }) });
+  await started;
+  const busy = await fetch(new URL('/healthz', url));
+  assert.equal(busy.status, 503);
+  assert.equal(busy.headers.get('retry-after'), '1');
+  release();
+  assert.equal((await request).status, 200);
+  assert.equal((await fetch(new URL('/healthz', url))).status, 200);
 });
