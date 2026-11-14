@@ -31,7 +31,7 @@ The canonical resource is `https://electoral.mcpaql.org/mcp`. Both the root and
 path-specific RFC 9728 discovery URLs are published. Client ID Metadata Documents
 (CIMD) are enabled. Dynamic client registration (DCR) is disabled by default;
 `EVM_OAUTH_DCR_ENABLED=true` enables `/oauth/register` for clients that require it.
-Registrations expire after one day and share all authentication budgets. Qualify
+Registrations expire after one day, allow at most 25 attempts/day, and share all authentication budgets. Qualify
 each intended client before claiming compatibility; discovery support varies.
 The library serves revocation at its advertised token endpoint, `/oauth/token`.
 
@@ -79,8 +79,14 @@ limiter (300 requests/minute/IP or IPv6 /64). Interactive/protocol routes also
 have a 30/minute network limiter. These approximate edge limits mitigate ingress;
 they are not global account or spending guarantees. Shared networks share them.
 
-The named authentication object admits at most 60 protocol flows/minute,
+Human verification precedes consent-state KV writes and client metadata fetching;
+simply opening the verification page does not create a consent record. Repeated
+uses of one bearer token are also limited before its KV lookup, followed by the
+stable-account admission limit after validation.
+
+The named authentication object admits at most 60 mutating protocol flows/minute,
 1,000/day, eight queued/in-flight flows and 16 concurrent token validations.
+Read-only discovery does not consume the mutating-flow budget.
 Every library KV operation reserves its budget durably **before** reaching KV:
 25,000 reads, 500 writes, 500 deletes and 500 lists per UTC day. Failed provider
 operations still consume their reservation. Exhaustion fails closed; partially

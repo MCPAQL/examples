@@ -2,7 +2,7 @@
 import { OAuthAuthorizationServer, OAuthResourceServer, OAuthError, AuthorizationError, CimdFetchError, insufficientScope, authorizationErrorRedirect } from '@cloudflare/workers-oauth-provider';
 import * as oidc from 'openid-client';
 import { HttpFailure, failureReply, networkIdentity } from './worker-policy.js';
-import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, meteredKV, authBudget, authBody, usedTransaction } from './worker-oauth-policy.js';
+import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, meteredKV, authBudget, authBody, usedTransaction, digest } from './worker-oauth-policy.js';
 
 // No redirects, unbounded provider responses, or non-HTTPS endpoints. The Worker
 // also uses global_fetch_strictly_public for outbound network address checks.
@@ -82,12 +82,23 @@ export async function routeOAuth(request, env, ctx, application) {
     const canonical = new URL(origin + '/.well-known/oauth-protected-resource/mcp');
     return resource.fetch(new Request(canonical, request), env, ctx);
   }
-  if (url.pathname === '/mcp' && !url.search) return resource.fetch(request, env, ctx);
+  if (url.pathname === '/mcp' && !url.search) {
+    const bearer = request.headers.get('authorization');
+    // Repeated use of one token is bounded before any KV validation. The
+    // separate stable-account limiter still applies after verification.
+    if (bearer && !(await env.MCP_RATE_LIMITER.limit({ key: 'oauth-token:' + digest(bearer) })).success) throw new HttpFailure(429, 'Too many requests', 60);
+    return resource.fetch(request, env, ctx);
+  }
   const paths = new Set([...AUTH_PATHS, ...(env.EVM_OAUTH_DCR_ENABLED === 'true' ? ['/oauth/register'] : [])]);
   if (!paths.has(url.pathname)) throw new HttpFailure(404, 'Not found');
   const get = request.method === 'GET';
   if ((url.pathname === '/callback' || url.pathname.startsWith('/.well-known/')) ? !get : !['GET', 'POST', 'OPTIONS'].includes(request.method)) throw new HttpFailure(405, 'Method not allowed');
   if (!(await env.OAUTH_FLOW_LIMITER.limit({ key: network })).success) throw new HttpFailure(429, 'Too many sign-in attempts', 60);
+  if (url.pathname === '/authorize' && get) {
+    const query = url.search;
+    if (query.length > 8192) throw new HttpFailure(414, 'Authorization URL too long');
+    return new Response(verificationPage(query, env.EVM_TURNSTILE_SITE_KEY), { headers: pageHeaders() });
+  }
   if (url.pathname === '/authorize' && request.method === 'POST' && request.headers.get('origin') !== origin) throw new HttpFailure(403, 'Origin not allowed');
   const headers = new Headers();
   for (const name of ['content-type', 'accept', 'cookie', 'authorization', 'origin']) if (request.headers.has(name)) headers.set(name, request.headers.get(name));
@@ -97,7 +108,7 @@ export async function routeOAuth(request, env, ctx, application) {
   return stubFor(env).fetch(new Request(request.url, { method: request.method, headers, ...(body !== undefined ? { body } : {}) }));
 }
 
-function consentPage(details, handle, siteKey) {
+function consentPage(details, handle) {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Connect Electoral Vote Map</title>
 <h1>Connect Electoral Vote Map</h1><p>Allow <strong>${escapeHtml(details.clientName)}</strong> to use the free electoral map tools?</p>
 <p>${details.clientDomain ? `Client domain: <strong>${escapeHtml(details.clientDomain)}</strong>.` : 'This client registered its own name; the name is not verified.'}
@@ -106,10 +117,26 @@ ${details.redirectIsLoopback ? '<p><strong>This sends access to an app on your c
 <p>Read public scenarios and polling data, calculate hypothetical maps, and generate map links. No ability to change the source websites. Free usage limits apply.</p>
 <form method="post" action="/authorize"><input type="hidden" name="handle" value="${escapeHtml(handle)}">
 <p>Permission: electoral:read</p>${details.scope.includes('offline_access') ? '<label><input type="checkbox" name="offline" value="yes" checked> Keep this connection for up to seven days</label>' : ''}
-<div class="cf-turnstile" data-sitekey="${escapeHtml(siteKey)}" data-action="electoral-oauth"></div>
 <p><button name="decision" value="approve">Continue with Google</button> <button name="decision" value="deny">Deny</button></p></form>
 <p>Google verifies your identity. We do not request access to your Google files or other Google services. A pseudonymous account identifier is used for quotas. Enrollment is controlled during the pilot.</p>
+</html>`;
+}
+
+function verificationPage(query, siteKey) {
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Connect Electoral Vote Map</title>
+<h1>Connect Electoral Vote Map</h1><p>Verify to review the app requesting access to the free electoral map tools.</p>
+<form method="post" action="/authorize"><input type="hidden" name="stage" value="verify"><input type="hidden" name="query" value="${escapeHtml(query)}">
+<div class="cf-turnstile" data-sitekey="${escapeHtml(siteKey)}" data-action="electoral-oauth"></div><p><button>Review connection</button></p></form>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script></html>`;
+}
+
+function pageHeaders(headers = new Headers()) {
+  headers.set('content-type', 'text/html; charset=utf-8');
+  headers.set('cache-control', 'no-store');
+  headers.set('referrer-policy', 'no-referrer');
+  headers.set('x-frame-options', 'DENY');
+  headers.set('content-security-policy', "default-src 'none'; script-src https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
+  return headers;
 }
 
 async function turnstile(env, token) {
@@ -159,7 +186,10 @@ export class OAuthCoordinatorImpl {
       this.pending++;
       // KV get/delete is not atomic. One named DO serializes protocol mutations;
       // successful one-time transactions additionally receive durable fences.
-      const work = this.queue.then(async () => { await authBudget(this.ctx.storage, 'flow'); return this.protocol(request); });
+      const work = this.queue.then(async () => {
+        if (request.method === 'POST' || new URL(request.url).pathname === '/callback') await authBudget(this.ctx.storage, 'flow');
+        return this.protocol(request);
+      });
       this.queue = work.catch(() => {});
       try { return await work; } finally { this.pending--; }
     } catch (error) { return failureReply(error); }
@@ -169,18 +199,26 @@ export class OAuthCoordinatorImpl {
     const api = this.server.getOAuthApi(this.boundEnv);
     try {
       if (path === '/authorize' && request.method === 'GET') {
-        const original = await api.parseAuthRequest(request);
-        if (!original.codeChallenge || original.codeChallengeMethod !== 'S256' || !original.scope.includes(OAUTH_SCOPE)) throw new HttpFailure(400, 'Use electoral:read and S256 PKCE');
-        const details = await api.describeConsent(original), consent = await api.beginConsent(original);
-        const headers = consent.headers;
-        headers.set('content-type', 'text/html; charset=utf-8');
-        headers.set('referrer-policy', 'no-referrer');
-        headers.set('content-security-policy', "default-src 'none'; script-src https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
-        return new Response(consentPage(details, consent.handle, this.env.EVM_TURNSTILE_SITE_KEY), { headers });
+        const query = new URL(request.url).search;
+        if (query.length > 8192) throw new HttpFailure(414, 'Authorization URL too long');
+        // No client metadata fetch or consent KV write before a human verifies.
+        return new Response(verificationPage(query, this.env.EVM_TURNSTILE_SITE_KEY), { headers: pageHeaders() });
       }
       if (path === '/authorize' && request.method === 'POST') {
         if (request.headers.get('origin') !== this.env.EVM_PUBLIC_ORIGIN || !request.headers.get('content-type')?.startsWith('application/x-www-form-urlencoded')) throw new HttpFailure(403, 'Invalid consent form');
-        const form = new URLSearchParams(await authBody(request)), handle = form.get('handle');
+        const form = new URLSearchParams(await authBody(request));
+        if (form.get('stage') === 'verify') {
+          await turnstile(this.env, form.get('cf-turnstile-response'));
+          const query = form.get('query');
+          if (!query || !query.startsWith('?') || query.includes('#') || query.length > 8192) throw new HttpFailure(400, 'Invalid authorization request');
+          // The query is untrusted; the Cloudflare library revalidates every
+          // client/redirect/resource/scope field after verification.
+          const original = await api.parseAuthRequest(new Request(this.env.EVM_PUBLIC_ORIGIN + '/authorize' + query));
+          if (!original.codeChallenge || original.codeChallengeMethod !== 'S256' || !original.scope.includes(OAUTH_SCOPE)) throw new HttpFailure(400, 'Use electoral:read and S256 PKCE');
+          const details = await api.describeConsent(original), consent = await api.beginConsent(original);
+          return new Response(consentPage(details, consent.handle), { headers: pageHeaders(consent.headers) });
+        }
+        const handle = form.get('handle');
         if (!handle || handle.length > 256) throw new HttpFailure(400, 'Invalid consent form');
         if (form.get('decision') === 'deny') {
           const denied = await api.denyConsent(request, handle);
@@ -188,7 +226,6 @@ export class OAuthCoordinatorImpl {
         }
         if (form.get('decision') !== 'approve') throw new HttpFailure(400, 'Invalid consent decision');
         await usedTransaction(this.ctx.storage, 'consent:' + handle);
-        await turnstile(this.env, form.get('cf-turnstile-response'));
         const approved = await api.approveConsent(request, handle, { scope: [OAUTH_SCOPE, ...(form.get('offline') === 'yes' ? ['offline_access'] : [])] });
         await usedTransaction(this.ctx.storage, 'consent:' + handle, true);
         const verifier = oidc.randomPKCECodeVerifier(), nonce = oidc.randomNonce();
@@ -248,6 +285,7 @@ export class OAuthCoordinatorImpl {
         const headers = new Headers(request.headers); headers.delete('content-length');
         request = new Request(request.url, { method: 'POST', headers, body: text });
       }
+      if (path === '/oauth/register' && request.method === 'POST') await authBudget(this.ctx.storage, 'registration');
       const response = await this.server.fetch(request, this.boundEnv, this.ctx);
       if (response.ok && code) await usedTransaction(this.ctx.storage, 'code:' + code, true);
       return response;

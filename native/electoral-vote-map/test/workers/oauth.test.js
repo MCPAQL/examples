@@ -57,13 +57,15 @@ async function runtime(t, vars = {}) {
     },
   }));
   t.after(() => mf.dispose()); await mf.ready;
-  const fetch = (path, init = {}) => mf.dispatchFetch(new URL(path, origin).href, { ...init, headers: { 'cf-connecting-ip': '192.0.2.1', ...init.headers } });
+  const fetch = (path, init = {}) => mf.dispatchFetch(new URL(path, origin).href, { redirect: 'manual', ...init, headers: { 'cf-connecting-ip': '192.0.2.1', ...init.headers } });
   const form = (path, data, headers = {}) => fetch(path, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers }, body: new URLSearchParams(data).toString() });
   async function consent(client = 1) {
     const verifier = 'fixture-verifier-'.padEnd(48, 'v');
     const clientId = `https://client${client}.example/oauth.json`, redirect = `https://client${client}.example/callback`;
     const query = new URLSearchParams({ response_type: 'code', client_id: clientId, redirect_uri: redirect, scope: 'electoral:read offline_access', state: 'fixture-client-state', resource: origin + '/mcp', code_challenge: challenge(verifier), code_challenge_method: 'S256' });
-    const page = await fetch('/authorize?' + query);
+    const gate = await fetch('/authorize?' + query);
+    assert.equal(gate.status, 200);
+    const page = await form('/authorize', { stage: 'verify', query: '?' + query, 'cf-turnstile-response': 'fixture-pass' }, { origin });
     assert.equal(page.status, 200);
     const text = await page.text(), handle = text.match(/name="handle" value="([^"]+)"/)?.[1];
     assert.ok(handle);
@@ -118,7 +120,7 @@ test('OAuth discovery and consent use the Cloudflare library, safe client render
   assert.match(initial.page.headers.get('set-cookie'), /HttpOnly/i);
   assert.equal((await app.form('/authorize', { handle: initial.handle, decision: 'approve', 'cf-turnstile-response': 'fixture-pass' }, { origin })).status, 400);
   assert.equal((await app.form('/authorize', { handle: initial.handle, decision: 'approve', 'cf-turnstile-response': 'fixture-pass' }, { origin: 'https://attacker.example', cookie: initial.cookie })).status, 403);
-  assert.equal((await app.form('/authorize', { handle: initial.handle, decision: 'approve', 'cf-turnstile-response': 'fixture-fail' }, { origin, cookie: initial.cookie })).status, 403);
+  assert.equal((await app.form('/authorize', { stage: 'verify', query: '?client_id=anything', 'cf-turnstile-response': 'fixture-fail' }, { origin })).status, 403);
   const approved = await app.approve(initial); assert.equal(approved.status, 302);
   assert.equal((await app.approve(initial)).status, 400);
 });

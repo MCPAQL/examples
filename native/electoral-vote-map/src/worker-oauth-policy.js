@@ -31,7 +31,7 @@ export function sessionValid(props, now = Date.now()) {
 // Reserve before touching KV, including failed operations. These are this
 // adapter's ceilings, not reservations of the account's shared free allowance.
 export async function authBudget(storage, kind, now = Date.now()) {
-  const limits = { read: 25_000, write: 500, delete: 500, list: 500, flow: 1000 };
+  const limits = { read: 25_000, write: 500, delete: 500, list: 500, flow: 1000, registration: 25 };
   if (!(kind in limits)) throw new Error('Invalid authentication budget');
   await storage.transaction(async tx => {
     const day = new Date(now).toISOString().slice(0, 10);
