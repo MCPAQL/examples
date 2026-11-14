@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { HOME } from './map.js';
+import { HOME, AdapterError } from './map.js';
 import { DATASETS, parsePollingCsv } from './polling.js';
 import { parseSite } from './site.js';
 import { markSourceTime } from './source-timing.js';
@@ -42,16 +42,20 @@ export function durableSourceFetch(storage, { fetchImpl = (url, init) => fetch(u
     const index = SOURCES.indexOf(String(url));
     if (index < 0) throw new Error('Source URL not allowed');
     const key = `source:${index}`;
-    const materialize = entry => entry.error
-      ? new Response('Source temporarily unavailable', { status: 503 })
-      : markSourceTime(new Response(entry.body), new Date(entry.retrievedAt).toISOString());
+    const materialize = entry => {
+      if (entry.code === 'UPSTREAM_CONTRACT_CHANGED') throw new AdapterError(entry.code, 'Source contract is temporarily unavailable');
+      return entry.error ? new Response('Source temporarily unavailable', { status: 503 })
+        : markSourceTime(new Response(entry.body), new Date(entry.retrievedAt).toISOString());
+    };
     if (!pending.has(key)) {
       const request = (async () => {
         const cached = await read(key);
         if (cached) return cached;
         let entry;
         try {
-          const response = await fetchImpl(SOURCES[index], { redirect: 'error', signal: AbortSignal.timeout(15_000), headers: { accept: index === 0 ? 'text/html' : 'text/csv,text/plain,application/octet-stream', 'user-agent': 'MCPAQL-ElectoralVoteMap-Demo/0.2' } });
+          // Workers supports manual/follow only; reject every non-2xx response
+          // explicitly so a redirect never leaves the four fixed source URLs.
+          const response = await fetchImpl(SOURCES[index], { redirect: 'manual', signal: AbortSignal.timeout(15_000), headers: { accept: index === 0 ? 'text/html' : 'text/csv,text/plain,application/octet-stream', 'user-agent': 'MCPAQL-ElectoralVoteMap-Demo/0.2' } });
           if (!response.ok) { await response.body?.cancel(); throw new Error('Source unavailable'); }
           const reader = response.body.getReader(), decoder = new TextDecoder('utf-8', { fatal: true });
           let size = 0, body = '';
@@ -71,7 +75,7 @@ export function durableSourceFetch(storage, { fetchImpl = (url, init) => fetch(u
           if (index === 0) parseSite(body, source);
           else parsePollingCsv(body, DATASETS[index - 1], source, { row_policy: 'quarantine' });
           entry = { body, retrievedAt, expires: retrievedAt + 300_000 };
-        } catch { entry = { error: true, expires: now() + 30_000 }; }
+        } catch (error) { entry = { error: true, ...(error?.code === 'UPSTREAM_CONTRACT_CHANGED' ? { code: error.code } : {}), expires: now() + 30_000 }; }
         await write(key, entry);
         return entry;
       })();

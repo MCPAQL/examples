@@ -44,7 +44,10 @@ export function createSiteClient({ fetchImpl = fetch, fixtureHtml, now = () => n
           }
           html += decoder.decode();
         } finally { await reader.cancel(); }
-      } catch (error) { throw new AdapterError('UPSTREAM_UNAVAILABLE', `Could not read Electoral Vote Map: ${error.message}`); }
+      } catch (error) {
+        if (error instanceof AdapterError && error.code === 'UPSTREAM_CONTRACT_CHANGED') throw error;
+        throw new AdapterError('UPSTREAM_UNAVAILABLE', `Could not read Electoral Vote Map: ${error.message}`);
+      }
     }
     return parseSite(html, { url: HOME, retrieved_at: retrievedAt ?? now().toISOString(), mode: fixtureHtml === undefined ? 'live' : 'test_fixture', contract: 'evm-map-1.29-url-codec', forecast_note: 'Site scenarios and ratings are inputs for exploration, not calibrated win probabilities.' });
   }, { now, ttlMs, failureTtlMs, expiresAt: data => Date.parse(data.source.retrieved_at) + ttlMs });

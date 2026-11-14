@@ -15,7 +15,7 @@ The AI chooses which states count as “unexpected” and which alternatives to 
 
 ## Run and connect
 
-Requires Node.js 22 or later.
+Requires Node.js 22.12 or later.
 
 ```sh
 cd native/electoral-vote-map

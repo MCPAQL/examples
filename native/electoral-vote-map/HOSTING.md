@@ -76,7 +76,7 @@ npm audit --audit-level=low
 
 The on-demand GitHub Actions workflow supports `live_smoke=true` to read only the four fixed public sources. It does not deploy anything. Independent Puck and CI live-source results are recorded in [issue #72](https://github.com/MCPAQL/examples/issues/72), including exact revisions. They validate sources and generated maps, not the Worker runtime or hosting approval.
 
-Before deployment, restore a valid Cloudflare CLI login and choose the correct account. Use a dedicated, least-privilege deployment identity for this Worker when automating deployment; never copy Maker Perks runtime secrets, grants or storage IDs. A read-only `wrangler whoami --json` check found the current local CLI session expired on November 14, 2026; no new login, deployment, secret access or account mutation was attempted.
+Before deployment, restore a valid Cloudflare CLI login and choose the correct account. Use a dedicated, least-privilege deployment identity for this Worker when automating deployment; never copy Maker Perks runtime secrets, grants or storage IDs. A read-only `wrangler whoami --json` check found the current local CLI session expired on November 14, 2026; no new login, deployment, application-secret reads or account-settings changes were requested.
 
 Configure `EVM_CLIENT_TOKENS` as a **Worker secret**, containing a JSON object with 1–32 stable client IDs mapped to unique random bearer tokens of 32–256 allowed characters. IDs contain lowercase letters, digits, underscore or hyphen; `alice` and `bob` below are examples of separate identities, not shared-account credentials. Tokens must not be committed, logged or put in public `vars`.
 

@@ -14,7 +14,7 @@ test('durable source cache coalesces, chunks bounded values and survives recreat
   const storage = memoryStorage(); let calls = 0;
   const text = htmlFixture + ' '.repeat(2 * 1024 * 1024 - Buffer.byteLength(htmlFixture));
   const options = { now: () => 1000, fetchImpl: async (url, init) => {
-    calls++; assert.equal(url, HOME); assert.equal(init.redirect, 'error');
+    calls++; assert.equal(url, HOME); assert.equal(init.redirect, 'manual');
     assert.equal(init.headers.authorization, undefined);
     return new Response(text);
   } };
@@ -49,9 +49,9 @@ test('HTTP-200 contract failures use the short durable cooldown and recover when
   for (const [url, valid] of [[HOME, htmlFixture], [DATASETS[1].url, csv]]) {
     const storage = memoryStorage(); let time = 0, calls = 0;
     const options = { now: () => time, fetchImpl: async () => new Response(++calls === 1 ? '<html>Maintenance</html>' : valid) };
-    assert.equal((await durableSourceFetch(storage, options)(url)).status, 503);
+    await assert.rejects(durableSourceFetch(storage, options)(url), { code: 'UPSTREAM_CONTRACT_CHANGED' });
     time = 29_999;
-    assert.equal((await durableSourceFetch(storage, options)(url)).status, 503);
+    await assert.rejects(durableSourceFetch(storage, options)(url), { code: 'UPSTREAM_CONTRACT_CHANGED' });
     assert.equal(calls, 1);
     time = 30_001;
     assert.equal((await durableSourceFetch(storage, options)(url)).status, 200);

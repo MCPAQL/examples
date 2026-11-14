@@ -178,7 +178,10 @@ export function createPollingClient({ fetchImpl = fetch, fixtureCsv, now = () =>
           }
           text += decoder.decode();
         } finally { await reader.cancel(); }
-      } catch (error) { throw new AdapterError('UPSTREAM_UNAVAILABLE', `Could not read polling dataset: ${error.message}`); }
+      } catch (error) {
+        if (error instanceof AdapterError && error.code === 'UPSTREAM_CONTRACT_CHANGED') throw error;
+        throw new AdapterError('UPSTREAM_UNAVAILABLE', `Could not read polling dataset: ${error.message}`);
+      }
     }
     // Parse once per download. Policy changes reuse the same data and never
     // multiply upstream reads. Strict callers still fail on any rejected row.

@@ -152,3 +152,13 @@ test('workerd rejects disabled service, bad credentials, origins, methods, encod
   assert.equal((await app.fetch('https://electoral.example/mcp', { method: 'POST', headers: { ...headers, 'x-large': 'x'.repeat(17 * 1024) }, body: '{}' })).status, 431);
   assert.equal(app.requests.length, 0);
 });
+
+test('workerd rejects upstream redirects and preserves contract-failure error codes', { timeout: 60_000 }, async t => {
+  const redirect = await runtime(t, { outbound: () => new RuntimeResponse('', { status: 302, headers: { location: 'https://attacker.example/' } }) });
+  assert.equal((await redirect.tool('get_map')).structuredContent.error.code, 'UPSTREAM_UNAVAILABLE');
+  assert.deepEqual(redirect.requests.map(r => r.url), ['https://electoralvotemap.com/']);
+  const invalid = await runtime(t, { outbound: () => new RuntimeResponse('<html>Maintenance</html>') });
+  assert.equal((await invalid.tool('get_map')).structuredContent.error.code, 'UPSTREAM_CONTRACT_CHANGED');
+  assert.equal((await invalid.tool('get_map')).structuredContent.error.code, 'UPSTREAM_CONTRACT_CHANGED');
+  assert.equal(invalid.requests.length, 1);
+});
