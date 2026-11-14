@@ -89,13 +89,16 @@ Replace the hostname, point its DNS at your server, and configure Caddy's certif
 | `EVM_TLS_KEY` | Required PEM private-key path for direct HTTPS |
 | `EVM_ALLOWED_HOSTS` | Comma-separated exact `host[:port]` authorities; defaults to loopback names with the actual listener port; set the public authority for proxy/direct remote hosting |
 | `EVM_ALLOWED_ORIGINS` | Comma-separated exact HTTP(S) origins, without trailing slashes; defaults to allowed authorities with the listener scheme; other supplied Origin headers are rejected |
+| `EVM_HTTP_REQUESTS_PER_MINUTE` | `120`; global per-process token-bucket capacity and refill per minute |
+| `EVM_HTTP_PER_IP_PER_MINUTE` | `60`; per-socket-IP token-bucket capacity and refill per minute |
+| `EVM_HTTP_MAX_CONCURRENT` | `16`; maximum admitted requests at once; excess returns 503 |
 | `EVM_HTTP_BEARER_TOKEN` | Optional shared bearer token; when set, every `/mcp` request must include `Authorization: Bearer TOKEN` |
 
 `GET /healthz` returns only `{"status":"ok"}` and does not require a bearer token. Host and Origin checks apply to it too. There is no wildcard CORS support; browser-based JavaScript clients need a separate, carefully configured gateway. Native remote MCP clients can omit Origin.
 
 To restrict a deployment, set the bearer token through your service's secret configuration and give it only to clients that support an Authorization header. Protect remote access with HTTPS and your chosen authentication/rate-limiting gateway. This example does **not** implement OAuth discovery or authorization. Private ChatGPT connectors that require OAuth need an OAuth-capable gateway; a shared bearer token alone does not provide that flow. Public hosting and client registration are separate deployment steps.
 
-The HTTP transport is stateless and returns JSON responses. It has no session store, standalone SSE stream, or legacy HTTP+SSE endpoint; `GET` and `DELETE /mcp` return 405. Independent MCP server/transport instances handle concurrent POST requests while sharing only source caches. Request bodies are limited to 1 MiB, headers to a 10-second timeout, and request reception to 30 seconds. SIGINT/SIGTERM close the listener and active transports. HTTP diagnostics go to stderr, keeping stdout suitable for stdio mode.
+The HTTP transport is stateless and returns JSON responses. It has no session store, standalone SSE stream, or legacy HTTP+SSE endpoint; `GET` and `DELETE /mcp` return 405. Independent MCP server/transport instances handle concurrent POST requests while sharing only source caches. Request bodies are limited to 1 MiB, headers to a 10-second timeout, and request reception to 30 seconds. SIGINT/SIGTERM close the listener and active transports. HTTP diagnostics go to stderr, keeping stdout suitable for stdio mode. Admission limits run before authentication and body parsing; 429/503 responses include Retry-After. Per-IP state is capped at 1,024 identities and fails closed if full. All rates are positive, configurable, and per process; forwarded client-IP headers are ignored. Behind a proxy, socket-IP limits group its clients together. A provider edge limiter must enforce real client identities and distributed limits. See [Hosting and abuse controls](HOSTING.md).
 
 ## Operations
 
@@ -171,7 +174,7 @@ The normative baseline is [spec v1.0.0-draft](https://github.com/MCPAQL/spec/blo
 - Documented fully concurrent requests, coalesced source reads, size/depth limits, and an explicit unsupported-capability declaration for optional batching, field selection and the execution safety loop.
 - An optional `parameters` compatibility alias, with `params` values taking precedence. Omit optional parameters; explicit null is rejected.
 
-Map discovery uses a fixed-origin GET to the public homepage. Polling uses only the three cataloged electoral-vote.com CSV URLs described in [POLLING.md](POLLING.md). Supplied map and research URLs are never fetched. Each source response is limited to 2 MiB, has a 15-second timeout and a five-minute cache, and rejects redirects. Payload/ordering/header drift fails explicitly. No JavaScript from either site is executed. Site descriptions and research content are untrusted external data, not agent instructions.
+Map discovery uses a fixed-origin GET to the public homepage. Polling uses only the three cataloged electoral-vote.com CSV URLs described in [POLLING.md](POLLING.md). Supplied map and research URLs are never fetched. Each source response is limited to 2 MiB, has a 15-second timeout and a five-minute success cache plus a 30-second failure cooldown, and rejects redirects. Payload/ordering/header drift fails explicitly. No JavaScript from either site is executed. Site descriptions and research content are untrusted external data, not agent instructions.
 
 The codec follows the published `evm-map` 1.29 format: 56 ordered electoral units, seven Democratic/Republican/toss-up rating positions, and additional party codes preserved on round-trip. This demo supports full homepage `?map=YEAR:CODE` share URLs with optional `&ev=2032`. Embed hashes, short links, historical pages, nominee suffixes and additional presentation parameters are rejected explicitly. County data and probability simulations are outside this first version.
 

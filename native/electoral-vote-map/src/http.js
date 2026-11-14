@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createMcpServer } from './mcp.js';
+import { createAdmission } from './admission.js';
 
 export const MAX_HTTP_BODY_BYTES = 1024 * 1024;
 
@@ -39,11 +40,19 @@ export function readTransportConfig(env = {}, args = []) {
   if (transport === 'http' && (env.EVM_TLS_CERT || env.EVM_TLS_KEY)) throw new Error('Use --transport=https with TLS certificate/key files');
   const bearerToken = env.EVM_HTTP_BEARER_TOKEN;
   if (bearerToken !== undefined && !/^[A-Za-z0-9\-._~+/]+=*$/.test(bearerToken)) throw new Error('EVM_HTTP_BEARER_TOKEN must be a nonempty bearer token');
+  const limit = (key, fallback) => {
+    const value = env[key] ?? String(fallback);
+    if (!/^\d+$/.test(value) || Number(value) < 1 || Number(value) > 100_000) throw new Error(`${key} must be an integer from 1 to 100000`);
+    return Number(value);
+  };
   return {
     transport, host: env.EVM_HOST || '127.0.0.1', port: Number(portText),
     allowedHosts: csv(env.EVM_ALLOWED_HOSTS).map(authority),
     allowedOrigins: csv(env.EVM_ALLOWED_ORIGINS).map(origin),
     bearerToken, certPath: env.EVM_TLS_CERT, keyPath: env.EVM_TLS_KEY,
+    requestsPerMinute: limit('EVM_HTTP_REQUESTS_PER_MINUTE', 120),
+    perIpPerMinute: limit('EVM_HTTP_PER_IP_PER_MINUTE', 60),
+    maxConcurrent: limit('EVM_HTTP_MAX_CONCURRENT', 16),
   };
 }
 
@@ -55,14 +64,22 @@ function reply(res, status, message, headers = {}) {
 // Stateless Streamable HTTP: a fresh MCP server/transport for EVERY POST avoids
 // collisions when different clients reuse JSON-RPC request IDs. Only caches are shared.
 export async function startHttpServer({ dispatch, transport = 'http', host = '127.0.0.1', port = 3000,
-  allowedHosts = [], allowedOrigins = [], bearerToken, certPath, keyPath }) {
+  allowedHosts = [], allowedOrigins = [], bearerToken, certPath, keyPath,
+  requestsPerMinute = 120, perIpPerMinute = 60, maxConcurrent = 16 }) {
   const tls = transport === 'https' ? {
     cert: await readFile(certPath), key: await readFile(keyPath), minVersion: 'TLSv1.2',
   } : undefined;
   const tokenHash = bearerToken ? createHash('sha256').update(`Bearer ${bearerToken}`).digest() : undefined;
   const active = new Set();
+  const admission = createAdmission({ requestsPerMinute, perIpPerMinute, maxConcurrent });
   const listener = async (req, res) => {
+    let release;
     try {
+      // Count authentication failures and bad paths too. Never accept a client
+      // supplied Forwarded/X-Forwarded-For as the identity for an abuse limit.
+      const ticket = admission.enter(req.socket.remoteAddress || 'unknown');
+      if (!ticket.release) return reply(res, ticket.status, ticket.status === 429 ? 'Too many requests' : 'Server busy', { 'Retry-After': String(ticket.retryAfter) });
+      release = ticket.release;
       const boundPort = webServer.address().port;
       const hosts = allowedHosts.length ? allowedHosts : ['127.0.0.1', 'localhost', '[::1]'].map(name => `${name}:${boundPort}`);
       const requestHost = req.headers.host?.toLowerCase();
@@ -93,9 +110,11 @@ export async function startHttpServer({ dispatch, transport = 'http', host = '12
       // Do not echo request contents, credentials, or TLS paths into responses/logs.
       if (!res.headersSent) reply(res, 500, 'Internal server error');
       else res.destroy();
+    } finally {
+      release?.();
     }
   };
-  const webServer = tls ? createHttpsServer(tls, listener) : createHttpServer(listener);
+  const webServer = tls ? createHttpsServer({ ...tls, maxHeaderSize: 16384 }, listener) : createHttpServer({ maxHeaderSize: 16384 }, listener);
   webServer.requestTimeout = 30_000;
   webServer.headersTimeout = 10_000;
   await new Promise((resolve, reject) => {
