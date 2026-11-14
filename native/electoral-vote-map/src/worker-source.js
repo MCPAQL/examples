@@ -9,7 +9,7 @@ const MAX_BYTES = 2 * 1024 * 1024, CHUNK_CHARS = 8192;
 // Chunk values stay below Durable Object KV's 128 KiB value limit, including
 // Unicode/serialization overhead. One logical source has at most 256 chunks.
 export function durableSourceFetch(storage, { fetchImpl = (url, init) => fetch(url, init), now = Date.now } = {}) {
-  const pending = new Map();
+  const pending = new Map(), memory = new Map();
   async function read(key) {
     return storage.transaction(async tx => {
       const entry = await tx.get(key);
@@ -47,6 +47,9 @@ export function durableSourceFetch(storage, { fetchImpl = (url, init) => fetch(u
       return entry.error ? new Response('Source temporarily unavailable', { status: 503 })
         : markSourceTime(new Response(entry.body), new Date(entry.retrievedAt).toISOString());
     };
+    const hot = memory.get(key);
+    if (hot?.expires > now()) return materialize(hot);
+    memory.delete(key);
     if (!pending.has(key)) {
       const request = (async () => {
         const cached = await read(key);
@@ -78,7 +81,10 @@ export function durableSourceFetch(storage, { fetchImpl = (url, init) => fetch(u
         } catch (error) { entry = { error: true, ...(error?.code === 'UPSTREAM_CONTRACT_CHANGED' ? { code: error.code } : {}), expires: now() + 30_000 }; }
         await write(key, entry);
         return entry;
-      })();
+      })().then(entry => { memory.set(key, entry); return entry; }, () => {
+        memory.set(key, { error: true, expires: now() + 30_000 });
+        throw new AdapterError('UPSTREAM_UNAVAILABLE', 'Source cache temporarily unavailable');
+      });
       pending.set(key, request);
       void request.finally(() => pending.delete(key)).catch(() => {});
     }

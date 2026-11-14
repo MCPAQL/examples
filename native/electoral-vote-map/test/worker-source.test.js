@@ -59,6 +59,27 @@ test('HTTP-200 contract failures use the short durable cooldown and recover when
   }
 });
 
+test('restarting parser clients near failure expiry does not extend the durable cooldown', async () => {
+  const csv = await readFile(new URL('./fixtures/polling.csv', import.meta.url), 'utf8');
+  for (const [url, valid] of [[HOME, htmlFixture], [DATASETS[1].url, csv]]) {
+    const storage = memoryStorage(); let time = 0, calls = 0;
+    const options = { now: () => time, fetchImpl: async () => new Response(++calls === 1 ? '<html>Maintenance</html>' : valid) };
+    const create = () => {
+      const fetchImpl = durableSourceFetch(storage, options), now = () => new Date(time), failureTtlMs = 0;
+      const client = url === HOME ? createSiteClient({ fetchImpl, now, failureTtlMs }) : createPollingClient({ fetchImpl, now, failureTtlMs });
+      return () => client(DATASETS[1].id);
+    };
+    await assert.rejects(create()(), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+    time = 24_000;
+    const restarted = create();
+    await assert.rejects(restarted(), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+    assert.equal(calls, 1);
+    time = 30_001;
+    assert.ok(await restarted());
+    assert.equal(calls, 2);
+  }
+});
+
 test('oversize and invalid-UTF8 sources are rejected before storage and remain unavailable', async () => {
   for (const body of [new Uint8Array([0xff]), 'x'.repeat(2 * 1024 * 1024 + 1)]) {
     const storage = memoryStorage(); let calls = 0;

@@ -47,7 +47,9 @@ export class ElectoralCoordinator {
   constructor(ctx, env) {
     this.ctx = ctx; this.env = env; this.active = 0;
     const fetchImpl = durableSourceFetch(ctx.storage);
-    this.dispatch = createAdapter({ loadSite: createSiteClient({ fetchImpl }), loadPolling: createPollingClient({ fetchImpl }) });
+    // The durable fetch cache owns failure expiry. A second parser-layer failure
+    // cache would restart the 30s timer after eviction and delay source recovery.
+    this.dispatch = createAdapter({ loadSite: createSiteClient({ fetchImpl, failureTtlMs: 0 }), loadPolling: createPollingClient({ fetchImpl, failureTtlMs: 0 }) });
   }
   async fetch(request) {
     let server;
