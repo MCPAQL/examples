@@ -39,7 +39,9 @@ export default {
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) throw new HttpFailure(415, 'Expected application/json');
       checkBodyLength(request);
       const headers = new Headers();
-      for (const name of ['content-type', 'content-length', 'accept', 'mcp-protocol-version']) if (request.headers.has(name)) headers.set(name, request.headers.get(name));
+      // Re-encoding after UTF-8 validation may remove an initial BOM; let the
+      // platform derive the forwarded length instead of copying the caller's.
+      for (const name of ['content-type', 'accept', 'mcp-protocol-version']) if (request.headers.has(name)) headers.set(name, request.headers.get(name));
       if (clientId) headers.set('x-evm-client-id', clientId);
       // Exactly one namespace-local ID for every deployment/location. Never key
       // this by the request, user, region, or revision: that would reset quotas.

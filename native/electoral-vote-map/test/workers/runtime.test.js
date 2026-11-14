@@ -129,6 +129,14 @@ test('malformed bodies consume the sender allowance before parsing and are visib
   assert.equal(app.requests.length, 0);
 });
 
+test('validated UTF-8 text derives its forwarded length after stripping an initial BOM', { timeout: 60_000 }, async t => {
+  const app = await runtime(t);
+  const text = '\uFEFF' + JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
+  const response = await app.fetch('https://electoral.example/mcp', { method: 'POST', headers: { authorization: `Bearer ${tokenA}`, 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'content-length': String(Buffer.byteLength(text)) }, body: text });
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).result.tools[0].name, 'mcp_aql_read');
+});
+
 test('streaming body reception occupies coordinated concurrency and times out before MCP parsing', { timeout: 60_000 }, async t => {
   const app = await runtime(t, { vars: { EVM_MAX_CONCURRENT: '1', EVM_OPERATOR_CLIENT_IDS: '["alice"]' } });
   let controller;
