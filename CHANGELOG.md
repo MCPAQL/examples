@@ -44,6 +44,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Fixed
 
+- Electoral OAuth consent now disables refresh tokens when offline access is declined or unrequested, bounds token lifetimes to the sign-in window, and removes stale length/encoding headers from decoded identity-provider responses.
+
 - Electoral Vote Map duplicate groups preserve each source row's original raw label, including suffix/whitespace differences, and restore the correct label when expanded with keep-all weighting.
 
 - Spell-check CI pins CSpell 10.5.0 and disables install lifecycle scripts, avoiding missing dependency tarballs in the moving latest release; workflow edits also trigger the check.

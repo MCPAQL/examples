@@ -37,6 +37,15 @@ export function sessionValid(props, now = Date.now()) {
   return isOAuthIdentity(props?.quotaId) && Number.isSafeInteger(props.loginAt) && props.loginAt <= now && now - props.loginAt < 7 * 86_400_000;
 }
 
+export function tokenLifetimes(props, grantedScope, now = Date.now()) {
+  if (!sessionValid(props, now) || !grantedScope.includes(OAUTH_SCOPE)) return null;
+  const remaining = Math.floor((props.loginAt + 7 * 86_400_000 - now) / 1000);
+  // The provider requires token lifetimes of at least 60 seconds. Reauthorize
+  // rather than extending a nearly expired session or returning invalid TTLs.
+  if (remaining < 60) return null;
+  return { accessTokenTTL: Math.min(3600, remaining), refreshTokenTTL: grantedScope.includes('offline_access') ? remaining : 0 };
+}
+
 // Reserve before touching KV, including failed operations. These are this
 // adapter's ceilings, not reservations of the account's shared free allowance.
 export async function authBudget(storage, kind, now = Date.now()) {

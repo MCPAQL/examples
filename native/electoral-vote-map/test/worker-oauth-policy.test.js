@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { authBudget, meteredKV, quotaIdentity, isOAuthIdentity, sessionValid, authBody, usedTransaction } from '../src/worker-oauth-policy.js';
+import { authBudget, meteredKV, quotaIdentity, isOAuthIdentity, sessionValid, tokenLifetimes, authBody, usedTransaction } from '../src/worker-oauth-policy.js';
 import { readWorkerConfig, takeBudget } from '../src/worker-policy.js';
 import { memoryStorage } from './helpers/storage.js';
 
@@ -33,6 +33,15 @@ test('authentication KV writes have a durable atomic ceiling, including failed a
   assert.equal((await storage.get('oauth-budget')).counts.write, 500);
   await assert.rejects(meteredKV({ put() { throw new Error('must not reach provider'); } }, storage).put('key', 'value'), { status: 503 });
   assert.doesNotMatch(JSON.stringify(await storage.get('oauth-budget')), /opaque/);
+});
+
+test('token lifetimes honor granted offline consent and the absolute seven-day sign-in boundary', () => {
+  const props = { quotaId: quotaIdentity('https://issuer.example', 'one'), loginAt: 1000 };
+  const end = props.loginAt + 7 * 86_400_000;
+  assert.deepEqual(tokenLifetimes(props, ['electoral:read'], 1000), { accessTokenTTL: 3600, refreshTokenTTL: 0 });
+  assert.deepEqual(tokenLifetimes(props, ['electoral:read', 'offline_access'], end - 61_000), { accessTokenTTL: 61, refreshTokenTTL: 61 });
+  for (const time of [end - 59_000, end, end + 1000]) assert.equal(tokenLifetimes(props, ['electoral:read', 'offline_access'], time), null);
+  assert.equal(tokenLifetimes(props, ['offline_access'], 1000), null);
 });
 
 test('authentication flow limits refill and reset at UTC midnight without erasing KV counts', async () => {

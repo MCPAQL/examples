@@ -98,6 +98,23 @@ completed logins must restart after recovery. These are adapter-specific limits,
 not reserved account allowances. Maker Perks and other workloads still share
 Cloudflare's free quotas. Monitor the account, including KV write capacity.
 
+**Availability limitation:** unauthenticated protocol POSTs/callbacks consume the
+shared flow allowance before human verification, and rotating well-formed invalid
+tokens consume the shared KV-read allowance. An attacker who bypasses the coarse
+network limits can lock out sign-in/token operations or MCP token validation
+until the next UTC-day reset. These ceilings protect usage, not availability.
+Address or explicitly accept this behavior under the public-launch gates before
+open enrollment. The per-token limiter only bounds repeated use of one token;
+it does not stop token rotation or distributed sources.
+
+With the pinned provider, each valid token validation uses **one KV read**; a
+well-formed unknown token also uses one. The workerd regression measures both
+through the aggregate counters. Thus 10,000 MCP admissions need 10,000 validation
+reads, leaving headroom in the 25,000 ceiling for sign-in and other operations;
+rejected/retried requests still cost reads and can exhaust that headroom. No
+positive-validation cache is introduced: it would require a defined revocation
+delay and would not by itself solve signup/flow-budget denial of service.
+
 Authentication forms/protocol bodies are limited to 16 KiB and a five-second
 Worker reader deadline. OIDC and Turnstile requests require HTTPS, refuse
 redirects, have a five-second deadline and a 256 KiB response limit. Provider
@@ -110,10 +127,16 @@ mutations serialize through one object; KV remains the library's token store.
 Provider KV consistency, per-key write limits and crash boundaries still require
 live qualification. Revocation is checked through the authorization server on
 each MCP request; no separate edge token cache is introduced.
+Replay fences are allocated only after successful consent, browser-bound upstream
+state recovery, or code exchange. Invalid traffic cannot directly fill this table.
+An aggregate active-fence count is included in `/admin/oauth-usage`.
 
 Tokens expire after at most one hour; refresh grants and the absolute sign-in
 window last at most seven days. Refresh cannot reset that window or the account's
-MCP usage counters. Every signed-in account shares the existing per-client
+MCP usage counters. Unchecking the offline option, or a client requesting only
+`electoral:read`, issues no refresh token. Tokens stop renewing at the absolute
+sign-in boundary, including its last minute (the provider's minimum token TTL).
+Every signed-in account shares the existing per-client
 minute/day/concurrency allowance across apps and refreshed tokens. Operators
 retain separate static identities. OAuth defaults to at most 256 distinct
 admitted identities/day; `EVM_MAX_DAILY_CLIENTS` can set 1–512. A full table rejects

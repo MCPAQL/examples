@@ -59,10 +59,10 @@ async function runtime(t, vars = {}) {
   t.after(() => mf.dispose()); await mf.ready;
   const fetch = (path, init = {}) => mf.dispatchFetch(new URL(path, origin).href, { redirect: 'manual', ...init, headers: { 'cf-connecting-ip': '192.0.2.1', ...init.headers } });
   const form = (path, data, headers = {}) => fetch(path, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers }, body: new URLSearchParams(data).toString() });
-  async function consent(client = 1) {
+  async function consent(client = 1, scope = 'electoral:read offline_access') {
     const verifier = 'fixture-verifier-'.padEnd(48, 'v');
     const clientId = `https://client${client}.example/oauth.json`, redirect = `https://client${client}.example/callback`;
-    const query = new URLSearchParams({ response_type: 'code', client_id: clientId, redirect_uri: redirect, scope: 'electoral:read offline_access', state: 'fixture-client-state', resource: origin + '/mcp', code_challenge: challenge(verifier), code_challenge_method: 'S256' });
+    const query = new URLSearchParams({ response_type: 'code', client_id: clientId, redirect_uri: redirect, scope, state: 'fixture-client-state', resource: origin + '/mcp', code_challenge: challenge(verifier), code_challenge_method: 'S256' });
     const gate = await fetch('/authorize?' + query);
     assert.equal(gate.status, 200);
     const page = await form('/authorize', { stage: 'verify', query: '?' + query, 'cf-turnstile-response': 'fixture-pass' }, { origin });
@@ -71,11 +71,11 @@ async function runtime(t, vars = {}) {
     assert.ok(handle);
     return { verifier, clientId, redirect, page, text, handle, cookie: cookie(page) };
   }
-  async function approve(initial) {
-    return form('/authorize', { handle: initial.handle, decision: 'approve', offline: 'yes', 'cf-turnstile-response': 'fixture-pass' }, { cookie: initial.cookie, origin });
+  async function approve(initial, offline = true) {
+    return form('/authorize', { handle: initial.handle, decision: 'approve', ...(offline ? { offline: 'yes' } : {}) }, { cookie: initial.cookie, origin });
   }
-  async function signIn({ client = 1, claims = {}, badSignature = false } = {}) {
-    const initial = await consent(client), approved = await approve(initial);
+  async function signIn({ client = 1, claims = {}, badSignature = false, scope = 'electoral:read offline_access', offline = true } = {}) {
+    const initial = await consent(client, scope), approved = await approve(initial, offline);
     assert.equal(approved.status, 302);
     const google = new URL(approved.headers.get('location'));
     assert.equal(google.origin, issuer);
@@ -97,6 +97,40 @@ async function runtime(t, vars = {}) {
   const mcp = token => fetch('/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, 'content-type': 'application/json', accept: 'application/json, text/event-stream' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }) });
   return { mf, fetch, form, consent, approve, signIn, exchange, mcp, requests };
 }
+
+test('declined or unrequested offline access never issues refresh tokens', { timeout: 60_000 }, async t => {
+  const app = await runtime(t);
+  for (const choice of [{ offline: false }, { scope: 'electoral:read', offline: false }, { scope: 'electoral:read', offline: true }]) {
+    const signed = await app.signIn(choice);
+    if (choice.scope === 'electoral:read') assert.doesNotMatch(signed.text, /name="offline"/);
+    const response = await app.exchange(signed); assert.equal(response.status, 200);
+    const token = await response.json();
+    assert.ok(token.access_token);
+    assert.equal(token.refresh_token, undefined);
+    assert.equal(token.scope, 'electoral:read');
+    assert.ok(token.expires_in <= 3600);
+    assert.equal((await app.mcp(token.access_token)).status, 200);
+  }
+});
+
+test('pinned token validation costs one KV read and invalid traffic cannot allocate replay fences', { timeout: 60_000 }, async t => {
+  const app = await runtime(t), signed = await app.signIn();
+  const response = await app.exchange(signed); assert.equal(response.status, 200);
+  const token = await response.json();
+  const usage = async () => (await app.fetch('/admin/oauth-usage', { headers: { authorization: 'Bearer ' + operator } })).json();
+  const before = await usage();
+  for (let i = 0; i < 3; i++) assert.equal((await app.mcp(token.access_token)).status, 200);
+  const afterValid = await usage();
+  assert.equal(afterValid.counts.read - before.counts.read, 3);
+  for (let i = 0; i < 3; i++) {
+    assert.equal((await app.mcp('unknown:grant:' + randomUUID())).status, 401);
+    assert.equal((await app.form('/authorize', { handle: randomUUID(), decision: 'approve' }, { origin })).status, 400);
+    assert.equal((await app.fetch('/callback?state=' + randomUUID())).status, 400);
+  }
+  const afterInvalid = await usage();
+  assert.equal(afterInvalid.counts.read - afterValid.counts.read, 3);
+  assert.equal(afterInvalid.active_replay_fences, before.active_replay_fences);
+});
 
 test('OAuth discovery and consent use the Cloudflare library, safe client rendering and browser-bound state', { timeout: 60_000 }, async t => {
   const app = await runtime(t);

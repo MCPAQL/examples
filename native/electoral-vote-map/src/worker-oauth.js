@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { OAuthAuthorizationServer, OAuthResourceServer, OAuthError, AuthorizationError, CimdFetchError, insufficientScope, authorizationErrorRedirect } from '@cloudflare/workers-oauth-provider';
 import * as oidc from 'openid-client';
-import { HttpFailure, failureReply, networkIdentity, readWorkerConfig } from './worker-policy.js';
-import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, meteredKV, authBudget, authBody, usedTransaction, digest, oauthFailureReply } from './worker-oauth-policy.js';
+import { HttpFailure, networkIdentity, readWorkerConfig } from './worker-policy.js';
+import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, tokenLifetimes, meteredKV, authBudget, authBody, usedTransaction, digest, oauthFailureReply } from './worker-oauth-policy.js';
 
 // No redirects, unbounded provider responses, or non-HTTPS endpoints. The Worker
 // also uses global_fetch_strictly_public for outbound network address checks.
@@ -25,7 +25,9 @@ export async function identityFetch(input, init = {}) {
     }
     const body = new Uint8Array(size); let offset = 0;
     for (const chunk of chunks) { body.set(chunk, offset); offset += chunk.byteLength; }
-    return new Response(response.body ? body : null, { status: response.status, headers: response.headers });
+    const headers = new Headers(response.headers);
+    headers.delete('content-encoding'); headers.delete('content-length');
+    return new Response(response.body ? body : null, { status: response.status, headers });
   } finally { clearTimeout(timer); if (reader) void reader.cancel().catch(() => {}); }
 }
 
@@ -36,11 +38,14 @@ function authorizationServer(origin, dcr) {
     ...(dcr ? { clientRegistrationEndpoint: origin + '/oauth/register', clientRegistrationTTL: 86_400 } : {}),
     accessTokenTTL: 3600, refreshTokenTTL: 7 * 86_400,
     cookiePrefix: '__Host-electoral-oauth-',
-    tokenExchangeCallback({ props, requestedScope }) {
-      if (!sessionValid(props) || !requestedScope.includes(OAUTH_SCOPE)) throw new OAuthError('invalid_grant', { description: 'Please sign in again' });
+    tokenExchangeCallback({ props, scope, requestedScope }) {
+      const lifetimes = tokenLifetimes(props, scope);
+      if (!lifetimes || !requestedScope.includes(OAUTH_SCOPE)) throw new OAuthError('invalid_grant', { description: 'Please sign in again' });
       // A refresh cannot extend the seven-day sign-in window. No upstream
       // provider token is stored in props or used to access provider APIs.
-      return { accessTokenTTL: Math.max(1, Math.min(3600, Math.floor((props.loginAt + 7 * 86_400_000 - Date.now()) / 1000))) };
+      // The pinned provider uses this TTL, not offline_access by itself, to
+      // decide whether to issue a refresh token at authorization-code exchange.
+      return lifetimes;
     },
     onError: () => {}, // Deliberately avoid request/internal-detail console logs.
   });
@@ -175,7 +180,8 @@ export class OAuthCoordinatorImpl {
       if (request.headers.get('x-evm-oauth-action') === 'usage') {
         if (request.url !== 'https://oauth-coordinator/usage' || request.method !== 'GET' || !readWorkerConfig(this.env).operatorIds.includes(request.headers.get('x-evm-client-id'))) throw new HttpFailure(403, 'Operator required');
         const day = new Date().toISOString().slice(0, 10), stored = await this.ctx.storage.get('oauth-budget');
-        return Response.json({ day, counts: stored?.day === day ? stored.counts : {}, pending_flows: this.pending, active_validations: this.validations }, { headers: { 'cache-control': 'no-store' } });
+        const fences = Object.values(await this.ctx.storage.get('oauth-used') ?? {}).filter(until => until > Date.now()).length;
+        return Response.json({ day, counts: stored?.day === day ? stored.counts : {}, pending_flows: this.pending, active_validations: this.validations, active_replay_fences: fences }, { headers: { 'cache-control': 'no-store' } });
       }
       if (request.headers.get('x-evm-oauth-action') === 'validate') {
         if (request.url !== 'https://oauth-coordinator/validate' || request.method !== 'POST') throw new HttpFailure(404, 'Not found');
@@ -235,7 +241,10 @@ export class OAuthCoordinatorImpl {
           return new Response(null, { status: 302, headers: denied.headers });
         }
         if (form.get('decision') !== 'approve') throw new HttpFailure(400, 'Invalid consent decision');
-        const approved = await api.approveConsent(request, handle, { scope: [OAUTH_SCOPE, ...(form.get('offline') === 'yes' ? ['offline_access'] : [])] });
+        const approved = await api.approveConsent(request, handle);
+        // Preserve the validated request's scope ceiling: a forged form field
+        // cannot add offline access that this client never requested.
+        approved.request.scope = approved.request.scope.filter(scope => scope === OAUTH_SCOPE || (scope === 'offline_access' && form.get('offline') === 'yes'));
         await usedTransaction(this.ctx.storage, 'consent:' + handle, true);
         const verifier = oidc.randomPKCECodeVerifier(), nonce = oidc.randomNonce();
         const config = await this.oidcConfiguration();
