@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { execFile, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import { request as httpsRequest } from 'node:https';
+import { request as httpRequest } from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { once } from 'node:events';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -32,6 +33,18 @@ async function connect(t, url, options = {}) {
   t.after(() => client.close());
   await client.connect(new StreamableHTTPClientTransport(new URL(url), options));
   return client;
+}
+// fetch controls Host itself on some supported Node versions. Use a raw request
+// so the DNS-rebinding tests send the exact attacker/proxy authority on the wire.
+function rawHttp(url, headers) {
+  return new Promise((resolve, reject) => {
+    const req = httpRequest(url, { headers }, res => {
+      res.resume();
+      res.on('end', () => resolve(res.statusCode));
+    });
+    req.on('error', reject);
+    req.end();
+  });
 }
 
 test('transport configuration keeps stdio default and requires explicit, complete HTTPS settings', () => {
@@ -79,14 +92,14 @@ test('HTTP enforces Host and Origin before serving MCP or health checks', { time
   const { url } = await start(t);
   assert.equal((await fetch(new URL('/healthz', url))).status, 200);
   for (const path of ['/mcp', '/healthz']) {
-    assert.equal((await fetch(new URL(path, url), { headers: { Host: 'attacker.example' } })).status, 403);
+    assert.equal(await rawHttp(new URL(path, url), { Host: 'attacker.example' }), 403);
     assert.equal((await fetch(new URL(path, url), { headers: { Origin: 'https://attacker.example' } })).status, 403);
     assert.equal((await fetch(new URL(path, url), { headers: { Origin: 'null' } })).status, 403);
   }
   assert.equal((await fetch(new URL('/healthz', url), { headers: { Origin: new URL(url).origin } })).status, 200);
   const proxy = await start(t, { allowedHosts: ['maps.example.com'], allowedOrigins: ['https://assistant.example.com'] });
   assert.equal((await fetch(proxy.url)).status, 403);
-  assert.equal((await fetch(proxy.url, { headers: { Host: 'maps.example.com', Origin: 'https://assistant.example.com' } })).status, 405);
+  assert.equal(await rawHttp(proxy.url, { Host: 'maps.example.com', Origin: 'https://assistant.example.com' }), 405);
 });
 
 test('optional bearer authentication protects MCP and supports a real SDK client', { timeout: 10_000 }, async t => {
