@@ -83,6 +83,10 @@ Human verification precedes consent-state KV writes and client metadata fetching
 simply opening the verification page does not create a consent record. Repeated
 uses of one bearer token are also limited before its KV lookup, followed by the
 stable-account admission limit after validation.
+Named operators can inspect aggregate authentication counters at
+`GET /admin/oauth-usage`, using the same private operator bearer as `/admin/usage`.
+The response contains daily operation counts and active/queued work, without
+account identifiers, grant details, emails or credentials.
 
 The named authentication object admits at most 60 mutating protocol flows/minute,
 1,000/day, eight queued/in-flight flows and 16 concurrent token validations.

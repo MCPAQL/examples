@@ -113,6 +113,10 @@ test('OAuth discovery and consent use the Cloudflare library, safe client render
   assert.match(unauthenticated.headers.get('www-authenticate'), /resource_metadata=/);
   assert.equal((await app.fetch('/oauth/register', { method: 'POST', body: '{}' })).status, 404);
   assert.equal((await app.fetch('/validate', { method: 'POST', headers: { 'x-evm-oauth-action': 'validate' }, body: '{}' })).status, 404);
+  for (let i = 0; i < 3; i++) assert.equal((await app.fetch('/authorize?client_id=untrusted')).status, 200);
+  const beforeHuman = await (await app.fetch('/admin/oauth-usage', { headers: { authorization: 'Bearer ' + operator } })).json();
+  assert.deepEqual(beforeHuman.counts, {});
+  assert.equal(app.requests.length, 0);
   const initial = await app.consent();
   assert.doesNotMatch(initial.text, /<script>client/);
   assert.match(initial.text, /&#60;script&#62;/);
@@ -143,6 +147,7 @@ test('signed OIDC login issues audience-bound MCP tokens with refresh/revocation
   const wrongResource = await app.form('/oauth/token', { grant_type: 'refresh_token', refresh_token: refreshed.refresh_token, client_id: signed.clientId, resource: 'https://attacker.example/mcp' });
   assert.equal(wrongResource.status, 400);
   assert.equal((await app.fetch('/admin/usage', { headers: { authorization: 'Bearer ' + refreshed.access_token, 'x-evm-client-id': 'operator', 'x-evm-auth-kind': 'oauth' } })).status, 401);
+  assert.equal((await app.fetch('/admin/oauth-usage', { headers: { authorization: 'Bearer ' + refreshed.access_token, 'x-evm-client-id': 'operator' } })).status, 401);
   const usage = await (await app.fetch('/admin/usage', { headers: { authorization: 'Bearer ' + operator } })).json();
   assert.equal(usage.admitted, 1); assert.equal(usage.active_clients, 1);
   const revoked = await app.form('/oauth/token', { token: refreshed.refresh_token, token_type_hint: 'refresh_token', client_id: signed.clientId }); assert.equal(revoked.status, 200);

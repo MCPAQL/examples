@@ -35,9 +35,14 @@ async function handleWorker(request, env, ctx, verified = null) {
       if (!success) throw new HttpFailure(429, 'Too many requests', 60);
       if (authError) throw authError;
       if (url.pathname === '/healthz' && request.method === 'GET' && !url.search) return new Response('{"status":"ok"}', { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
-      if (url.pathname === '/admin/usage' && !url.search) {
+      if (['/admin/usage', '/admin/oauth-usage'].includes(url.pathname) && !url.search) {
         if (!clientId || !config.operatorIds.includes(clientId)) throw new HttpFailure(403, 'Operator required');
         if (request.method !== 'GET') return jsonReply(405, 'Only GET is supported', { allow: 'GET' });
+        if (url.pathname === '/admin/oauth-usage') {
+          if (!config.oauth || !env.ELECTORAL_OAUTH_COORDINATOR) throw new HttpFailure(404, 'Not found');
+          const stub = env.ELECTORAL_OAUTH_COORDINATOR.get(env.ELECTORAL_OAUTH_COORDINATOR.idFromName('oauth-global-v1'));
+          return await stub.fetch(new Request('https://oauth-coordinator/usage', { headers: { 'x-evm-oauth-action': 'usage', 'x-evm-client-id': clientId } }));
+        }
         const stub = env.ELECTORAL_COORDINATOR.get(env.ELECTORAL_COORDINATOR.idFromName('global-v1'));
         return await stub.fetch(new Request('https://coordinator/admin/usage', { headers: { 'x-evm-client-id': clientId } }));
       }

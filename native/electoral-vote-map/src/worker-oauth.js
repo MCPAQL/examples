@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { OAuthAuthorizationServer, OAuthResourceServer, OAuthError, AuthorizationError, CimdFetchError, insufficientScope, authorizationErrorRedirect } from '@cloudflare/workers-oauth-provider';
 import * as oidc from 'openid-client';
-import { HttpFailure, failureReply, networkIdentity } from './worker-policy.js';
+import { HttpFailure, failureReply, networkIdentity, readWorkerConfig } from './worker-policy.js';
 import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, meteredKV, authBudget, authBody, usedTransaction, digest } from './worker-oauth-policy.js';
 
 // No redirects, unbounded provider responses, or non-HTTPS endpoints. The Worker
@@ -105,7 +105,10 @@ export async function routeOAuth(request, env, ctx, application) {
   headers.set('x-evm-oauth-action', 'protocol');
   let body;
   if (request.method === 'POST') body = await authBody(request);
-  return stubFor(env).fetch(new Request(request.url, { method: request.method, headers, ...(body !== undefined ? { body } : {}) }));
+  // Service-binding fetch follows redirects unless told otherwise. OAuth
+  // redirects must return to the browser, never be followed with its cookies
+  // inside the coordinator boundary.
+  return stubFor(env).fetch(new Request(request.url, { method: request.method, headers, redirect: 'manual', ...(body !== undefined ? { body } : {}) }));
 }
 
 function consentPage(details, handle) {
@@ -169,6 +172,11 @@ export class OAuthCoordinatorImpl {
     try {
       if (this.env.EVM_ENABLED !== 'true') throw new HttpFailure(503, 'Service disabled', 60);
       oauthConfig(this.env);
+      if (request.headers.get('x-evm-oauth-action') === 'usage') {
+        if (request.url !== 'https://oauth-coordinator/usage' || request.method !== 'GET' || !readWorkerConfig(this.env).operatorIds.includes(request.headers.get('x-evm-client-id'))) throw new HttpFailure(403, 'Operator required');
+        const day = new Date().toISOString().slice(0, 10), stored = await this.ctx.storage.get('oauth-budget');
+        return Response.json({ day, counts: stored?.day === day ? stored.counts : {}, pending_flows: this.pending, active_validations: this.validations }, { headers: { 'cache-control': 'no-store' } });
+      }
       if (request.headers.get('x-evm-oauth-action') === 'validate') {
         if (request.url !== 'https://oauth-coordinator/validate' || request.method !== 'POST') throw new HttpFailure(404, 'Not found');
         if (this.validations >= 16) throw new HttpFailure(503, 'Authentication busy', 1);
