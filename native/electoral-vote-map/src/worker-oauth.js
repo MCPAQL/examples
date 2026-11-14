@@ -2,7 +2,7 @@
 import { OAuthAuthorizationServer, OAuthResourceServer, OAuthError, AuthorizationError, CimdFetchError, insufficientScope, authorizationErrorRedirect } from '@cloudflare/workers-oauth-provider';
 import * as oidc from 'openid-client';
 import { HttpFailure, failureReply, networkIdentity, readWorkerConfig } from './worker-policy.js';
-import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, meteredKV, authBudget, authBody, usedTransaction, digest } from './worker-oauth-policy.js';
+import { OAUTH_SCOPE, AUTH_PATHS, RESOURCE_PATHS, oauthConfig, isOAuthIdentity, quotaIdentity, escapeHtml, sessionValid, meteredKV, authBudget, authBody, usedTransaction, digest, oauthFailureReply } from './worker-oauth-policy.js';
 
 // No redirects, unbounded provider responses, or non-HTTPS endpoints. The Worker
 // also uses global_fetch_strictly_public for outbound network address checks.
@@ -200,7 +200,7 @@ export class OAuthCoordinatorImpl {
       });
       this.queue = work.catch(() => {});
       try { return await work; } finally { this.pending--; }
-    } catch (error) { return failureReply(error); }
+    } catch (error) { return oauthFailureReply(request, error); }
   }
   async protocol(request) {
     const path = new URL(request.url).pathname;
@@ -228,12 +228,13 @@ export class OAuthCoordinatorImpl {
         }
         const handle = form.get('handle');
         if (!handle || handle.length > 256) throw new HttpFailure(400, 'Invalid consent form');
+        await usedTransaction(this.ctx.storage, 'consent:' + handle);
         if (form.get('decision') === 'deny') {
           const denied = await api.denyConsent(request, handle);
+          await usedTransaction(this.ctx.storage, 'consent:' + handle, true);
           return new Response(null, { status: 302, headers: denied.headers });
         }
         if (form.get('decision') !== 'approve') throw new HttpFailure(400, 'Invalid consent decision');
-        await usedTransaction(this.ctx.storage, 'consent:' + handle);
         const approved = await api.approveConsent(request, handle, { scope: [OAUTH_SCOPE, ...(form.get('offline') === 'yes' ? ['offline_access'] : [])] });
         await usedTransaction(this.ctx.storage, 'consent:' + handle, true);
         const verifier = oidc.randomPKCECodeVerifier(), nonce = oidc.randomNonce();

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { createHash } from 'node:crypto';
-import { HttpFailure } from './worker-policy.js';
+import { HttpFailure, failureReply } from './worker-policy.js';
 
 export const OAUTH_SCOPE = 'electoral:read';
 export const AUTH_BODY_LIMIT = 16_384;
@@ -10,6 +10,15 @@ export const isOAuthIdentity = id => typeof id === 'string' && /^oauth:[a-f0-9]{
 export const digest = text => createHash('sha256').update(text).digest('hex');
 export const quotaIdentity = (issuer, subject) => `oauth:${digest(`${issuer}\0${subject}`)}`;
 export const escapeHtml = text => String(text).replace(/[&<>"']/g, char => `&#${char.charCodeAt(0)};`);
+
+export function oauthFailureReply(request, error) {
+  if (!['/oauth/token', '/oauth/register'].includes(new URL(request.url).pathname)) return failureReply(error);
+  const status = error instanceof HttpFailure ? error.status : 503;
+  return Response.json({ error: status === 429 || status >= 500 ? 'temporarily_unavailable' : 'invalid_request',
+    error_description: error instanceof HttpFailure ? error.message : 'Authentication unavailable' }, {
+    status, headers: { 'cache-control': 'no-store', 'access-control-allow-origin': '*', ...(error instanceof HttpFailure && error.retryAfter ? { 'retry-after': String(error.retryAfter) } : {}) },
+  });
+}
 
 export function oauthConfig(env) {
   if (env.EVM_OAUTH_ENABLED !== 'true' || !env.OAUTH_KV || !env.ELECTORAL_OAUTH_COORDINATOR) throw new HttpFailure(503, 'Authentication unavailable', 60);

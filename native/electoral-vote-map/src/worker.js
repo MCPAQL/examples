@@ -6,7 +6,7 @@ import { createSiteClient } from './site.js';
 import { createPollingClient } from './polling.js';
 import { durableSourceFetch } from './worker-source.js';
 import { HttpFailure, jsonReply, failureReply, readWorkerConfig, authenticatedClient, networkIdentity, checkBodyLength, boundedBody, takeBudget, readUsage } from './worker-policy.js';
-import { AUTH_PATHS, RESOURCE_PATHS, isOAuthIdentity } from './worker-oauth-policy.js';
+import { AUTH_PATHS, RESOURCE_PATHS, isOAuthIdentity, oauthFailureReply } from './worker-oauth-policy.js';
 
 async function handleWorker(request, env, ctx, verified = null) {
     try {
@@ -88,7 +88,7 @@ async function handleWorker(request, env, ctx, verified = null) {
           await stub.fetch(new Request('https://coordinator/release', { method: 'POST', headers: releaseHeaders })).catch(() => {});
         }
       }
-    } catch (error) { return failureReply(error); }
+    } catch (error) { return env.EVM_OAUTH_ENABLED === 'true' ? oauthFailureReply(request, error) : failureReply(error); }
 }
 export default { fetch: handleWorker };
 

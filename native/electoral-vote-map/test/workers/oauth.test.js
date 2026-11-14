@@ -127,6 +127,27 @@ test('OAuth discovery and consent use the Cloudflare library, safe client render
   assert.equal((await app.form('/authorize', { stage: 'verify', query: '?client_id=anything', 'cf-turnstile-response': 'fixture-fail' }, { origin })).status, 403);
   const approved = await app.approve(initial); assert.equal(approved.status, 302);
   assert.equal((await app.approve(initial)).status, 400);
+  const declined = await app.consent();
+  const denied = await app.form('/authorize', { handle: declined.handle, decision: 'deny' }, { origin, cookie: declined.cookie });
+  assert.equal(denied.status, 302);
+  assert.equal(new URL(denied.headers.get('location')).searchParams.get('error'), 'access_denied');
+  assert.equal((await app.approve(declined)).status, 400);
+});
+
+test('authorization rejects redirect/resource/scope/PKCE manipulation and a wrong token verifier', { timeout: 60_000 }, async t => {
+  const app = await runtime(t);
+  const base = { response_type: 'code', client_id: 'https://client1.example/oauth.json', redirect_uri: 'https://client1.example/callback', scope: 'electoral:read', state: 'fixture-state', resource: origin + '/mcp', code_challenge: challenge('v'.repeat(48)), code_challenge_method: 'S256' };
+  for (const patch of [{ redirect_uri: 'https://attacker.example/callback' }, { resource: 'https://attacker.example/mcp' }, { scope: 'electoral:write' }, { code_challenge_method: 'plain' }, { code_challenge: '' }]) {
+    const response = await app.form('/authorize', { stage: 'verify', query: '?' + new URLSearchParams({ ...base, ...patch }), 'cf-turnstile-response': 'fixture-pass' }, { origin });
+    assert.ok([400, 302].includes(response.status));
+    if (response.status === 302) {
+      const location = new URL(response.headers.get('location'));
+      assert.equal(location.origin, 'https://client1.example');
+      assert.ok(location.searchParams.get('error'));
+    }
+  }
+  const signed = await app.signIn();
+  assert.equal((await app.exchange(signed, { code_verifier: 'wrong-verifier'.padEnd(48, 'x') })).status, 400);
 });
 
 test('signed OIDC login issues audience-bound MCP tokens with refresh/revocation and account quotas across client apps', { timeout: 60_000 }, async t => {
