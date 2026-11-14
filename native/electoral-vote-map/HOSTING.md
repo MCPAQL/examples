@@ -42,7 +42,7 @@ Header size is bounded to 16 KiB; body reading is bounded to 1 MiB and five seco
 
 ### Proposed pilot profile
 
-The committed `wrangler.jsonc` is an isolated, **disabled and unrouted** deployment configuration:
+The committed `wrangler.jsonc` is an isolated deployment configuration, **disabled with no public routes**:
 
 | Setting | Proposed value |
 |---------|----------------|
@@ -59,7 +59,7 @@ The committed `wrangler.jsonc` is an isolated, **disabled and unrouted** deploym
 | Preview / workers.dev URLs | Disabled |
 | Application request logging | Disabled; no request/token/body logging added |
 
-These are application controls, not a dollar-denominated hosting cap. Edge invocations, rejected traffic, object calls and storage still consume provider usage. The account dashboard showed **Workers Free** and **Durable Objects Free tier** on November 14, 2026. Free-tier exhaustion rejects operations rather than purchasing overages, but the account-wide allowances are shared with Maker Perks and the other Workers. The 10,000 admitted-request quota does not protect those allowances from rejected edge traffic. Keep this service unrouted until the shared availability risk is accepted or the deployment is placed in a separate account.
+These are application controls, not a dollar-denominated hosting cap. Edge invocations, rejected traffic, object calls and storage still consume provider usage. The account dashboard showed **Workers Free** and **Durable Objects Free tier** on November 14, 2026. Free-tier exhaustion rejects operations rather than purchasing overages, but the account-wide allowances are shared with Maker Perks and the other Workers. The 10,000 admitted-request quota does not protect those allowances from rejected edge traffic. Keep this service without public routes until the shared availability risk is accepted or the deployment is placed in a separate account.
 
 The bootstrap configuration omits a paid-plan CPU override; it cannot raise the Free plan's 10 ms edge allowance. Durable Object execution and storage have separate limits and still need deployed qualification. A paid-plan upgrade must be a separate operator decision, with measured CPU limits and spending controls for **both Workers and Durable Objects**. Those product spending policies also apply across the account; an exhausted cap could stop Maker Perks. No plan, account-level budget or provider setting is changed by this PR.
 
@@ -103,3 +103,9 @@ Keep the last known-good deployment/version and configuration in the deployment 
 Cloudflare's [rate-limiting binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/) is approximate and local to each location. The Durable Object supplies coordinated application quotas; [Workers resource and spending limits](https://developers.cloudflare.com/workers/platform/limits/) are separate controls. A budget alert alone does not reject traffic.
 
 The committed configuration creates no public electoral endpoint and changes no account plan or spending policy. #72 remains open for account/quota review, deployed qualification and enabling the service.
+
+### Bootstrap deployment record
+
+On November 14, 2026 at 21:29:58 UTC, Wrangler accepted source revision `76391812d3a55e862753229f53c5ae3c11f16867` as version `317a01dd-3d96-4dd4-aa29-04485f2de48a` of `electoral-vote-map-mcpaql`. The uploaded bundle was 744.91 KiB (154.32 KiB gzip); reported startup time was 32 ms. Startup time is not per-request CPU qualification.
+
+Read-only provider checks confirmed `EVM_ENABLED=false`, `workers.dev` and preview URLs disabled, no custom domain, no Worker route in the `mcpaql.com` zone, and a new coordinator namespace. Rate-limit namespace `7201` was unused by all seven pre-existing Workers. No client secret was configured. Maker Perks' OAuth resource discovery returned HTTP 200, and its unauthenticated root returned the expected HTTP 401; no signed-in Maker Perks tool execution was tested. No existing Worker or account plan was changed. This records a disabled bootstrap upload, not successful deployed MCP execution or approval to enable public traffic.
