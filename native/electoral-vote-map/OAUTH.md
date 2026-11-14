@@ -103,8 +103,9 @@ shared flow allowance before human verification, and rotating well-formed invali
 tokens consume the shared KV-read allowance. An attacker who bypasses the coarse
 network limits can lock out sign-in/token operations or MCP token validation
 until the next UTC-day reset. These ceilings protect usage, not availability.
-Address or explicitly accept this behavior under the public-launch gates before
-open enrollment. The per-token limiter only bounds repeated use of one token;
+Resolve the availability policy in [issue #81](https://github.com/MCPAQL/examples/issues/81)
+under the public-launch gates before open enrollment.
+The per-token limiter only bounds repeated use of one token;
 it does not stop token rotation or distributed sources.
 
 With the pinned provider, each valid token validation uses **one KV read**; a
@@ -135,7 +136,7 @@ Tokens expire after at most one hour; refresh grants and the absolute sign-in
 window last at most seven days. Refresh cannot reset that window or the account's
 MCP usage counters. Unchecking the offline option, or a client requesting only
 `electoral:read`, issues no refresh token. Tokens stop renewing at the absolute
-sign-in boundary, including its last minute (the provider's minimum token TTL).
+sign-in boundary, including its last minute (the provider's minimum token lifetime).
 Every signed-in account shares the existing per-client
 minute/day/concurrency allowance across apps and refreshed tokens. Operators
 retain separate static identities. OAuth defaults to at most 256 distinct
