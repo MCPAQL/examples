@@ -6,20 +6,28 @@ import { createSiteClient } from './site.js';
 import { createPollingClient } from './polling.js';
 import { durableSourceFetch } from './worker-source.js';
 import { HttpFailure, jsonReply, failureReply, readWorkerConfig, authenticatedClient, networkIdentity, checkBodyLength, boundedBody, takeBudget, readUsage } from './worker-policy.js';
+import { AUTH_PATHS, RESOURCE_PATHS, isOAuthIdentity } from './worker-oauth-policy.js';
 
-export default {
-  async fetch(request, env) {
+async function handleWorker(request, env, ctx, verified = null) {
     try {
       if (env.EVM_ENABLED !== 'true') throw new HttpFailure(503, 'Service disabled', 60);
       const config = readWorkerConfig(env), url = new URL(request.url);
       let headerBytes = 0;
       for (const [name, value] of request.headers) headerBytes += new TextEncoder().encode(name + ': ' + value + '\r\n').byteLength;
       if (headerBytes > 16_384) throw new HttpFailure(431, 'Request headers too large');
-      if (url.origin !== config.origin || (request.headers.has('origin') && request.headers.get('origin') !== config.origin)) throw new HttpFailure(403, 'Origin not allowed');
+      const oauthProtocol = config.oauth && (AUTH_PATHS.has(url.pathname) || RESOURCE_PATHS.has(url.pathname) || url.pathname === '/oauth/register');
+      if (url.origin !== config.origin || (!oauthProtocol && request.headers.has('origin') && request.headers.get('origin') !== config.origin)) throw new HttpFailure(403, 'Origin not allowed');
       if (!env.MCP_RATE_LIMITER?.limit || !env.ELECTORAL_COORDINATOR) throw new HttpFailure(503, 'Service unavailable');
       const network = networkIdentity(request.headers.get('cf-connecting-ip'));
       let clientId, authError;
-      try { clientId = authenticatedClient(request, config); } catch (error) { authError = error; }
+      if (verified) {
+        if (!config.oauth || verified.kind !== 'oauth' || !isOAuthIdentity(verified.id)) throw new HttpFailure(403, 'Invalid identity');
+        clientId = verified.id;
+      } else try { clientId = authenticatedClient(request, config); } catch (error) { authError = error; }
+      if (config.oauth && !verified && (oauthProtocol || (url.pathname === '/mcp' && !clientId))) {
+        const { routeOAuth } = await import('./worker-oauth.js');
+        return await routeOAuth(request, env, ctx, (req, bindings, identity) => handleWorker(req, bindings, ctx, identity));
+      }
       // Valid, distinct credentials get independent allowances even when their
       // clients share a proxy IP. Invalid/anonymous requests use the network key.
       const identity = clientId ? `client:${clientId}` : network;
@@ -43,6 +51,7 @@ export default {
       // platform derive the forwarded length instead of copying the caller's.
       for (const name of ['content-type', 'accept', 'mcp-protocol-version']) if (request.headers.has(name)) headers.set(name, request.headers.get(name));
       if (clientId) headers.set('x-evm-client-id', clientId);
+      if (verified) headers.set('x-evm-auth-kind', 'oauth');
       // Exactly one namespace-local ID for every deployment/location. Never key
       // this by the request, user, region, or revision: that would reset quotas.
       const stub = env.ELECTORAL_COORDINATOR.get(env.ELECTORAL_COORDINATOR.idFromName('global-v1'));
@@ -50,6 +59,7 @@ export default {
       // service-binding body before the coordinator can inspect it.
       const admissionHeaders = new Headers();
       if (clientId) admissionHeaders.set('x-evm-client-id', clientId);
+      if (verified) admissionHeaders.set('x-evm-auth-kind', 'oauth');
       const admission = await stub.fetch(new Request('https://coordinator/admit', { method: 'POST', headers: admissionHeaders }));
       if (!admission.ok) return admission;
       const { admission_id: admissionId } = await admission.json();
@@ -68,13 +78,26 @@ export default {
         if (!handedOff) {
           const releaseHeaders = new Headers({ 'x-evm-admission-id': admissionId });
           if (clientId) releaseHeaders.set('x-evm-client-id', clientId);
+          if (verified) releaseHeaders.set('x-evm-auth-kind', 'oauth');
           if (failureStatus) releaseHeaders.set('x-evm-release-status', String(failureStatus));
           await stub.fetch(new Request('https://coordinator/release', { method: 'POST', headers: releaseHeaders })).catch(() => {});
         }
       }
     } catch (error) { return failureReply(error); }
-  },
-};
+}
+export default { fetch: handleWorker };
+
+// Lazy loading keeps stdio and Node policy tests independent of Cloudflare's
+// runtime-only OAuth package; Wrangler bundles the module into the Worker.
+export class OAuthCoordinator {
+  constructor(ctx, env) { this.ctx = ctx; this.env = env; this.impl = null; }
+  async fetch(request) {
+    try {
+      this.impl ??= import('./worker-oauth.js').then(({ OAuthCoordinatorImpl }) => new OAuthCoordinatorImpl(this.ctx, this.env));
+      return await (await this.impl).fetch(request);
+    } catch (error) { return failureReply(error); }
+  }
+}
 
 export class ElectoralCoordinator {
   constructor(ctx, env) {
@@ -113,7 +136,8 @@ export class ElectoralCoordinator {
       const config = readWorkerConfig(this.env), url = new URL(request.url);
       if (url.origin !== 'https://coordinator' || url.search) throw new HttpFailure(404, 'Not found');
       const clientId = request.headers.get('x-evm-client-id');
-      if (clientId && !config.tokens.some(token => token.id === clientId)) throw new HttpFailure(403, 'Unknown client');
+      const oauthClient = config.oauth && request.headers.get('x-evm-auth-kind') === 'oauth' && isOAuthIdentity(clientId);
+      if (clientId && !oauthClient && !config.tokens.some(token => token.id === clientId)) throw new HttpFailure(403, 'Unknown client');
       if (url.pathname === '/admin/usage' && request.method === 'GET') {
         if (!clientId || !config.operatorIds.includes(clientId)) throw new HttpFailure(403, 'Operator required');
         return Response.json({ ...await readUsage(this.ctx.storage, config), active_requests: this.active, client_concurrent_limit: config.clientMaxConcurrent, highest_client_concurrency: Math.max(0, ...this.activeClients.values()), transient: this.transientStats }, { headers: { 'cache-control': 'no-store' } });
