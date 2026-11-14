@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "introspection_variants_checked": 21,
+  "spec_commit": "52640154fc9d9594f1991101dd7a44a9fad3722a",
+  "schema_sha256": {
+    "operation-result.schema.json": "0655e6b900aef3d461325b8d048bfd9ba7daf6f8b8e2f0c7a6168d0cb7674c81",
+    "introspection-response.schema.json": "fa748d2efcd9f1467a4bea7ef18f91401915b0cdf4ed8758e114da58a0b5ea50",
+    "operation-input.schema.json": "7de98d515312bf774520210604ab61130f778f251f11c4eee36d178cf76e8e51"
+  }
+}

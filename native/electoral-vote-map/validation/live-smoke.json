@@ -1,0 +1,205 @@
+{
+  "retrieved_at": "2026-11-14T17:17:07.675Z",
+  "scenarios": [
+    {
+      "id": "current",
+      "name": "Current site map",
+      "totals": {
+        "dem": 222,
+        "rep": 219,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 97
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:SRR_DEEDDS_DTRERRRRDDFDT_FRRR_RRRFR_EF_DTRD_DRRRTRFDD_RR"
+    },
+    {
+      "id": "blue-wall",
+      "name": "Blue Wall returns",
+      "totals": {
+        "dem": 270,
+        "rep": 268,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 0
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:RRRRDDDDDRRDRRDRRRRDDDDRDDRRRRRRRDRDDDRDRRDDDRRRRRDDDDRR"
+    },
+    {
+      "id": "sun-belt",
+      "name": "Sun Belt swing",
+      "totals": {
+        "dem": 275,
+        "rep": 263,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 0
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:RRRDDDDDDRDDRRDRRRRDDDDRRDRRRDRRRDRDDDDDRRDRDRRRRRDDDRRR"
+    },
+    {
+      "id": "battlegrounds",
+      "name": "Seven battlegrounds",
+      "totals": {
+        "dem": 226,
+        "rep": 219,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 93
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:RRR_DDDDDR_DRRDRRRRDDDDR_DRRR_RRRDRDDD_DRRD_DRRRRRDDD_RR"
+    },
+    {
+      "id": "dem-sweep",
+      "name": "Democrats sweep the battlegrounds",
+      "totals": {
+        "dem": 319,
+        "rep": 219,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 0
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:RRRDDDDDDRDDRRDRRRRDDDDRDDRRRDRRRDRDDDDDRRDDDRRRRRDDDDRR"
+    },
+    {
+      "id": "gop-expands",
+      "name": "Republicans expand the map",
+      "totals": {
+        "dem": 192,
+        "rep": 346,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 0
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:RRRRDDDDDRRDRRDRRRRDDRDRRRRRRRRRRDRRDRRDRRDRDRRRRRRDDRRR"
+    },
+    {
+      "id": "tie",
+      "name": "A 269–269 tie",
+      "totals": {
+        "dem": 269,
+        "rep": 269,
+        "other": 0,
+        "alt": 0,
+        "alt2": 0,
+        "toss_up": 0
+      },
+      "map_url": "https://electoralvotemap.com/?map=2028:RRRDDDDDDRDDRRDRRRRDDDDRRDRRRDRRRDRDDDRDRRDRDRRRRRDDDRRR"
+    }
+  ],
+  "modified": {
+    "success": true,
+    "data": {
+      "map": {
+        "map_url": "https://electoralvotemap.com/?map=2028:RRRRDDDDDRRDRRDRRRRRDDDRDDRRRRRRRDRDDDRDRRDDDDRDRRDRDDRR",
+        "election_year": 2028,
+        "electoral_allocation": "current",
+        "totals": {
+          "dem": 276,
+          "rep": 262,
+          "other": 0,
+          "alt": 0,
+          "alt2": 0,
+          "toss_up": 0
+        },
+        "to_win": 270,
+        "winner": "dem",
+        "ratings": {
+          "AK": "safe_rep",
+          "AL": "safe_rep",
+          "AR": "safe_rep",
+          "AZ": "safe_rep",
+          "CA": "safe_dem",
+          "CO": "safe_dem",
+          "CT": "safe_dem",
+          "DC": "safe_dem",
+          "DE": "safe_dem",
+          "FL": "safe_rep",
+          "GA": "safe_rep",
+          "HI": "safe_dem",
+          "IA": "safe_rep",
+          "ID": "safe_rep",
+          "IL": "safe_dem",
+          "IN": "safe_rep",
+          "KS": "safe_rep",
+          "KY": "safe_rep",
+          "LA": "safe_rep",
+          "MA": "safe_rep",
+          "MD": "safe_dem",
+          "ME": "safe_dem",
+          "ME-1": "safe_dem",
+          "ME-2": "safe_rep",
+          "MI": "safe_dem",
+          "MN": "safe_dem",
+          "MO": "safe_rep",
+          "MS": "safe_rep",
+          "MT": "safe_rep",
+          "NC": "safe_rep",
+          "ND": "safe_rep",
+          "NE": "safe_rep",
+          "NE-1": "safe_rep",
+          "NE-2": "safe_dem",
+          "NE-3": "safe_rep",
+          "NH": "safe_dem",
+          "NJ": "safe_dem",
+          "NM": "safe_dem",
+          "NV": "safe_rep",
+          "NY": "safe_dem",
+          "OH": "safe_rep",
+          "OK": "safe_rep",
+          "OR": "safe_dem",
+          "PA": "safe_dem",
+          "RI": "safe_dem",
+          "SC": "safe_dem",
+          "SD": "safe_rep",
+          "TN": "safe_dem",
+          "TX": "safe_rep",
+          "UT": "safe_rep",
+          "VA": "safe_dem",
+          "VT": "safe_rep",
+          "WA": "safe_dem",
+          "WI": "safe_dem",
+          "WV": "safe_rep",
+          "WY": "safe_rep"
+        },
+        "source": {
+          "url": "https://electoralvotemap.com/",
+          "retrieved_at": "2026-11-14T17:17:07.675Z",
+          "mode": "live",
+          "contract": "evm-map-1.29-url-codec",
+          "forecast_note": "Site scenarios and ratings are inputs for exploration, not calibrated win probabilities."
+        },
+        "allocation_note": "Current electoral allocation from the site; Maine and Nebraska statewide units carry two votes each."
+      },
+      "changes": [
+        {
+          "unit": "MA",
+          "from": "safe_dem",
+          "to": "safe_rep"
+        },
+        {
+          "unit": "SC",
+          "from": "safe_rep",
+          "to": "safe_dem"
+        },
+        {
+          "unit": "TN",
+          "from": "safe_rep",
+          "to": "safe_dem"
+        },
+        {
+          "unit": "VT",
+          "from": "safe_dem",
+          "to": "safe_rep"
+        }
+      ],
+      "base_url": "https://electoralvotemap.com/?map=2028:RRRRDDDDDRRDRRDRRRRDDDDRDDRRRRRRRDRDDDRDRRDDDRRRRRDDDDRR"
+    }
+  }
+}
