@@ -11,6 +11,12 @@ on:
       - 'native/electoral-vote-map/**'
       - '.github/workflows/electoral-vote-map.yml'
   workflow_dispatch:
+    inputs:
+      live_smoke:
+        description: 'Read the four fixed public sources and verify a generated map'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -39,9 +45,30 @@ jobs:
       - name: Test domain and MCP behavior
         working-directory: native/electoral-vote-map
         run: npm test
+      - name: Qualify the Worker in the real local Cloudflare runtime
+        working-directory: native/electoral-vote-map
+        run: npm run test:worker
       - name: Validate all introspection variants against pinned spec schemas
         working-directory: native/electoral-vote-map
         run: node scripts/check-schemas.js ../../.mcpaql-spec/schemas
       - name: Check dependency advisories
         working-directory: native/electoral-vote-map
         run: npm audit --audit-level=low
+
+  live-smoke:
+    if: github.event_name == 'workflow_dispatch' && inputs.live_smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Install locked dependencies
+        working-directory: native/electoral-vote-map
+        run: npm ci --ignore-scripts
+      - name: Verify live polling and map round-trip
+        working-directory: native/electoral-vote-map
+        run: node scripts/polling-smoke-summary.js

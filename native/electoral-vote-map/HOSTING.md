@@ -24,18 +24,107 @@ All users behind one proxy or tunnel share its socket-IP allowance. One noisy us
 
 The identity table keys exact socket addresses, with no IPv6 prefix aggregation. An attacker rotating many addresses, including within one IPv6 /64, can fill its 1,024 slots and temporarily deny new legitimate clients. Full-table rejections preserve existing clients' quota, but they do not prevent table saturation. Prefix aggregation or authenticated identities should be evaluated at the deployment edge under issue #72, with shared-network fairness considered. Cleanup is bounded and runs at most once per second; it does not guarantee availability against distributed traffic.
 
-## Cloudflare deployment follow-up
+## Cloudflare Worker implementation
 
-The current executable is a Node stdio/HTTP(S) server. A Workers deployment needs a Fetch-handler entry point using the SDK's web-standard transport and the same MCP-AQL server factory/dispatch. Supplying a Wrangler file alone would not make the Node listener a Worker.
+`src/worker.js` exposes `/mcp` over the SDK's web-standard Streamable HTTP transport and the same MCP-AQL server factory as stdio/Node. Each POST gets a separate MCP lifecycle with JSON responses. GET/DELETE return 405; no standalone SSE stream or OAuth service is advertised.
 
-Before public hosting:
+The dedicated Worker routes every location to one namespace-local Durable Object named `global-v1`. The object provides:
 
-1. Create an independent Worker and hostname, with no Maker Perks secrets or storage bindings. Keep it read-only and omit OAuth/storage components unless authentication actually needs them.
-2. Apply edge rate limits before parsing or source work. Disable unused preview/direct routes so they cannot bypass the selected protection. Use authenticated identities where available; IP limits can group shared networks.
-3. Coordinate source refreshes and quotas across locations, using a Durable Object or equivalent. Preserve fixed URLs, five-minute cache freshness, failure cooldowns, deadlines, size limits and fail-closed parsing. Protect the original public sites from refresh amplification.
-4. Set a measured CPU ceiling, a strict pilot admission quota, and a kill switch. Configure provider spending limits and alerts before enabling public traffic; choose their account scope carefully because Maker Perks shares the provider. Edge rate limiting alone is not a spending cap.
-5. Verify actual deployed runtime behavior with concurrent clients, invalid authentication, malformed/slow/oversized bodies, spoofed origins/IP headers, upstream outages, distributed quota exhaustion and secret-redaction checks. Confirm a rollback path and collect aggregate usage counters without recording tokens or complete tool inputs.
+- Transactional daily admission accounting and global/client token buckets. Quotas survive restarts and deployments that preserve the namespace/ID. Initialization and MCP notifications count as admitted POSTs too; this is a request quota, not a count of tool calls. Quota and concurrency rejections do not spend another client's allowance.
+- At most 32 named authenticated client identities in its daily quota record; original bearer tokens are not stored or forwarded. Daily counts reset at UTC midnight. Authenticated clients sharing an IP receive independent allowances; anonymous users still share network limits and cannot be identified individually behind a shared proxy.
+- A coordinated durable cache for exactly four public source URLs. Concurrent reads coalesce. Bounded chunks stay below storage value limits and are replaced transactionally. Successful retrievals expire after five minutes; failures have a 30-second durable cooldown. Restored parser caches preserve the original retrieval timestamp and expiry instead of claiming that old content was just downloaded.
 
-Cloudflare's [rate-limiting binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/) is approximate and local to each location. Its documentation recommends Durable Objects for strict limits across locations. [Workers resource and spending limits](https://developers.cloudflare.com/workers/platform/limits/) are distinct controls; availability and account settings must be checked at deployment time. A budget alert alone does not reject traffic.
+The edge applies the Cloudflare rate-limit binding to named credentials or anonymous IPv4/IPv6 identities. IPv6 interface addresses within one /64 share a key; IPv4-mapped IPv6 is handled as IPv4. The edge uses Cloudflare's platform-supplied CF-Connecting-IP, never X-Forwarded-For. This trust assumption requires direct Cloudflare ingress; do not expose the same handler through an untrusted proxy that can supply that header.
 
-No public electoral endpoint or provider settings are created by these changes.
+Valid credentials have separate edge buckets even behind a common proxy. Invalid credentials and anonymous traffic use the network bucket. The Durable Object adds strict per-client limits for authenticated identities across locations. Different anonymous users behind one shared IP remain indistinguishable; prefix aggregation can group a household/network and is an abuse tradeoff, not identity verification.
+
+Header size is bounded to 16 KiB; body reading is bounded to 1 MiB and five seconds, with fatal UTF-8 decoding and rejection of JSON batches. Only content type, Accept, negotiated protocol version and the verified client ID reach the private object binding. Authorization, cookies, forwarded identity and caller-supplied internal identity headers are discarded. The coordinator rechecks request size and applies a concurrency bound before quota/storage work.
+
+### Proposed pilot profile
+
+The committed `wrangler.jsonc` is an isolated deployment configuration, **disabled with no public routes**:
+
+| Setting | Proposed value |
+|---------|----------------|
+| Worker | `electoral-vote-map-mcpaql` |
+| Proposed dedicated hostname | `electoral.mcpaql.com`; not attached by the bootstrap configuration |
+| Public traffic | Disabled (`EVM_ENABLED=false`) |
+| Authentication | Required; separate named bearer credentials |
+| Daily admitted MCP requests | 10,000 globally |
+| Global token bucket | 120 capacity, 120/minute refill |
+| Named-client token bucket | 60 capacity, 60/minute refill |
+| Edge approximate limiter | 60/minute per credential or anonymous network identity |
+| Concurrent coordinator requests | 16 |
+| Edge CPU allowance | Workers Free enforces 10 ms per invocation; qualify cold/warm behavior before enabling traffic |
+| Preview / workers.dev URLs | Disabled |
+| Application request logging | Disabled; no request/token/body logging added |
+
+These are application controls, not a dollar-denominated hosting cap. Edge invocations, rejected traffic, object calls and storage still consume provider usage. The account dashboard showed **Workers Free** and **Durable Objects Free tier** on November 14, 2026. Free-tier exhaustion rejects operations rather than purchasing overages, but the account-wide allowances are shared with Maker Perks and the other Workers. The 10,000 admitted-request quota does not protect those allowances from rejected edge traffic. Keep this service without public routes until the shared availability risk is accepted or the deployment is placed in a separate account.
+
+The bootstrap configuration omits a paid-plan CPU override; it cannot raise the Free plan's 10 ms edge allowance. Durable Object execution and storage have separate limits and still need deployed qualification. A paid-plan upgrade must be a separate operator decision, with measured CPU limits and spending controls for **both Workers and Durable Objects**. Those product spending policies also apply across the account; an exhausted cap could stop Maker Perks. No plan, account-level budget or provider setting is changed by this PR.
+
+### Configure and qualify
+
+Install the locked dependencies with lifecycle scripts disabled, then run:
+
+```sh
+npm ci --ignore-scripts
+npm test
+npm run test:worker
+npm audit --audit-level=low
+```
+
+`test:worker` first uses Wrangler's deployment **dry run** to produce the actual Worker bundle, then runs it in Miniflare/workerd with real SQLite-backed Durable Objects. Sources are mocked with committed fixtures in these runtime tests; passing them is not evidence of a deployed endpoint. The harness tests concurrent MCP clients, persistent quotas, source-cache recreation, credential isolation, failures, concurrency recovery, oversized data and redaction. Unit tests additionally cover IPv6 rotation, chunk/value bounds, slow body timeout, UTF-8 errors and expiry. Miniflare is pinned to the same runtime version shipped by the pinned Wrangler toolchain.
+
+The on-demand GitHub Actions workflow supports `live_smoke=true` to read only the four fixed public sources. It does not deploy anything. Independent Puck and CI live-source results are recorded in [issue #72](https://github.com/MCPAQL/examples/issues/72), including exact revisions. They validate sources and generated maps, not the Worker runtime or hosting approval.
+
+Before deployment, verify a valid Cloudflare CLI login and choose the correct account. Use a dedicated, least-privilege deployment identity for this Worker when automating deployment; never copy Maker Perks runtime secrets, grants or storage IDs. Mick renewed the local Wrangler login on November 14, 2026; read-only checks confirmed access to the account hosting Maker Perks and its active `mcpaql.com` zone. The proposed Worker name and custom-domain registration were unused. DNS-record reads and billing-policy API reads were denied by the CLI's permissions; the signed-in dashboard independently confirmed both products use the free tier. No Maker Perks secret values were requested or changed.
+
+Bootstrap with `routes: []`, `workers_dev: false`, `preview_urls: false` and `EVM_ENABLED=false`. Verify those settings after upload. A successful bootstrap upload proves packaging and provider acceptance, not an accessible MCP endpoint. After the account/quota decision and DNS checks, attach the custom domain explicitly:
+
+```json
+{"routes":[{"pattern":"electoral.mcpaql.com","custom_domain":true}]}
+```
+
+Configure `EVM_CLIENT_TOKENS` as a **Worker secret**, containing a JSON object with 1–32 stable client IDs mapped to unique random bearer tokens of 32–256 allowed characters. IDs contain lowercase letters, digits, underscore or hyphen; `alice` and `bob` below are examples of separate identities, not shared-account credentials. Tokens must not be committed, logged or put in public `vars`.
+
+```json
+{"alice":"REPLACE_WITH_A_UNIQUE_RANDOM_TOKEN_OF_AT_LEAST_32_CHARACTERS"}
+```
+
+Use `wrangler secret put EVM_CLIENT_TOKENS` with secure stdin or the provider's secret UI. A token is compared as an Authorization Bearer header. For a deliberately anonymous public service, `EVM_ALLOW_ANONYMOUS=true` is an explicit operator decision; requests then consume network and global quotas. This implementation does not provide OAuth discovery. OAuth-requiring private ChatGPT clients need an appropriate gateway; clients supporting fixed Authorization headers can connect directly.
+
+Before attaching any public route, verify the account plan, shared quotas or isolated account, and any applicable provider spending settings/alerts. Before setting `EVM_ENABLED=true`, verify the custom domain, disabled bypass routes, credentials and secret rotation, and the daily/rate/CPU profile. Validate the routed but disabled service first, then qualify a controlled authenticated pilot. Exercise real public routing, distributed quotas, slow/oversized requests and source outages, and measure actual CPU/usage. Keep the coordinator namespace and `global-v1` ID stable across deploys so quota/cache state is not reset.
+
+### Kill switch and rollback
+
+Keep the last known-good deployment/version and configuration in the deployment record. Set `EVM_ENABLED=false` and redeploy to stop admission before authentication, object calls or source fetches. If needed, remove the dedicated route or disable the Worker in the provider console. Roll back to a known-good disabled version first; do not delete/recreate the Durable Object namespace as a rollback shortcut, because that loses quota history. Record the deployed SHA/version, CPU measurements, budget settings, route checks and live qualification in #72 before enabling public use.
+
+Cloudflare's [rate-limiting binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/) is approximate and local to each location. The Durable Object supplies coordinated application quotas; [Workers resource and spending limits](https://developers.cloudflare.com/workers/platform/limits/) are separate controls. A budget alert alone does not reject traffic.
+
+The committed bootstrap configuration creates no public electoral endpoint and changes no account plan or spending policy. The authenticated pilot below uses an explicit deployment override; redeploying the bootstrap configuration disables it and removes its public route.
+
+### Bootstrap deployment record
+
+On November 14, 2026 at 21:29:58 UTC, Wrangler accepted source revision `76391812d3a55e862753229f53c5ae3c11f16867` as version `317a01dd-3d96-4dd4-aa29-04485f2de48a` of `electoral-vote-map-mcpaql`. The uploaded bundle was 744.91 KiB (154.32 KiB gzip); reported startup time was 32 ms. Startup time is not per-request CPU qualification.
+
+Read-only provider checks confirmed `EVM_ENABLED=false`, `workers.dev` and preview URLs disabled, no custom domain, no Worker route in the `mcpaql.com` zone, and a new coordinator namespace. Rate-limit namespace `7201` was unused by all seven pre-existing Workers. No client secret was configured. Maker Perks' OAuth resource discovery returned HTTP 200, and its unauthenticated root returned the expected HTTP 401; no signed-in Maker Perks tool execution was tested. No existing Worker or account plan was changed. This records a disabled bootstrap upload, not successful deployed MCP execution or approval to enable public traffic.
+
+### Authenticated pilot deployment
+
+Mick chose the existing shared free account after the dashboard showed 311/100,000 Workers requests that day (0.311%), 15 Maker Perks production invocations over 24 hours with no runtime errors, and 163.81 MB of the 5 GB Durable Objects storage allowance (3.28%). Account isolation is not a prerequisite. Revisit capacity as usage grows; this decision does not authorize a paid-plan upgrade.
+
+The pilot endpoint is **`https://electoral.mcpaql.com/mcp`**. It requires a separate named bearer credential; anonymous access remains disabled. It has no OAuth discovery service. The secret was installed with secure stdin, without using Maker Perks data. The retained personal credential is stored locally in the ignored `.wrangler/pilot/credentials.json` with mode `0600`; never commit or publish that file. Temporary qualification credentials were removed, and their rejection was verified after provider propagation.
+
+On November 14, 2026, source revision `dbdde79ec2cac700e874a70d8c03b2a8be81cced` was deployed with the custom-domain route and `EVM_ENABLED=true` override. Following credential rotation, the active version was `55bd80c6-165e-4236-b3ad-35ede42ee1e2` at 21:46:10 UTC. Limits match the proposed profile above: 10,000 daily admitted POSTs, 120/min global, 60/min per named client, and 16 concurrent coordinator requests. Provider reads confirmed the original coordinator namespace, no preview/workers.dev URLs, and no changes to Maker Perks' deployment. Pilot deployment configurations are local ignored files under `.wrangler/pilot/`; they copy the bootstrap configuration with an absolute `main`, the custom-domain route shown above, and explicit admission variables.
+
+Deployed qualification results:
+
+- The routed disabled service returned HTTP 503 before activation. Missing/invalid credentials and spoofed internal identity headers returned 401; a disallowed Origin returned 403.
+- A temporary two-request daily profile verified independent named-client allowances, per-client 429 rejection, global daily 429 rejection and quota persistence across redeployment. Restoring the normal profile preserved the namespace and accounting history.
+- The live kill switch was exercised: disabling returned 503; re-enabling recovered. Disabled version `552eac11-b6e3-431c-a6bb-2c8585880d9b` is a rollback reference. That historical version contains retired qualification credentials: rotate to the current credential set before ever re-enabling a historical rollback.
+- At 21:45:09 UTC, two real SDK clients connected concurrently. Seven scenarios and all three live polling datasets were available. Pennsylvania had 10 historical presidential polls; the generated map round-tripped to 538 EV (222 Democratic, 238 Republican, 78 toss-up). The client ran on the operator's computer against the actual Cloudflare service; this is distinct from the earlier Linux CI and Puck checks.
+- Unsupported GET, wrong content type, malformed UTF-8, JSON batch, oversized body, oversized headers and unknown path returned 405, 415, 400, 400, 413, 431 and 404 respectively. Authenticated health returned 200.
+- Source retrieval timestamps survived the credential deployment without being refreshed. Eight temporary live trace events spanning edge and Durable Object execution reported 1–6 ms CPU, all outcomes `ok`, and no exceptions. This small sample is not a sustained-load or worst-case CPU guarantee. Full traces were discarded; no request headers, tokens or bodies were saved in the qualification record.
+
+The existing Linux workerd tests cover injected source outages, failure expiry, concurrent admission and persistent storage. These failures were not induced against the public source sites. Cross-region quota load and a complete slow-upload deployment test remain follow-up qualification under [issue #72](https://github.com/MCPAQL/examples/issues/72); do not describe this pilot as exhaustive production load testing.

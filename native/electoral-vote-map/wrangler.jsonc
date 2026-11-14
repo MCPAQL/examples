@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "electoral-vote-map-mcpaql",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-13",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  // Add electoral.mcpaql.com only after account/quota and routing qualification.
+  // Keep the initial deployment unreachable, including while EVM_ENABLED=false.
+  "routes": [],
+  "vars": {
+    "EVM_ENABLED": "false",
+    "EVM_PUBLIC_ORIGIN": "https://electoral.mcpaql.com",
+    "EVM_ALLOW_ANONYMOUS": "false",
+    "EVM_DAILY_REQUEST_LIMIT": "10000",
+    "EVM_REQUESTS_PER_MINUTE": "120",
+    "EVM_CLIENT_REQUESTS_PER_MINUTE": "60",
+    "EVM_MAX_CONCURRENT": "16"
+  },
+  // EVM_CLIENT_TOKENS is an independent Worker secret, never Maker Perks data.
+  "durable_objects": {
+    "bindings": [{ "name": "ELECTORAL_COORDINATOR", "class_name": "ElectoralCoordinator" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["ElectoralCoordinator"] }],
+  "ratelimits": [{
+    "name": "MCP_RATE_LIMITER",
+    "namespace_id": "7201",
+    "simple": { "limit": 60, "period": 60 }
+  }]
+  // Workers Free enforces its 10 ms edge CPU allowance. Qualify that plan before
+  // adding traffic; a paid-plan CPU override does not raise the free allowance.
+}

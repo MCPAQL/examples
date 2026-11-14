@@ -15,7 +15,7 @@ The AI chooses which states count as “unexpected” and which alternatives to 
 
 ## Run and connect
 
-Requires Node.js 22 or later.
+Requires Node.js 22.12 or later.
 
 ```sh
 cd native/electoral-vote-map
@@ -37,6 +37,10 @@ For an MCP client supporting local stdio servers, add this entry to its MCP conf
 ```
 
 Stdio is the default. `--transport=stdio` selects it explicitly. The server returns URLs for people to open; it does not navigate or synchronize a browser.
+
+### Cloudflare Workers
+
+The adapter also has an isolated Worker implementation with coordinated admission quotas and source caching. Its configuration starts disabled; no public endpoint is deployed yet. See [Hosting and abuse controls](HOSTING.md) for the pilot profile, credential setup, real-runtime tests and remaining deployment steps.
 
 ### HTTP and HTTPS
 

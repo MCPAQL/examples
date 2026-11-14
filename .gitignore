@@ -37,6 +37,10 @@ generated/*/adapter/dist/
 
 # Native runnable examples
 native/*/node_modules/
+native/*/.worker-build/
+native/*/.wrangler/
+native/*/.dev.vars
+native/*/.dev.vars.*
 
 # REA validation targets, built in the VM
 generated/rea-mcp/validation/targets/build/
