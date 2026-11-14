@@ -31,6 +31,7 @@ The identity table keys exact socket addresses, with no IPv6 prefix aggregation.
 The dedicated Worker routes every location to one namespace-local Durable Object named `global-v1`. The object provides:
 
 - Transactional daily admission accounting and global/client token buckets. Quotas survive restarts and deployments that preserve the namespace/ID. Initialization and MCP notifications count as admitted POSTs too; this is a request quota, not a count of tool calls. Quota and concurrency rejections do not spend another client's allowance.
+- Named clients also have a persistent daily allowance, defaulting to 1,000 admissions. Minute refills and reconnects do not replenish it. UTC midnight resets both global and client daily counters. When upgrading legacy records without per-client counts, the existing global count is conservatively attributed to each existing client for that day; upgrading does not grant fresh allowance. New identities still receive their own allowance, subject to the global quota and 32-identity bound. OAuth onboarding and stable user identities are tracked in [issue #75](https://github.com/MCPAQL/examples/issues/75).
 - At most 32 named authenticated client identities in its daily quota record; original bearer tokens are not stored or forwarded. Daily counts reset at UTC midnight. Authenticated clients sharing an IP receive independent allowances; anonymous users still share network limits and cannot be identified individually behind a shared proxy.
 - A coordinated durable cache for exactly four public source URLs. Concurrent reads coalesce. Bounded chunks stay below storage value limits and are replaced transactionally. Successful retrievals expire after five minutes; failures have a 30-second durable cooldown. Restored parser caches preserve the original retrieval timestamp and expiry instead of claiming that old content was just downloaded.
 
@@ -38,7 +39,17 @@ The edge applies the Cloudflare rate-limit binding to named credentials or anony
 
 Valid credentials have separate edge buckets even behind a common proxy. Invalid credentials and anonymous traffic use the network bucket. The Durable Object adds strict per-client limits for authenticated identities across locations. Different anonymous users behind one shared IP remain indistinguishable; prefix aggregation can group a household/network and is an abuse tradeoff, not identity verification.
 
-Header size is bounded to 16 KiB; body reading is bounded to 1 MiB and five seconds, with fatal UTF-8 decoding and rejection of JSON batches. Only content type, Accept, negotiated protocol version and the verified client ID reach the private object binding. Authorization, cookies, forwarded identity and caller-supplied internal identity headers are discarded. The coordinator rechecks request size and applies a concurrency bound before quota/storage work.
+Header size is bounded to 16 KiB. Declared oversized bodies are rejected at the edge. Other requests first reserve the coordinator's shared concurrency slot and consume their daily admission, before the edge reads or parses the body. A random single-use reservation is bound to the verified client, expires after ten seconds if abandoned, and cannot be consumed or released by another client. Body errors release the slot; admitted invalid bodies still consume the sender's daily allowance. Quota/concurrency rejections do not consume another allowance. The edge bounds reading to 1 MiB and five seconds, with fatal UTF-8 decoding and rejection of JSON batches, then forwards the bounded text with its reservation. The coordinator consumes the reservation once and rechecks the body before MCP dispatch. A coordinator recreation loses outstanding reservations, which fail closed; persistent quota history is retained.
+
+The explicit reservation avoids depending on a provider streaming a service-binding body into the coordinator before buffering it. Successful MCP requests make two object calls (admission and dispatch); body failures make admission and release calls. These count as provider usage in addition to public edge invocations. The reading timeout is a Worker-reader deadline, not a total client-upload deadline. A real 6.5-second delayed upload did not demonstrate a 408 response; coordinator usage stayed at 28 admissions and zero active requests at one and four seconds, then rose to 29 after the completed request returned 200. This establishes that the observed delay did not occupy coordinator admission; it does not prove a total ingress upload deadline or bound provider buffering. Only content type, Accept, negotiated protocol version, verified client ID and private reservation ID reach the dispatch binding. Forwarded body length is derived from the validated text rather than trusting the original header. Authorization, cookies, forwarded identity and caller-supplied internal identity/reservation headers are discarded.
+
+### Operator usage and ingress protection
+
+`EVM_OPERATOR_CLIENT_IDS` is a JSON array of explicitly authorized existing client IDs; it defaults to `[]`, disabling operator access. A bearer-authenticated operator can GET `/admin/usage`. Both the edge and private coordinator check operator membership; other clients cannot impersonate an operator through request headers. The response uses `Cache-Control: no-store` and exposes aggregate daily admissions/remaining quota, active-client count, highest client usage and current concurrency, without tokens, client IDs or request content. Operators can inspect accounting even after the MCP daily quota is exhausted.
+
+Daily admissions are persisted. The response also includes bounded in-memory rejection counts by HTTP status and their start timestamp. These counters reset when the Durable Object is recreated, exclude edge/provider rejections and are not durable auditing or a complete alerting system. Rejections do not add a storage write each time. Use provider analytics for edge request/rejection visibility; do not enable request-header/body logging to obtain aggregate usage.
+
+The application edge binding executes inside the Worker. It does not prevent rejected traffic from invoking the Worker. Before public launch, qualify a provider-side rule scoped only to `electoral.mcpaql.com` to limit ingress before Worker work, including invalid credentials, unsupported paths and uploads. Use machine-compatible blocking/rate-limit responses, not browser challenges on `/mcp`. Check rule availability and existing zone rules before applying it; do not replace a rule protecting Maker Perks. Provider DDoS protection and coarse network limits complement authenticated per-client limits but do not guarantee availability against distributed abuse. Keep anonymous access disabled and public onboarding blocked under #72 until the applicable ingress and distributed tests are complete.
 
 ### Proposed pilot profile
 
@@ -47,10 +58,11 @@ The committed `wrangler.jsonc` is an isolated deployment configuration, **disabl
 | Setting | Proposed value |
 |---------|----------------|
 | Worker | `electoral-vote-map-mcpaql` |
-| Proposed dedicated hostname | `electoral.mcpaql.com`; not attached by the bootstrap configuration |
+| Dedicated hostname for ingress isolation | `electoral.mcpaql.org`; not attached by the bootstrap configuration |
 | Public traffic | Disabled (`EVM_ENABLED=false`) |
 | Authentication | Required; separate named bearer credentials |
 | Daily admitted MCP requests | 10,000 globally |
+| Daily admitted requests per named client | 1,000 (`EVM_CLIENT_DAILY_REQUEST_LIMIT`) |
 | Global token bucket | 120 capacity, 120/minute refill |
 | Named-client token bucket | 60 capacity, 60/minute refill |
 | Edge approximate limiter | 60/minute per credential or anonymous network identity |
@@ -58,6 +70,7 @@ The committed `wrangler.jsonc` is an isolated deployment configuration, **disabl
 | Edge CPU allowance | Workers Free enforces 10 ms per invocation; qualify cold/warm behavior before enabling traffic |
 | Preview / workers.dev URLs | Disabled |
 | Application request logging | Disabled; no request/token/body logging added |
+| Operator usage access | Disabled by default; explicit `EVM_OPERATOR_CLIENT_IDS` required |
 
 These are application controls, not a dollar-denominated hosting cap. Edge invocations, rejected traffic, object calls and storage still consume provider usage. The account dashboard showed **Workers Free** and **Durable Objects Free tier** on November 14, 2026. Free-tier exhaustion rejects operations rather than purchasing overages, but the account-wide allowances are shared with Maker Perks and the other Workers. The 10,000 admitted-request quota does not protect those allowances from rejected edge traffic. Keep this service without public routes until the shared availability risk is accepted or the deployment is placed in a separate account.
 
@@ -83,7 +96,7 @@ Before deployment, verify a valid Cloudflare CLI login and choose the correct ac
 Bootstrap with `routes: []`, `workers_dev: false`, `preview_urls: false` and `EVM_ENABLED=false`. Verify those settings after upload. A successful bootstrap upload proves packaging and provider acceptance, not an accessible MCP endpoint. After the account/quota decision and DNS checks, attach the custom domain explicitly:
 
 ```json
-{"routes":[{"pattern":"electoral.mcpaql.com","custom_domain":true}]}
+{"routes":[{"pattern":"electoral.mcpaql.org","custom_domain":true}]}
 ```
 
 Configure `EVM_CLIENT_TOKENS` as a **Worker secret**, containing a JSON object with 1–32 stable client IDs mapped to unique random bearer tokens of 32–256 allowed characters. IDs contain lowercase letters, digits, underscore or hyphen; `alice` and `bob` below are examples of separate identities, not shared-account credentials. Tokens must not be committed, logged or put in public `vars`.
@@ -114,7 +127,7 @@ Read-only provider checks confirmed `EVM_ENABLED=false`, `workers.dev` and previ
 
 Mick chose the existing shared free account after the dashboard showed 311/100,000 Workers requests that day (0.311%), 15 Maker Perks production invocations over 24 hours with no runtime errors, and 163.81 MB of the 5 GB Durable Objects storage allowance (3.28%). Account isolation is not a prerequisite. Revisit capacity as usage grows; this decision does not authorize a paid-plan upgrade.
 
-The pilot endpoint is **`https://electoral.mcpaql.com/mcp`**. It requires a separate named bearer credential; anonymous access remains disabled. It has no OAuth discovery service. The secret was installed with secure stdin, without using Maker Perks data. The retained personal credential is stored locally in the ignored `.wrangler/pilot/credentials.json` with mode `0600`; never commit or publish that file. Temporary qualification credentials were removed, and their rejection was verified after provider propagation.
+The original pilot endpoint was **`https://electoral.mcpaql.com/mcp`**. The abuse-hardening deployment moves it to `electoral.mcpaql.org` for the separate ingress rule described below. It requires a separate named bearer credential; anonymous access remains disabled. It has no OAuth discovery service. The secret was installed with secure stdin, without using Maker Perks data. The retained personal credential is stored locally in the ignored `.wrangler/pilot/credentials.json` with mode `0600`; never commit or publish that file. Temporary qualification credentials were removed, and their rejection was verified after provider propagation.
 
 On November 14, 2026, source revision `dbdde79ec2cac700e874a70d8c03b2a8be81cced` was deployed with the custom-domain route and `EVM_ENABLED=true` override. Following credential rotation, the active version was `55bd80c6-165e-4236-b3ad-35ede42ee1e2` at 21:46:10 UTC. Limits match the proposed profile above: 10,000 daily admitted POSTs, 120/min global, 60/min per named client, and 16 concurrent coordinator requests. Provider reads confirmed the original coordinator namespace, no preview/workers.dev URLs, and no changes to Maker Perks' deployment. Pilot deployment configurations are local ignored files under `.wrangler/pilot/`; they copy the bootstrap configuration with an absolute `main`, the custom-domain route shown above, and explicit admission variables.
 
@@ -128,3 +141,9 @@ Deployed qualification results:
 - Source retrieval timestamps survived the credential deployment without being refreshed. Eight temporary live trace events spanning edge and Durable Object execution reported 1–6 ms CPU, all outcomes `ok`, and no exceptions. This small sample is not a sustained-load or worst-case CPU guarantee. Full traces were discarded; no request headers, tokens or bodies were saved in the qualification record.
 
 The existing Linux workerd tests cover injected source outages, failure expiry, concurrent admission and persistent storage. These failures were not induced against the public source sites. Cross-region quota load and a complete slow-upload deployment test remain follow-up qualification under [issue #72](https://github.com/MCPAQL/examples/issues/72); do not describe this pilot as exhaustive production load testing.
+
+### Provider ingress isolation
+
+The November 14 dashboard inspection found the `mcpaql.com` Free zone's sole rate-limit rule already protecting Maker Perks. Reusing it would share network counters with Maker Perks. The same account's `mcpaql.org` Free zone had an unused slot, allowing a separate electoral ingress rule without a plan upgrade or changing Maker Perks.
+
+Rule `97e36a521a77461395ef429bc8afaab3` is active in `mcpaql.org`, matching only `(http.host eq "electoral.mcpaql.org")`: 120 requests per IP per 10 seconds, followed by a 10-second Block action. This is coarse ingress protection in addition to the stricter authenticated application limits. All clients behind one IP share this network allowance. It does not solve distributed address rotation, and it does not make rejected traffic free of all provider usage. There is no browser challenge on the MCP path. The old `.com` route must be removed during migration so it cannot bypass this rule; preview/workers.dev URLs must remain disabled. Verify live blocking and post-block recovery before describing this deployment step as qualified.

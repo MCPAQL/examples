@@ -37,9 +37,12 @@ export function readWorkerConfig(env) {
   }
   const anonymous = env.EVM_ALLOW_ANONYMOUS === 'true';
   if (!anonymous && !tokens.length) throw new Error('Client authentication required');
+  const operatorIds = JSON.parse(env.EVM_OPERATOR_CLIENT_IDS ?? '[]');
+  if (!Array.isArray(operatorIds) || operatorIds.length > 32 || new Set(operatorIds).size !== operatorIds.length || operatorIds.some(id => !tokens.some(token => token.id === id))) throw new Error('Invalid operator configuration');
   return {
-    origin: origin.origin, anonymous, tokens,
+    origin: origin.origin, anonymous, tokens, operatorIds,
     dailyLimit: integer('EVM_DAILY_REQUEST_LIMIT', 10_000, 100_000),
+    clientDailyLimit: integer('EVM_CLIENT_DAILY_REQUEST_LIMIT', 1000, 100_000),
     perMinute: integer('EVM_REQUESTS_PER_MINUTE', 120, 1000),
     perClientPerMinute: integer('EVM_CLIENT_REQUESTS_PER_MINUTE', 60, 1000),
     maxConcurrent: integer('EVM_MAX_CONCURRENT', 16, 64),
@@ -53,6 +56,11 @@ export function authenticatedClient(request, config) {
   for (const token of config.tokens) if (timingSafeEqual(hash, token.hash)) id = token.id;
   if (!id) throw new HttpFailure(401, 'Unauthorized');
   return id;
+}
+
+export function checkBodyLength(request) {
+  const length = request.headers.get('content-length');
+  if (length !== null && (!/^\d+$/.test(length) || Number(length) > MAX_WORKER_BODY)) throw new HttpFailure(413, 'Request body too large');
 }
 
 // Cloudflare supplies CF-Connecting-IP at its public edge. Never read forwarded
@@ -72,8 +80,7 @@ export function networkIdentity(ip) {
 }
 
 export async function boundedBody(request, timeoutMs = 5000) {
-  const length = request.headers.get('content-length');
-  if (length !== null && (!/^\d+$/.test(length) || Number(length) > MAX_WORKER_BODY)) throw new HttpFailure(413, 'Request body too large');
+  checkBodyLength(request);
   if (!request.body) throw new HttpFailure(400, 'Missing request body');
   const reader = request.body.getReader(), decoder = new TextDecoder('utf-8', { fatal: true });
   let timer, size = 0, text = '';
@@ -104,20 +111,39 @@ export async function takeBudget(storage, config, clientId, time = Date.now()) {
     const day = new Date(time).toISOString().slice(0, 10);
     const budget = await tx.get('request-budget') ?? { day, count: 0, tokens: config.perMinute, updated: time, clients: {} };
     if (budget.day !== day) { budget.day = day; budget.count = 0; budget.clients = {}; }
-    if (budget.count >= config.dailyLimit) throw new HttpFailure(429, 'Daily admission quota exhausted', Math.ceil((Date.parse(day + 'T00:00:00Z') + 86_400_000 - time) / 1000));
+    const dailyRetry = Math.max(1, Math.ceil((Date.parse(day + 'T00:00:00Z') + 86_400_000 - time) / 1000));
+    if (budget.count >= config.dailyLimit) throw new HttpFailure(429, 'Daily admission quota exhausted', dailyRetry);
     const refill = (bucket, capacity) => { bucket.tokens = Math.min(capacity, bucket.tokens + Math.max(0, time - bucket.updated) * capacity / 60_000); bucket.updated = time; };
     refill(budget, config.perMinute);
     let client;
     if (clientId) {
       client = budget.clients[`client:${clientId}`];
       if (!client && Object.keys(budget.clients).length >= 32) throw new HttpFailure(429, 'Client quota table full', 60);
-      client ??= { tokens: config.perClientPerMinute, updated: time };
+      client ??= { tokens: config.perClientPerMinute, updated: time, count: 0 };
+      // Legacy records have no per-client count. Conservatively attribute the
+      // existing global count rather than granting a new allowance on upgrade.
+      client.count ??= budget.count;
+      if (client.count >= config.clientDailyLimit) throw new HttpFailure(429, 'Client daily admission quota exhausted', dailyRetry);
       refill(client, config.perClientPerMinute);
       if (client.tokens < 1) throw new HttpFailure(429, 'Client admission quota exhausted', Math.ceil((1 - client.tokens) * 60 / config.perClientPerMinute));
     }
     if (budget.tokens < 1) throw new HttpFailure(429, 'Global admission rate exhausted', Math.ceil((1 - budget.tokens) * 60 / config.perMinute));
     budget.tokens--; budget.count++;
-    if (client) { client.tokens--; budget.clients[`client:${clientId}`] = client; }
+    if (client) { client.tokens--; client.count++; budget.clients[`client:${clientId}`] = client; }
     await tx.put('request-budget', budget);
   });
+}
+
+// Operator-visible aggregate accounting, never tokens, request data or client IDs.
+export async function readUsage(storage, config, time = Date.now()) {
+  const day = new Date(time).toISOString().slice(0, 10);
+  const stored = await storage.get('request-budget');
+  const budget = stored?.day === day ? stored : { count: 0, clients: {} };
+  const clients = Object.values(budget.clients);
+  return {
+    day, admitted: budget.count, daily_limit: config.dailyLimit,
+    daily_remaining: Math.max(0, config.dailyLimit - budget.count),
+    client_daily_limit: config.clientDailyLimit, active_clients: clients.length,
+    highest_client_admissions: Math.max(0, ...clients.map(client => client.count ?? budget.count)),
+  };
 }
