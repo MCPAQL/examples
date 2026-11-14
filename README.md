@@ -29,7 +29,7 @@ For **normative protocol specifications**, see the [spec repository](https://git
 
 | Example | Description | Source |
 |---------|-------------|--------|
-| [Electoral Vote Map](native/electoral-vote-map/README.md) | Discover scenarios, query dated polling evidence, explore state flips and sourced congressional scenarios, and return clickable maps through MCP-AQL. | Electoral Vote Map public map payload/share URLs and electoral-vote.com polling downloads |
+| [Electoral Vote Map](native/electoral-vote-map/README.md) | Discover scenarios, query dated polling evidence, explore state flips and sourced congressional scenarios, and return clickable maps through MCP-AQL over stdio or HTTP(S). | Electoral Vote Map public map payload/share URLs and electoral-vote.com polling downloads |
 
 ### Native Sensor Adapters
 

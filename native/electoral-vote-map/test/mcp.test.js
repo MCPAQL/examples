@@ -7,7 +7,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 test('real MCP stdio handshake, discovery, scenario change and errors', async () => {
   const client = new Client({ name: 'electoral-demo-test', version: '0.1.0' });
-  const transport = new StdioClientTransport({ command: process.execPath, args: [fileURLToPath(new URL('../src/server.js', import.meta.url))], env: { ...process.env, EVM_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/site.html', import.meta.url)), EVM_POLL_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/polling.csv', import.meta.url)) }, stderr: 'pipe' });
+  const transport = new StdioClientTransport({ command: process.execPath, args: [fileURLToPath(new URL('../src/server.js', import.meta.url)), '--transport=stdio'], env: { ...process.env, EVM_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/site.html', import.meta.url)), EVM_POLL_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/polling.csv', import.meta.url)) }, stderr: 'pipe' });
   try {
     await client.connect(transport);
     const { tools } = await client.listTools();
