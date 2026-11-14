@@ -34,6 +34,8 @@ exclude = [
     # Electoral endpoint is verified with a bearer credential in hosting qualification.
     "^https://electoral\\.mcpaql\\.com/mcp$",
     "^https://electoral\\.mcpaql\\.org/mcp$",
+    # OAuth callbacks require a one-time code/state and are not navigable pages.
+    "^https://electoral\\.mcpaql\\.org/callback$",
 
     # npm package pages (npmjs.com answers automated checkers with 403)
     "^https?://(www\\.)?npmjs\\.com",

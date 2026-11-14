@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Electoral Worker opt-in OAuth with Cloudflare's provider library, Google OIDC sign-in, Turnstile consent verification, separate authentication storage budgets and account quotas shared across client apps. OAuth and public enrollment remain disabled until provider setup and live qualification.
+
 - Electoral Worker per-client concurrent admission limits preserve global capacity for other clients during one credential's burst.
 
 - Electoral Worker abuse safeguards: persistent per-client daily allowances, shared admission before body parsing, and an explicitly authorized aggregate usage endpoint.

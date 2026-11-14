@@ -1,4 +1,5 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- cspell:words PKCE CIMD DCR -->
 # OAuth for the hosted Electoral Vote Map adapter
 
 This is an opt-in Worker integration. The deployed pilot continues to require its

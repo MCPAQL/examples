@@ -20,7 +20,9 @@ test('stable pseudonymous quota identities distinguish issuers and subjects and 
   assert.notEqual(id, quotaIdentity('https://accounts.google.com', 'user-two'));
   assert.equal(isOAuthIdentity('mick'), false);
   assert.equal(sessionValid({ quotaId: id, loginAt: 1000 }, 1000), true);
-  for (const props of [{ quotaId: 'mick', loginAt: 1000 }, { quotaId: id, loginAt: 1001 }, { quotaId: id, loginAt: 0 }]) assert.equal(sessionValid(props, 7 * 86_400_000), false);
+  assert.equal(sessionValid({ quotaId: 'mick', loginAt: 1000 }, 1000), false);
+  assert.equal(sessionValid({ quotaId: id, loginAt: 1001 }, 1000), false);
+  assert.equal(sessionValid({ quotaId: id, loginAt: 0 }, 7 * 86_400_000), false);
 });
 
 test('authentication KV writes have a durable atomic ceiling, including failed attempts and restarts', async () => {
