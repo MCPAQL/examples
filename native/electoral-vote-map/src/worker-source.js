@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { HOME } from './map.js';
-import { DATASETS } from './polling.js';
+import { DATASETS, parsePollingCsv } from './polling.js';
+import { parseSite } from './site.js';
 import { markSourceTime } from './source-timing.js';
 
 const SOURCES = [HOME, ...DATASETS.map(d => d.url)];
 const MAX_BYTES = 2 * 1024 * 1024, CHUNK_CHARS = 8192;
 // Chunk values stay below Durable Object KV's 128 KiB value limit, including
 // Unicode/serialization overhead. One logical source has at most 256 chunks.
-export function durableSourceFetch(storage, { fetchImpl = fetch, now = Date.now } = {}) {
+export function durableSourceFetch(storage, { fetchImpl = (url, init) => fetch(url, init), now = Date.now } = {}) {
   const pending = new Map();
   async function read(key) {
     return storage.transaction(async tx => {
@@ -64,6 +65,11 @@ export function durableSourceFetch(storage, { fetchImpl = fetch, now = Date.now 
             body += decoder.decode();
           } finally { await reader.cancel(); }
           const retrievedAt = now();
+          // An HTTP 200 maintenance page is not a successful source contract.
+          // Quarantine validates CSV structure without hiding rejected row evidence.
+          const source = { url: SOURCES[index], retrieved_at: new Date(retrievedAt).toISOString(), mode: 'live' };
+          if (index === 0) parseSite(body, source);
+          else parsePollingCsv(body, DATASETS[index - 1], source, { row_policy: 'quarantine' });
           entry = { body, retrievedAt, expires: retrievedAt + 300_000 };
         } catch { entry = { error: true, expires: now() + 30_000 }; }
         await write(key, entry);

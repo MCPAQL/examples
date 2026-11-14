@@ -23,7 +23,7 @@ async function runtime(t, { vars = {}, persist, outbound, edgeLimit = 10_000 } =
     compatibilityDate: '2026-11-13', compatibilityFlags: ['nodejs_compat'], cf: false, port: 0,
     bindings: { ...bindings, ...vars },
     durableObjects: { ELECTORAL_COORDINATOR: { className: 'ElectoralCoordinator', useSQLite: true } },
-    ...(persist ? { durableObjectsPersist: persist } : {}),
+    ...(persist ? { resourcePersistencePath: persist } : {}),
     ratelimits: { MCP_RATE_LIMITER: { namespace_id: '7201', simple: { limit: edgeLimit, period: 60 } } },
     outboundService: async request => {
       requests.push({ url: request.url, authorization: request.headers.get('authorization'), cookie: request.headers.get('cookie') });
@@ -59,7 +59,9 @@ test('real workerd runs concurrent SDK clients with the same MCP-AQL operations 
     assert.deepEqual((await c.listTools()).tools.map(t => t.name), ['mcp_aql_read']);
     const invoke = (operation, params = {}) => c.callTool({ name: 'mcp_aql_read', arguments: { operation, params } });
     assert.equal((await invoke('introspect')).structuredContent.success, true);
-    assert.equal((await invoke('list_scenarios')).structuredContent.data.scenarios.length, 7);
+    const scenarios = await invoke('list_scenarios');
+    assert.equal(scenarios.structuredContent.success, true, JSON.stringify(scenarios));
+    assert.equal(scenarios.structuredContent.data.scenarios.length, 7);
     const changed = await invoke('modify_map', { scenario_id: 'blue-wall', edits: [{ unit: 'MA', flip: true }] });
     assert.equal(changed.structuredContent.data.map.totals.rep, 279);
     const poll = await invoke('get_poll_average', { dataset_id: 'senate_2024', race_id: 'PA', as_of: '2024-11-02' });
@@ -96,7 +98,7 @@ test('durable source cache survives runtime recreation without relabeling retrie
   t.after(() => rm(directory, { recursive: true, force: true }));
   const app = await runtime(t, { persist: directory });
   const map = await app.tool('get_map');
-  assert.equal(map.structuredContent.success, true);
+  assert.equal(map.structuredContent.success, true, JSON.stringify(map));
   assert.equal(app.requests.length, 1);
   await app.mf.dispose();
   const restarted = await runtime(t, { persist: directory });

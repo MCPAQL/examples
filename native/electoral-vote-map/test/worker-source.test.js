@@ -8,10 +8,11 @@ import { createPollingClient, DATASETS } from '../src/polling.js';
 import { HOME } from '../src/map.js';
 import { sourceTime } from '../src/source-timing.js';
 import { memoryStorage } from './helpers/storage.js';
+const htmlFixture = await readFile(new URL('./fixtures/site.html', import.meta.url), 'utf8');
 
 test('durable source cache coalesces, chunks bounded values and survives recreation', async () => {
   const storage = memoryStorage(); let calls = 0;
-  const text = 'x'.repeat(2 * 1024 * 1024);
+  const text = htmlFixture + ' '.repeat(2 * 1024 * 1024 - Buffer.byteLength(htmlFixture));
   const options = { now: () => 1000, fetchImpl: async (url, init) => {
     calls++; assert.equal(url, HOME); assert.equal(init.redirect, 'error');
     assert.equal(init.headers.authorization, undefined);
@@ -32,8 +33,8 @@ test('durable source cache coalesces, chunks bounded values and survives recreat
 
 test('failed sources keep a durable cooldown across restarts and never serve stale successes', async () => {
   const storage = memoryStorage(); let time = 0, calls = 0;
-  const options = { now: () => time, fetchImpl: async () => { calls++; return new Response(calls === 1 ? 'good' : 'failed', { status: calls === 1 ? 200 : 503 }); } };
-  assert.equal(await (await durableSourceFetch(storage, options)(HOME)).text(), 'good');
+  const options = { now: () => time, fetchImpl: async () => { calls++; return new Response(calls === 1 ? htmlFixture : 'failed', { status: calls === 1 ? 200 : 503 }); } };
+  assert.equal(await (await durableSourceFetch(storage, options)(HOME)).text(), htmlFixture);
   time = 300_001;
   assert.equal((await durableSourceFetch(storage, options)(HOME)).status, 503);
   assert.equal((await durableSourceFetch(storage, options)(HOME)).status, 503);
@@ -41,6 +42,21 @@ test('failed sources keep a durable cooldown across restarts and never serve sta
   time += 30_001;
   assert.equal((await durableSourceFetch(storage, options)(HOME)).status, 503);
   assert.equal(calls, 3);
+});
+
+test('HTTP-200 contract failures use the short durable cooldown and recover when the source recovers', async () => {
+  const csv = await readFile(new URL('./fixtures/polling.csv', import.meta.url), 'utf8');
+  for (const [url, valid] of [[HOME, htmlFixture], [DATASETS[1].url, csv]]) {
+    const storage = memoryStorage(); let time = 0, calls = 0;
+    const options = { now: () => time, fetchImpl: async () => new Response(++calls === 1 ? '<html>Maintenance</html>' : valid) };
+    assert.equal((await durableSourceFetch(storage, options)(url)).status, 503);
+    time = 29_999;
+    assert.equal((await durableSourceFetch(storage, options)(url)).status, 503);
+    assert.equal(calls, 1);
+    time = 30_001;
+    assert.equal((await durableSourceFetch(storage, options)(url)).status, 200);
+    assert.equal(calls, 2);
+  }
 });
 
 test('oversize and invalid-UTF8 sources are rejected before storage and remain unavailable', async () => {
