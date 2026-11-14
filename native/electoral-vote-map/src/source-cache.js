@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Callers validate fixed catalog keys before entry. Failures are cached briefly
 // too, so an unavailable upstream cannot be hammered by sequential client retries.
+// All loader rejections, including contract and programmer errors, share the short
+// cooldown. The original error is rethrown; failures never become successful data.
+// This is intentional for the four fixed source keys, not a general-purpose cache.
 export function createSourceCache(load, { now = () => new Date(), ttlMs = 300_000, failureTtlMs = 30_000 } = {}) {
   const cache = new Map(), pending = new Map();
   return async key => {

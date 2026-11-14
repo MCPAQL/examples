@@ -10,13 +10,19 @@ Public traffic can still consume hosting CPU, requests, memory, transfer and sou
 
 ## Implemented Node HTTP protections
 
-- Global and socket-IP token buckets default to 120 and 60 requests per minute, respectively, with the same burst capacities. The identity table holds at most 1,024 clients and rejects new identities when full. Forwarded IP headers are ignored.
+- Global and socket-IP token buckets default to 120 and 60 requests per minute, respectively, with the same burst capacities. Admission rejection spends no quota or new identity slot; admitted requests consume both buckets, including later authentication/path failures. The identity table holds at most 1,024 clients and rejects new identities when full. Idle entries expire after 60 seconds, with a request-driven sweep at most once per second. Forwarded IP headers are ignored.
 - At most 16 requests are admitted concurrently. Admission runs before authentication and body parsing, including failures and health requests. Rejections return 429 or 503 with Retry-After.
 - Host and Origin allowlists, an optional bearer token, TLS support, a 1 MiB MCP body limit, a 16 KiB header limit, and reception timeouts bound individual requests.
 - Source reads coalesce concurrently, cache successes for five minutes, and cache failures for 30 seconds. Strict/quarantine policy changes do not trigger separate downloads. No stale success is silently presented as fresh after a failed refresh.
 - Only four source cache keys exist. Caller-supplied addresses, cookies and Authorization headers do not reach sources. Direct transport errors contain generic messages; no request-body or credential logging is added.
 
 These controls apply per process and reset on restart. Behind a reverse proxy, the socket-IP bucket sees the proxy rather than individual users. Keep the origin private and enforce actual client identity at the edge. A multi-instance deployment needs coordinated quotas and caching; process-local buckets are not a worldwide usage cap.
+
+### Known identity limitations
+
+All users behind one proxy or tunnel share its socket-IP allowance. One noisy user can exhaust that shared allowance and block the others, even when the global bucket still has capacity. There is no trusted-proxy mode: accepting arbitrary forwarded identity headers would let callers bypass the limiter. Public deployment must apply individual-client limits at the trusted edge; changing the process limits alone does not establish per-user fairness.
+
+The identity table keys exact socket addresses, with no IPv6 prefix aggregation. An attacker rotating many addresses, including within one IPv6 /64, can fill its 1,024 slots and temporarily deny new legitimate clients. Full-table rejections preserve existing clients' quota, but they do not prevent table saturation. Prefix aggregation or authenticated identities should be evaluated at the deployment edge under issue #72, with shared-network fairness considered. Cleanup is bounded and runs at most once per second; it does not guarantee availability against distributed traffic.
 
 ## Cloudflare deployment follow-up
 

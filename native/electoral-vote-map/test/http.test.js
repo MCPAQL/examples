@@ -199,6 +199,19 @@ test('HTTP counts failed authentication attempts and ignores spoofed proxy ident
   assert.doesNotMatch(await response.text(), /test-only-secret/);
 });
 
+test('HTTP parser rejects oversized headers before dispatch and remains usable', { timeout: 10_000 }, async t => {
+  let calls = 0;
+  const { url } = await start(t, { dispatch: async () => { calls++; return { success: true, data: {} }; } });
+  try {
+    assert.equal(await rawHttp(url, { 'X-Oversized': 'x'.repeat(17 * 1024) }), 431);
+  } catch (error) {
+    // Some supported Node/platform combinations close the connection instead.
+    assert.ok(['ECONNRESET', 'EPIPE'].includes(error.code), `Unexpected parser failure: ${error.code}`);
+  }
+  assert.equal(calls, 0);
+  assert.equal((await fetch(new URL('/healthz', url))).status, 200);
+});
+
 test('HTTP rejects work over the concurrency bound and recovers when the active response finishes', { timeout: 10_000 }, async t => {
   let release, entered;
   const blocked = new Promise(resolve => { release = resolve; });

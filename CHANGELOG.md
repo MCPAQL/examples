@@ -36,6 +36,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Fixed
 
+- Electoral Vote Map admission rejections no longer consume shared or per-client tokens or reserve new identity slots. Includes regression coverage for client isolation, table/concurrency rejection, and oversized HTTP headers; bounds eviction sweeps to once per second and documents proxy/address-rotation limitations.
+
 - AirPods adapter README: the prebuilt-binaries link now points to the `v2026.05.15` release; `releases/latest` resolved to a release with no AirPods assets
 
 ## [2026.10.14] - 2026-10-14
