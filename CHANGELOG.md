@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Electoral Vote Map example now supports stdio and stateless Streamable HTTP, including direct HTTPS with supplied TLS files, proxy hosting instructions, request limits, Host/Origin validation, optional bearer authentication, and transport integration tests.
+
 - Polling review hardening: year-crossing fieldwork, explicit state identities, and visible unknown-label and dataset-duplicate exclusions, with documented fail-closed and duplicate-identity limitations.
 
 - Electoral Vote Map example polling source module for electoral-vote.com: three verified datasets, typed poll/result/call records, dated and freshness-aware averages, separate special races, and map generation with explicit source-year, missing-data and district policies.

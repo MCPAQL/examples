@@ -10,6 +10,8 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "start": "node src/server.js",
+    "start:http": "node src/server.js --transport=http",
+    "start:https": "node src/server.js --transport=https",
     "test": "node --test test/*.test.js",
     "smoke:live": "node scripts/live-smoke.js",
     "smoke:polling": "node scripts/polling-live-smoke.js"

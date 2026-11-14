@@ -36,7 +36,66 @@ For an MCP client supporting local stdio servers, add this entry to its MCP conf
 }
 ```
 
-This version provides a local stdio server, matching the runnable examples in this repository. A remote ChatGPT connector requires a separately hosted MCP transport; that deployment is not included. The server returns URLs for people to open. Browser navigation and synchronization are future integration work, not implied by URL generation.
+Stdio is the default. `--transport=stdio` selects it explicitly. The server returns URLs for people to open; it does not navigate or synchronize a browser.
+
+### HTTP and HTTPS
+
+The same adapter also serves MCP over [Streamable HTTP](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports#streamable-http) at `/mcp`, using the installed MCP SDK's supported protocol versions. Choose one transport per process; run separate processes if both are needed simultaneously. The tool catalog, MCP-AQL envelopes, introspection, and operation behavior are identical in each mode.
+
+Start a local HTTP listener (defaults to `127.0.0.1:3000`):
+
+```sh
+npm run start:http
+```
+
+Connect a Streamable HTTP MCP client to `http://127.0.0.1:3000/mcp`. For Claude Code:
+
+```sh
+claude mcp add --transport http electoral-vote-map http://127.0.0.1:3000/mcp
+```
+
+For **direct HTTPS**, supply a certificate chain and private key as PEM files:
+
+```sh
+EVM_TLS_CERT=/absolute/path/fullchain.pem \
+EVM_TLS_KEY=/absolute/path/privkey.pem \
+npm run start:https
+```
+
+Use a certificate trusted by the connecting client. Certificate acquisition, renewal, and restarting after renewal are the operator's responsibility. TLS 1.2 or later is required. Keep keys out of the repository.
+
+For a public hostname, the usual deployment is **HTTPS through a reverse proxy**. For example, run the adapter on loopback:
+
+```sh
+EVM_ALLOWED_HOSTS=maps.example.com npm run start:http
+```
+
+Then use a Caddyfile like:
+
+```caddyfile
+maps.example.com {
+    reverse_proxy 127.0.0.1:3000
+}
+```
+
+Replace the hostname, point its DNS at your server, and configure Caddy's certificate prerequisites. The remote MCP URL is `https://maps.example.com/mcp`. Caddy terminates TLS; the adapter remains on loopback. Preserve the configured Host header through the proxy. Forwarded headers are not trusted or used to bypass validation.
+
+| Variable | Default / meaning |
+|----------|-------------------|
+| `EVM_TRANSPORT` | `stdio`; accepts `stdio`, `http`, `https`; CLI `--transport=...` takes precedence |
+| `EVM_HOST` | `127.0.0.1`; listener address for HTTP(S) |
+| `EVM_PORT` | `3000`; integer 0–65535, with 0 choosing a free port |
+| `EVM_TLS_CERT` | Required PEM certificate-chain path for direct HTTPS |
+| `EVM_TLS_KEY` | Required PEM private-key path for direct HTTPS |
+| `EVM_ALLOWED_HOSTS` | Comma-separated exact `host[:port]` authorities; defaults to loopback names with the actual listener port; set the public authority for proxy/direct remote hosting |
+| `EVM_ALLOWED_ORIGINS` | Comma-separated exact HTTP(S) origins, without trailing slashes; defaults to allowed authorities with the listener scheme; other supplied Origin headers are rejected |
+| `EVM_HTTP_BEARER_TOKEN` | Optional shared bearer token; when set, every `/mcp` request must include `Authorization: Bearer TOKEN` |
+
+`GET /healthz` returns only `{"status":"ok"}` and does not require a bearer token. Host and Origin checks apply to it too. There is no wildcard CORS support; browser-based JavaScript clients need a separate, carefully configured gateway. Native remote MCP clients can omit Origin.
+
+To restrict a deployment, set the bearer token through your service's secret configuration and give it only to clients that support an Authorization header. Protect remote access with HTTPS and your chosen authentication/rate-limiting gateway. This example does **not** implement OAuth discovery or authorization. Private ChatGPT connectors that require OAuth need an OAuth-capable gateway; a shared bearer token alone does not provide that flow. Public hosting and client registration are separate deployment steps.
+
+The HTTP transport is stateless and returns JSON responses. It has no session store, standalone SSE stream, or legacy HTTP+SSE endpoint; `GET` and `DELETE /mcp` return 405. Independent MCP server/transport instances handle concurrent POST requests while sharing only source caches. Request bodies are limited to 1 MiB, headers to a 10-second timeout, and request reception to 30 seconds. SIGINT/SIGTERM close the listener and active transports. HTTP diagnostics go to stderr, keeping stdout suitable for stdio mode.
 
 ## Operations
 
@@ -140,6 +199,6 @@ node tools/dist/conformance-cli.js \
 
 `EVM_POLL_TEST_FIXTURE` optionally supplies a synthetic source-format CSV for offline polling tests; it also labels responses as fixture mode. The committed polling fixture is entirely illustrative, with test figures rather than actual observations. It is built for the 2024 Senate schema, including a special race; other cycle/office parsers may reject it. Leave both fixture variables unset for live use.
 
-The MCPAQL tools validator currently checks registration, the request envelope, and introspection schemas. The example's tests additionally exercise a real MCP stdio connection, both supplied map URLs, every published scenario, district accounting, edits, research conversion, validation errors and upstream failures. `check-schemas.js` checks every operation/type introspection variant against the supplied normative schemas. The live smoke test discovers scenarios from the actual site and round-trips their URLs.
+The MCPAQL tools validator currently checks registration, the request envelope, and introspection schemas. The example's tests additionally exercise real MCP stdio and concurrent Streamable HTTP clients, direct HTTPS with certificate verification, HTTP validation/authentication/size limits and shutdown, both supplied map URLs, every published scenario, district accounting, edits, research conversion, validation errors and upstream failures. HTTPS tests use `openssl` to generate a temporary test certificate and delete its files afterward. `check-schemas.js` checks every operation/type introspection variant against the supplied normative schemas. The live smoke test discovers scenarios from the actual site and round-trips their URLs.
 
 The initial validation evidence is recorded under `validation/`: [live scenarios and modified map](validation/live-smoke.json), [MCPAQL tools checks](validation/mcpaql-tools.json), [spec schema checks and pinned revision](validation/spec-schemas.json), and [dependency audit](validation/dependency-audit.json). These files record one run; rerun the commands above to check current behavior and advisories.
