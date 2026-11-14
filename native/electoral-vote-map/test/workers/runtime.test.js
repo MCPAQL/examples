@@ -229,6 +229,24 @@ test('workerd concurrency rejection does not consume daily quota and recovers af
   assert.equal((await app.rpc('tools/list')).status, 429);
 });
 
+test('one client cannot occupy all global concurrency slots and recovers after completing work', { timeout: 60_000 }, async t => {
+  let release, entered;
+  const blocked = new Promise(resolve => { release = resolve; });
+  const started = new Promise(resolve => { entered = resolve; });
+  t.after(() => release());
+  const app = await runtime(t, { vars: { EVM_MAX_CONCURRENT: '3', EVM_CLIENT_MAX_CONCURRENT: '1', EVM_DAILY_REQUEST_LIMIT: '3' }, outbound: async () => { entered(); await blocked; return new RuntimeResponse(html); } });
+  const first = app.tool('get_map');
+  await started;
+  const busy = await app.rpc('tools/list');
+  assert.equal(busy.status, 429);
+  assert.equal((await busy.json()).error, 'Client concurrency exhausted');
+  assert.equal((await app.rpc('tools/list', {}, tokenB)).status, 200);
+  release();
+  assert.equal((await first).isError, false);
+  assert.equal((await app.rpc('tools/list')).status, 200);
+  assert.equal((await app.rpc('tools/list')).status, 429);
+});
+
 test('workerd rejects disabled service, bad credentials, origins, methods, encoding and oversized requests', { timeout: 60_000 }, async t => {
   const disabled = await runtime(t, { vars: { EVM_ENABLED: 'false' } });
   assert.equal((await disabled.rpc('tools/list')).status, 503);

@@ -80,6 +80,7 @@ export class ElectoralCoordinator {
   constructor(ctx, env) {
     this.ctx = ctx; this.env = env; this.active = 0;
     this.admissions = new Map();
+    this.activeClients = new Map();
     this.transientStats = { since: new Date().toISOString(), rejections_by_status: {} };
     const fetchImpl = durableSourceFetch(ctx.storage);
     // The durable fetch cache owns failure expiry. A second parser-layer failure
@@ -91,8 +92,14 @@ export class ElectoralCoordinator {
     if (!admission || admission.clientId !== clientId) return false;
     clearTimeout(admission.timer);
     this.admissions.delete(id);
-    this.active--;
+    this.releaseSlot(clientId);
     return true;
+  }
+  releaseSlot(clientId) {
+    this.active--;
+    const count = this.activeClients.get(clientId) - 1;
+    if (count) this.activeClients.set(clientId, count);
+    else this.activeClients.delete(clientId);
   }
   recordRejection(status) {
     this.transientStats.rejections_by_status[status] = (this.transientStats.rejections_by_status[status] ?? 0) + 1;
@@ -100,6 +107,7 @@ export class ElectoralCoordinator {
   async fetch(request) {
     let server;
     let admitted = false;
+    let admittedClientId;
     try {
       if (this.env.EVM_ENABLED !== 'true') throw new HttpFailure(503, 'Service disabled', 60);
       const config = readWorkerConfig(this.env), url = new URL(request.url);
@@ -108,7 +116,7 @@ export class ElectoralCoordinator {
       if (clientId && !config.tokens.some(token => token.id === clientId)) throw new HttpFailure(403, 'Unknown client');
       if (url.pathname === '/admin/usage' && request.method === 'GET') {
         if (!clientId || !config.operatorIds.includes(clientId)) throw new HttpFailure(403, 'Operator required');
-        return Response.json({ ...await readUsage(this.ctx.storage, config), active_requests: this.active, transient: this.transientStats }, { headers: { 'cache-control': 'no-store' } });
+        return Response.json({ ...await readUsage(this.ctx.storage, config), active_requests: this.active, client_concurrent_limit: config.clientMaxConcurrent, highest_client_concurrency: Math.max(0, ...this.activeClients.values()), transient: this.transientStats }, { headers: { 'cache-control': 'no-store' } });
       }
       if (!clientId && !config.anonymous) throw new HttpFailure(403, 'Client required');
       if (request.method !== 'POST') throw new HttpFailure(404, 'Not found');
@@ -122,7 +130,9 @@ export class ElectoralCoordinator {
       }
       if (url.pathname === '/admit') {
         if (this.active >= config.maxConcurrent) throw new HttpFailure(503, 'Server busy', 1);
-        this.active++; admitted = true;
+        const clientActive = this.activeClients.get(clientId) ?? 0;
+        if (clientActive >= config.clientMaxConcurrent) throw new HttpFailure(429, 'Client concurrency exhausted', 1);
+        this.active++; this.activeClients.set(clientId, clientActive + 1); admitted = true; admittedClientId = clientId;
         await takeBudget(this.ctx.storage, config, clientId);
         const id = crypto.randomUUID();
         const timer = setTimeout(() => this.releaseAdmission(id, clientId), 10_000);
@@ -135,7 +145,7 @@ export class ElectoralCoordinator {
       if (!admission || admission.clientId !== clientId) throw new HttpFailure(503, 'Admission expired', 1);
       clearTimeout(admission.timer);
       this.admissions.delete(admissionId);
-      admitted = true; // Consume once; keep its slot until MCP work finishes.
+      admitted = true; admittedClientId = clientId; // Keep its slot until MCP work finishes.
       const text = await boundedBody(request);
       server = createMcpServer(this.dispatch);
       const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true, maxRequestBodySize: 1024 * 1024 });
@@ -148,6 +158,6 @@ export class ElectoralCoordinator {
       this.recordRejection(status);
       return failureReply(error);
     }
-    finally { if (admitted) this.active--; if (server) await server.close().catch(() => {}); }
+    finally { if (admitted) this.releaseSlot(admittedClientId); if (server) await server.close().catch(() => {}); }
   }
 }

@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Electoral Worker per-client concurrent admission limits preserve global capacity for other clients during one credential's burst.
+
 - Electoral Worker abuse safeguards: persistent per-client daily allowances, shared admission before body parsing, and an explicitly authorized aggregate usage endpoint.
 
 - Electoral Vote Map Cloudflare Worker: isolated disabled configuration, named-client authentication, coordinated durable admission quotas and fixed-source caching, preserved cache freshness across restarts, workerd/SQLite runtime checks, and on-demand Linux live-source smoke testing.
