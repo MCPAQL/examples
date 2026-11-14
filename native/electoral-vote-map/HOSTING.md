@@ -56,7 +56,7 @@ The committed `wrangler.jsonc` is an isolated deployment configuration, **disabl
 | Setting | Proposed value |
 |---------|----------------|
 | Worker | `electoral-vote-map-mcpaql` |
-| Proposed dedicated hostname | `electoral.mcpaql.com`; not attached by the bootstrap configuration |
+| Dedicated hostname for ingress isolation | `electoral.mcpaql.org`; not attached by the bootstrap configuration |
 | Public traffic | Disabled (`EVM_ENABLED=false`) |
 | Authentication | Required; separate named bearer credentials |
 | Daily admitted MCP requests | 10,000 globally |
@@ -94,7 +94,7 @@ Before deployment, verify a valid Cloudflare CLI login and choose the correct ac
 Bootstrap with `routes: []`, `workers_dev: false`, `preview_urls: false` and `EVM_ENABLED=false`. Verify those settings after upload. A successful bootstrap upload proves packaging and provider acceptance, not an accessible MCP endpoint. After the account/quota decision and DNS checks, attach the custom domain explicitly:
 
 ```json
-{"routes":[{"pattern":"electoral.mcpaql.com","custom_domain":true}]}
+{"routes":[{"pattern":"electoral.mcpaql.org","custom_domain":true}]}
 ```
 
 Configure `EVM_CLIENT_TOKENS` as a **Worker secret**, containing a JSON object with 1–32 stable client IDs mapped to unique random bearer tokens of 32–256 allowed characters. IDs contain lowercase letters, digits, underscore or hyphen; `alice` and `bob` below are examples of separate identities, not shared-account credentials. Tokens must not be committed, logged or put in public `vars`.
@@ -125,7 +125,7 @@ Read-only provider checks confirmed `EVM_ENABLED=false`, `workers.dev` and previ
 
 Mick chose the existing shared free account after the dashboard showed 311/100,000 Workers requests that day (0.311%), 15 Maker Perks production invocations over 24 hours with no runtime errors, and 163.81 MB of the 5 GB Durable Objects storage allowance (3.28%). Account isolation is not a prerequisite. Revisit capacity as usage grows; this decision does not authorize a paid-plan upgrade.
 
-The pilot endpoint is **`https://electoral.mcpaql.com/mcp`**. It requires a separate named bearer credential; anonymous access remains disabled. It has no OAuth discovery service. The secret was installed with secure stdin, without using Maker Perks data. The retained personal credential is stored locally in the ignored `.wrangler/pilot/credentials.json` with mode `0600`; never commit or publish that file. Temporary qualification credentials were removed, and their rejection was verified after provider propagation.
+The original pilot endpoint was **`https://electoral.mcpaql.com/mcp`**. The abuse-hardening deployment moves it to `electoral.mcpaql.org` for the separate ingress rule described below. It requires a separate named bearer credential; anonymous access remains disabled. It has no OAuth discovery service. The secret was installed with secure stdin, without using Maker Perks data. The retained personal credential is stored locally in the ignored `.wrangler/pilot/credentials.json` with mode `0600`; never commit or publish that file. Temporary qualification credentials were removed, and their rejection was verified after provider propagation.
 
 On November 14, 2026, source revision `dbdde79ec2cac700e874a70d8c03b2a8be81cced` was deployed with the custom-domain route and `EVM_ENABLED=true` override. Following credential rotation, the active version was `55bd80c6-165e-4236-b3ad-35ede42ee1e2` at 21:46:10 UTC. Limits match the proposed profile above: 10,000 daily admitted POSTs, 120/min global, 60/min per named client, and 16 concurrent coordinator requests. Provider reads confirmed the original coordinator namespace, no preview/workers.dev URLs, and no changes to Maker Perks' deployment. Pilot deployment configurations are local ignored files under `.wrangler/pilot/`; they copy the bootstrap configuration with an absolute `main`, the custom-domain route shown above, and explicit admission variables.
 
@@ -139,3 +139,9 @@ Deployed qualification results:
 - Source retrieval timestamps survived the credential deployment without being refreshed. Eight temporary live trace events spanning edge and Durable Object execution reported 1–6 ms CPU, all outcomes `ok`, and no exceptions. This small sample is not a sustained-load or worst-case CPU guarantee. Full traces were discarded; no request headers, tokens or bodies were saved in the qualification record.
 
 The existing Linux workerd tests cover injected source outages, failure expiry, concurrent admission and persistent storage. These failures were not induced against the public source sites. Cross-region quota load and a complete slow-upload deployment test remain follow-up qualification under [issue #72](https://github.com/MCPAQL/examples/issues/72); do not describe this pilot as exhaustive production load testing.
+
+### Provider ingress isolation
+
+The November 14 dashboard inspection found the `mcpaql.com` Free zone's sole rate-limit rule already protecting Maker Perks. Reusing it would share network counters with Maker Perks. The same account's `mcpaql.org` Free zone had an unused slot, allowing a separate electoral ingress rule without a plan upgrade or changing Maker Perks.
+
+Rule `97e36a521a77461395ef429bc8afaab3` is active in `mcpaql.org`, matching only `(http.host eq "electoral.mcpaql.org")`: 120 requests per IP per 10 seconds, followed by a 10-second Block action. This is coarse ingress protection in addition to the stricter authenticated application limits. All clients behind one IP share this network allowance. It does not solve distributed address rotation, and it does not make rejected traffic free of all provider usage. There is no browser challenge on the MCP path. The old `.com` route must be removed during migration so it cannot bypass this rule; preview/workers.dev URLs must remain disabled. Verify live blocking and post-block recovery before describing this deployment step as qualified.

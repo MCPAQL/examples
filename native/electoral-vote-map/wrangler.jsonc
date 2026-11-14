@@ -7,12 +7,12 @@
   "workers_dev": false,
   "preview_urls": false,
   "observability": { "enabled": false },
-  // Add electoral.mcpaql.com only after account/quota and routing qualification.
+  // Add electoral.mcpaql.org only after account/quota and routing qualification.
   // Keep the initial deployment unreachable, including while EVM_ENABLED=false.
   "routes": [],
   "vars": {
     "EVM_ENABLED": "false",
-    "EVM_PUBLIC_ORIGIN": "https://electoral.mcpaql.com",
+    "EVM_PUBLIC_ORIGIN": "https://electoral.mcpaql.org",
     "EVM_ALLOW_ANONYMOUS": "false",
     "EVM_DAILY_REQUEST_LIMIT": "10000",
     "EVM_CLIENT_DAILY_REQUEST_LIMIT": "1000",

@@ -33,6 +33,7 @@ exclude = [
     "^https?://mcp\\.chief\\.bot",
     # Electoral endpoint is verified with a bearer credential in hosting qualification.
     "^https://electoral\\.mcpaql\\.com/mcp$",
+    "^https://electoral\\.mcpaql\\.org/mcp$",
 
     # npm package pages (npmjs.com answers automated checkers with 403)
     "^https?://(www\\.)?npmjs\\.com",
