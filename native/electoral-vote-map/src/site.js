@@ -20,7 +20,8 @@ export function parseSite(html, source) {
   }
   return data;
 }
-// This is the only upstream request. User-supplied URLs are parsed, never fetched.
+// The map source only fetches this fixed URL; polling sources have a separate catalog.
+// User-supplied URLs are parsed, never fetched.
 // No cookies, account, browser, write API, model provider or arbitrary host is involved.
 export function createSiteClient({ fetchImpl = fetch, fixtureHtml, now = () => new Date(), ttlMs = 300_000 } = {}) {
   let cached, pending, expires = 0;

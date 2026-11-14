@@ -1,6 +1,6 @@
 {
   "name": "@mcpaql/example-electoral-vote-map",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Native MCP-AQL demo for discovering and exploring Electoral Vote Map scenarios",
   "type": "module",
@@ -11,7 +11,8 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "node --test test/*.test.js",
-    "smoke:live": "node scripts/live-smoke.js"
+    "smoke:live": "node scripts/live-smoke.js",
+    "smoke:polling": "node scripts/polling-live-smoke.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2"

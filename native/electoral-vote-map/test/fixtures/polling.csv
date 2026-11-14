@@ -1,0 +1,14 @@
+Day,Len,State,EV,Dem,GOP,Ind,Date,,,,,,,,Pollster
+306,3,Pennsylvania,,52,46,,Nov 02,,,,,,,,Example Research-3
+299,3,Pennsylvania,,50,48,,Oct 26,,,,,,,,"Example, University-3"
+298,3,Pennsylvania,,40,55,,Oct 25,,,,,,,,Outside Window-3
+308,1,Pennsylvania,,45,55,,Nov 03,,,,,,,,Future Poll-1
+320,1,Pennsylvania,,49,50,,Nov 15,,,,,,,,Election 2024-1
+306,1,Michigan,,48,48,,Nov 01,,,,,,,,Not called-1
+306,1,Wisconsin,,53,47,,Nov 01,,,,,,,,Called for Example (D)-1
+1,1,Delaware,,60,38,,Jan 01,,,,,,,,Election 2018-1
+306,1,Maine,,54,44,,Nov 01,,,,,,,,Example Pollster-1
+306,1,Nebraska,,45,49,,Nov 01,,,,,,,,Example Pollster-1
+306,1,Nebraska-special,,52,46,,Nov 01,,,,,,,,Example Special Pollster-1
+306,1,Georgia,,,46,,Nov 01,,,,,,,,Missing D Share-1
+306,1,Texas,,51,49,,Nov 01,,,,,,,,Exit poll estimate-1

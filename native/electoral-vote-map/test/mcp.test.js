@@ -7,7 +7,7 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 test('real MCP stdio handshake, discovery, scenario change and errors', async () => {
   const client = new Client({ name: 'electoral-demo-test', version: '0.1.0' });
-  const transport = new StdioClientTransport({ command: process.execPath, args: [fileURLToPath(new URL('../src/server.js', import.meta.url))], env: { ...process.env, EVM_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/site.html', import.meta.url)) }, stderr: 'pipe' });
+  const transport = new StdioClientTransport({ command: process.execPath, args: [fileURLToPath(new URL('../src/server.js', import.meta.url))], env: { ...process.env, EVM_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/site.html', import.meta.url)), EVM_POLL_TEST_FIXTURE: fileURLToPath(new URL('./fixtures/polling.csv', import.meta.url)) }, stderr: 'pipe' });
   try {
     await client.connect(transport);
     const { tools } = await client.listTools();
@@ -25,5 +25,9 @@ test('real MCP stdio handshake, discovery, scenario change and errors', async ()
     const invalid = await invoke('get_map', { arbitrary: 'not allowed' });
     assert.equal(invalid.isError, true);
     assert.equal(invalid.structuredContent.error.code, 'VALIDATION_UNKNOWN_PARAM');
+    const polling = await invoke('get_poll_average', { dataset_id: 'senate_2024', race_id: 'PA', as_of: '2024-11-02' });
+    assert.equal(polling.isError, false);
+    assert.equal(polling.structuredContent.data.poll_count, 2);
+    assert.equal(polling.structuredContent.data.source.mode, 'test_fixture');
   } finally { await transport.close(); }
 });
