@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { AdapterError, requireValue, knownFields, baseMap, describeMap, changesBetween, UNIT_ORDER } from './map.js';
+import { AdapterError, requireValue, knownFields, baseMap, describeMap, changesBetween } from './map.js';
 
 const ORIGIN = 'https://www.electoral-vote.com';
 export const DATASETS = [
@@ -8,9 +8,22 @@ export const DATASETS = [
   { id: 'senate_2026', office: 'senate', election_year: 2026, path: '/evp2026/Senate/senate_polls.csv' },
 ].map(d => ({ ...d, url: ORIGIN + d.path }));
 export const RECORD_KINDS = ['poll', 'historical_result', 'election_call', 'uncalled', 'unknown'];
-const STATE_NAMES = 'Alaska|Alabama|Arkansas|Arizona|California|Colorado|Connecticut|District of Columbia|Delaware|Florida|Georgia|Hawaii|Iowa|Idaho|Illinois|Indiana|Kansas|Kentucky|Louisiana|Massachusetts|Maryland|Maine|Michigan|Minnesota|Missouri|Mississippi|Montana|North Carolina|North Dakota|Nebraska|New Hampshire|New Jersey|New Mexico|Nevada|New York|Ohio|Oklahoma|Oregon|Pennsylvania|Rhode Island|South Carolina|South Dakota|Tennessee|Texas|Utah|Virginia|Vermont|Washington|Wisconsin|West Virginia|Wyoming'.split('|');
-const STATES = UNIT_ORDER.filter(u => !u.includes('-'));
-const STATE_IDS = new Map(STATE_NAMES.map((name, i) => [name.toLowerCase(), STATES[i]]));
+// Source names have explicit identities, independent of the map codec's ordering.
+const STATE_CODES = {
+  Alabama: 'AL', Alaska: 'AK', Arizona: 'AZ', Arkansas: 'AR', California: 'CA',
+  Colorado: 'CO', Connecticut: 'CT', Delaware: 'DE', 'District of Columbia': 'DC',
+  Florida: 'FL', Georgia: 'GA', Hawaii: 'HI', Idaho: 'ID', Illinois: 'IL',
+  Indiana: 'IN', Iowa: 'IA', Kansas: 'KS', Kentucky: 'KY', Louisiana: 'LA',
+  Maine: 'ME', Maryland: 'MD', Massachusetts: 'MA', Michigan: 'MI', Minnesota: 'MN',
+  Mississippi: 'MS', Missouri: 'MO', Montana: 'MT', Nebraska: 'NE', Nevada: 'NV',
+  'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY',
+  'North Carolina': 'NC', 'North Dakota': 'ND', Ohio: 'OH', Oklahoma: 'OK',
+  Oregon: 'OR', Pennsylvania: 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
+  'South Dakota': 'SD', Tennessee: 'TN', Texas: 'TX', Utah: 'UT', Vermont: 'VT',
+  Virginia: 'VA', Washington: 'WA', 'West Virginia': 'WV', Wisconsin: 'WI', Wyoming: 'WY',
+};
+const STATES = Object.values(STATE_CODES);
+const STATE_IDS = new Map(Object.entries(STATE_CODES).map(([name, code]) => [name.toLowerCase(), code]));
 STATE_IDS.set('d.c.', 'DC');
 const DAY = 86400000;
 export function isoDate(value) {
@@ -67,7 +80,9 @@ export function parsePollingCsv(text, dataset, source) {
     const state = STATE_IDS.get(rawState.toLowerCase());
     contract(state && !(dataset.office === 'president' && special), `Unknown state/race: ${values[2]}`);
     const length = Number(values[1]), middle = Number(values[0]);
-    contract(values[0] !== '' && values[1] !== '' && Number.isInteger(length) && length >= 1 && length <= 366 && Number.isFinite(middle) && middle >= 1 && middle <= 366, 'Invalid polling date/length');
+    // An early-January poll can have a zero/negative midpoint relative to Jan 1.
+    // The Len/Date cross-check below still rejects inconsistent negative values.
+    contract(values[0] !== '' && values[1] !== '' && Number.isInteger(length) && length >= 1 && length <= 366 && Number.isFinite(middle) && middle >= 1 - (length - 1) / 2 && middle <= 366, 'Invalid polling date/length');
     const dateMatch = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2})$/.exec(values[7]);
     contract(dateMatch, `Unknown source date: ${values[7]}`);
     const month = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ').indexOf(dateMatch[1]);
@@ -109,6 +124,7 @@ export function parsePollingCsv(text, dataset, source) {
       'D/R are source column labels, not verified candidate party or caucus identities. Independents and candidate changes require external verification before substantive party predictions.',
       'Source dates for result/call rows are source markers, not certified election dates or publication timestamps.',
       'As-of queries filter source/fieldwork dates in the currently downloaded file; publication times and past file revisions are unavailable. This is not a point-in-time archive.',
+      'Identical normalized rows are collapsed without source poll IDs. Distinct surveys with indistinguishable published fields cannot be distinguished; dataset_duplicate_rows_removed reports this dataset-wide ambiguity.',
     ],
   };
 }
@@ -152,32 +168,33 @@ export function pollRecords(data, params) {
     dataset: data.dataset, race_id: params.race_id, as_of: params.as_of,
     ...electionPhase(data.dataset.election_year, cutoff), counts,
     coverage: records.length ? 'records_available' : 'no_records_as_of',
-    records, source: data.source, notes: data.notes,
+    records, dataset_duplicate_rows_removed: data.duplicate_rows_removed, source: data.source, notes: data.notes,
   };
 }
 export function pollAverage(data, params) {
   const view = pollRecords(data, params), cutoff = isoDate(params.as_of);
   const polls = view.records.filter(r => r.kind === 'poll' && r.margin_dem_minus_rep !== null);
   const latest = polls.length ? Math.max(...polls.map(r => r.midpoint_day)) : null;
-  const window = polls.filter(r => r.midpoint_day >= latest - 7);
-  const latestEnd = window.length ? Math.max(...window.map(r => isoDate(r.fieldwork_end))) : null;
+  const windowPolls = polls.filter(r => r.midpoint_day >= latest - 7);
+  const latestEnd = windowPolls.length ? Math.max(...windowPolls.map(r => isoDate(r.fieldwork_end))) : null;
   const age = latestEnd === null ? null : (cutoff - latestEnd) / DAY;
   const maxAge = params.max_age_days ?? 30;
-  const average = field => window.reduce((total, r) => total + r.shares[field], 0) / window.length;
+  const average = field => windowPolls.reduce((total, r) => total + r.shares[field], 0) / windowPolls.length;
   const latestMarker = view.records.reduce((latest, r) => r.source_date > latest ? r.source_date : latest, '');
   const recentKinds = [...new Set(view.records.filter(r => r.source_date === latestMarker).map(r => r.kind))];
   const { records: _records, ...metadata } = view;
   return {
     ...metadata,
-    polling_status: window.length ? age > maxAge ? 'stale' : 'fresh' : 'no_usable_polls',
+    polling_status: windowPolls.length ? age > maxAge ? 'stale' : 'fresh' : 'no_usable_polls',
     latest_record_kinds: recentKinds, latest_poll_end: latestEnd === null ? null : dateString(latestEnd),
-    age_days: age, max_age_days: maxAge, poll_count: window.length,
-    average: window.length ? { dem: average('dem'), rep: average('rep'), margin_dem_minus_rep: average('dem') - average('rep') } : null,
+    age_days: age, max_age_days: maxAge, poll_count: windowPolls.length,
+    average: windowPolls.length ? { dem: average('dem'), rep: average('rep'), margin_dem_minus_rep: average('dem') - average('rep') } : null,
+    excluded_unknown_labels: [...new Set(view.records.filter(r => r.kind === 'unknown').map(r => r.label))],
     method: 'Equal weight per distinct row within seven midpoint days of the most recent eligible poll. Non-poll records and missing D/R shares are excluded.',
     context_note: recentKinds.some(kind => kind !== 'poll')
       ? 'Other evidence is present on the latest source date. This remains a polls-only summary, not a claim about the current election outcome.'
       : 'A polling summary describes the selected source and cutoff, not a calibrated prediction.',
-    included_polls: window, excluded_record_count: view.records.length - window.length,
+    included_polls: windowPolls, excluded_record_count: view.records.length - windowPolls.length,
   };
 }
 export function pollingScenario(data, params, mapData) {

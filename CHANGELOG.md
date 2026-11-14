@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Polling review hardening: year-crossing fieldwork, explicit state identities, and visible unknown-label and dataset-duplicate exclusions, with documented fail-closed and duplicate-identity limitations.
+
 - Electoral Vote Map example polling source module for electoral-vote.com: three verified datasets, typed poll/result/call records, dated and freshness-aware averages, separate special races, and map generation with explicit source-year, missing-data and district policies.
 
 - Native Electoral Vote Map MCP-AQL demo (`native/electoral-vote-map/`): live site scenario discovery, state/district edits and flips, projected electoral allocations, comparisons, and a research handoff for hypothetical maps based on congressional results. Includes a stdio server, strict introspection, source-aware results, protocol/schema checks and deterministic tests.

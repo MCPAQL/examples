@@ -75,6 +75,37 @@ test('exact duplicate observations are removed and counted once; different races
   assert.equal(duplicate.records.length, parsed.records.length);
   assert.equal(duplicate.duplicate_rows_removed, 1);
   assert.equal(pollAverage(duplicate, baseQuery).poll_count, 2);
+  assert.equal(pollAverage(duplicate, baseQuery).dataset_duplicate_rows_removed, 1);
+});
+test('year-crossing fieldwork preserves zero/negative midpoints and cutoff filtering', () => {
+  const winter = fixture.split('\n')[0] + '\n' + [
+    '-1,5,Pennsylvania,,50,48,,Jan 01,,,,,,,,Winter One-5',
+    '0,7,Pennsylvania,,51,47,,Jan 03,,,,,,,,Winter Two-7',
+    '4,3,Pennsylvania,,52,46,,Jan 05,,,,,,,,Winter Three-3',
+  ].join('\n');
+  const data = parsePollingCsv(winter, dataset, {});
+  assert.equal(data.records[0].fieldwork_start, '2023-12-28');
+  assert.equal(data.records[0].fieldwork_end, '2024-01-01');
+  assert.deepEqual(data.records.map(r => r.midpoint_day), [-1, 0, 4]);
+  assert.equal(pollAverage(data, { ...baseQuery, as_of: '2024-01-05' }).poll_count, 3);
+  assert.equal(pollAverage(data, { ...baseQuery, as_of: '2024-01-05' }).average.margin_dem_minus_rep, 4);
+  assert.equal(pollAverage(data, { ...baseQuery, as_of: '2024-01-01' }).poll_count, 1);
+  assert.throws(() => parsePollingCsv(winter.replace('-1,5', '-2,5'), dataset, {}), { code: 'UPSTREAM_CONTRACT_CHANGED' });
+});
+test('source state identities are explicit for names that differ from postal-code order', () => {
+  const cases = [['Alaska', 'AK'], ['Alabama', 'AL'], ['Pennsylvania', 'PA'], ['D.C.', 'DC'], ['District of Columbia', 'DC'], ['Wyoming', 'WY']];
+  for (const [name, code] of cases) {
+    const data = parsePollingCsv(fixture.replace('Pennsylvania', name), dataset, {});
+    assert.equal(data.records.find(r => r.source_row === 2).state, code, name);
+  }
+});
+test('averages expose unknown labels, including conservative keyword false positives', () => {
+  const data = parsePollingCsv(fixture.replace('Example Research-3', 'Election Data Services-3'), dataset, {});
+  const summary = pollAverage(data, baseQuery);
+  assert.deepEqual(summary.excluded_unknown_labels, ['Election Data Services']);
+  assert.equal(summary.counts.unknown, 1);
+  assert.equal(summary.poll_count, 2);
+  assert.equal(summary.included_polls.some(r => r.label === 'Election Data Services'), false);
 });
 test('CSV supports quoted newlines and doubled quotes without dropping record identity', () => {
   const modified = fixture.replace('"Example, University-3"', '"Example, ""Quoted""\nUniversity-3"');

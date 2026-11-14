@@ -26,7 +26,9 @@ The same file can change meaning during an election cycle. The November 14, 2026
 | `uncalled` | An explicit uncalled/too-close label; excluded from averages |
 | `unknown` | A non-poll estimate/forecast/result-like label; retained for inspection and excluded from averages |
 
-The classifier follows the source's label conventions, not independent pollster certification. Unrecognized ordinary pollster names retain `poll` classification; the exact label remains inspectable. Header or structural drift is rejected rather than guessed.
+The classifier follows the source's label conventions, not independent pollster certification. Unrecognized ordinary pollster names retain `poll` classification; the exact label remains inspectable. The conservative keyword rule can also exclude a real pollster whose name includes a word such as “Election” or “Primary.” `get_poll_average` surfaces `excluded_unknown_labels` for the selected race and cutoff so those exclusions can be reviewed rather than silently trusted.
+
+Malformed headers or any malformed row intentionally fail the entire affected dataset with `UPSTREAM_CONTRACT_CHANGED`, rather than producing a partial average from silently dropped states or records. Catalog probes isolate that failure from other datasets. Row quarantine would require explicit rejected-row reporting and incomplete-coverage policies; it is not enabled implicitly.
 
 Regular and special Senate races retain separate IDs, such as `NE` and `NE-special`. They never enter the same average. Missing records mean `no_records_as_of`, not proof that a state had no election. Election calls, prior results and unknown rows remain available through `get_state_polls`.
 
@@ -38,9 +40,13 @@ Every record query, average and generated polling scenario requires an explicit 
 
 The files do not provide publication timestamps or previous revisions. An as-of query filters dates in the file retrieved today; it is **not a reconstruction of exactly what was publicly available on that historical date**. Result-row dates are source markers, not authoritative election or certification dates. Polls ending before a cutoff may have been released afterward. A result-only replacement file cannot reconstruct polling observations it no longer contains.
 
+Source end dates are interpreted in the dataset's cycle year. Fieldwork may begin in December of the previous year and end in early January; midpoint days of zero or below are accepted when consistent with the supplied duration and end date. The averaging window remains continuous across New Year. The parser does not guess an alternative year for an end date whose year is absent from the source.
+
 `get_poll_average` reproduces the site's [documented method](https://www.electoral-vote.com/evp2026/Info/map-algorithm.html): select the latest eligible poll by its fieldwork midpoint, then equally average distinct poll rows whose midpoints lie within the preceding seven days, inclusive. The latest midpoint anchors the window even when that cluster is old. Exact duplicate rows are removed and counted; different observations from the same pollster retain equal weight. The [polling FAQ](https://www.electoral-vote.com/evp2026/Info/polling-faq.html) identifies the fieldwork midpoint, rather than release date, as the ordering date.
 
-Freshness is independent: `age_days` is the difference between `as_of` and the latest included fieldwork end. `max_age_days` defaults to 30. Results report `fresh`, `stale` or `no_usable_polls`, the exact contributing records, other record counts, and the kinds on the latest visible source date. A polls-only summary can coexist with a later election result; it is not presented as the current election outcome.
+Freshness is independent: `age_days` is the difference between `as_of` and the latest included fieldwork end. `max_age_days` defaults to 30. Results report `fresh`, `stale` or `no_usable_polls`, the exact contributing records, unknown labels excluded by the classifier, other record counts, and the kinds on the latest visible source date. A polls-only summary can coexist with a later election result; it is not presented as the current election outcome.
+
+Duplicate removal collapses observations with identical published fields. The source supplies no unique poll IDs, so it cannot distinguish a repeated row from two genuine surveys with the same pollster, fieldwork and shares. This is an explicit limitation, not verified survey identity. `dataset_duplicate_rows_removed` in record queries and averages reports the count for the entire dataset, independently of the selected race/cutoff.
 
 ```json
 {
@@ -98,4 +104,4 @@ node scripts/check-schemas.js /path/to/MCPAQL/spec/schemas
 
 Deterministic tests use synthetic data, covering election phases, result/call exclusion, old result years, regular/special races, blank shares, exact duplicates, seven-day boundaries, future dates, missing metadata, stale-data decisions, map policies and source failures. The MCP transport test also exercises a polling average. The live smoke test probes all three downloads, checks their record distinctions and a historical polling summary, generates a hypothetical map, and round-trips its URL.
 
-The initial polling extension run is recorded in [polling validation](validation/polling-checks.json), including dataset counts, source timestamps, generated map and schema/tool check results. The original map-only evidence in the main README remains a record of version 0.1.0; rerun validation commands for current results.
+The initial polling extension run is recorded in [polling validation](validation/polling-checks.json), including dataset counts, source timestamps, generated map and schema/tool check results. Recorded counts are point-in-time snapshots and may drift as the live files change. The original map-only evidence in the main README remains a record of version 0.1.0; rerun validation commands for current results.
