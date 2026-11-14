@@ -14,6 +14,7 @@ test('Worker policy defaults to private authentication, strict bounded limits an
   assert.throws(() => readWorkerConfig({ EVM_PUBLIC_ORIGIN: env.EVM_PUBLIC_ORIGIN }));
   assert.equal(config.dailyLimit, 10_000);
   assert.equal(config.clientDailyLimit, 1000);
+  assert.equal(config.clientMaxConcurrent, 4);
   assert.equal(authenticatedClient(request(), config), 'alice');
   assert.equal(authenticatedClient(request(b), config), 'bob');
   assert.throws(() => authenticatedClient(request('invalid'), config), { status: 401 });
@@ -140,10 +141,12 @@ test('admission reservations expire, reject replay and cannot be consumed or rel
   assert.equal(coordinator.active, 1);
   t.mock.timers.tick(10_001);
   assert.equal(coordinator.active, 0);
+  assert.equal(coordinator.activeClients.size, 0);
   assert.equal((await coordinator.fetch(internal('mcp', 'alice', id))).status, 503);
   const second = await coordinator.fetch(internal('admit'));
   const { admission_id: secondId } = await second.json();
   await coordinator.fetch(internal('release', 'alice', secondId));
   assert.equal(coordinator.active, 0);
+  assert.equal(coordinator.activeClients.size, 0);
   assert.equal((await coordinator.fetch(internal('mcp', 'alice', secondId))).status, 503);
 });

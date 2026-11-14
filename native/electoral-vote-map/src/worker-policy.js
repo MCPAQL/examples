@@ -46,6 +46,7 @@ export function readWorkerConfig(env) {
     perMinute: integer('EVM_REQUESTS_PER_MINUTE', 120, 1000),
     perClientPerMinute: integer('EVM_CLIENT_REQUESTS_PER_MINUTE', 60, 1000),
     maxConcurrent: integer('EVM_MAX_CONCURRENT', 16, 64),
+    clientMaxConcurrent: integer('EVM_CLIENT_MAX_CONCURRENT', 4, 64),
   };
 }
 export function authenticatedClient(request, config) {

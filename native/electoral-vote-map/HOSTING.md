@@ -45,6 +45,8 @@ The explicit reservation avoids depending on a provider streaming a service-bind
 
 ### Operator usage and ingress protection
 
+Per-client concurrency is checked before reserving a global slot. A saturated client receives 429 while other clients retain available global capacity. The slot covers both an admission reservation and its executing MCP request, and is released on completion, body failure, quota rejection or reservation expiry. Anonymous clients, if explicitly enabled later, share one client concurrency group. Operator usage includes the highest current client concurrency, without exposing identities. These counters are in memory; a recreation invalidates outstanding reservations rather than accepting them without their slot.
+
 `EVM_OPERATOR_CLIENT_IDS` is a JSON array of explicitly authorized existing client IDs; it defaults to `[]`, disabling operator access. A bearer-authenticated operator can GET `/admin/usage`. Both the edge and private coordinator check operator membership; other clients cannot impersonate an operator through request headers. The response uses `Cache-Control: no-store` and exposes aggregate daily admissions/remaining quota, active-client count, highest client usage and current concurrency, without tokens, client IDs or request content. Operators can inspect accounting even after the MCP daily quota is exhausted.
 
 Daily admissions are persisted. The response also includes bounded in-memory rejection counts by HTTP status and their start timestamp. These counters reset when the Durable Object is recreated, exclude edge/provider rejections and are not durable auditing or a complete alerting system. Rejections do not add a storage write each time. Use provider analytics for edge request/rejection visibility; do not enable request-header/body logging to obtain aggregate usage.
@@ -67,6 +69,7 @@ The committed `wrangler.jsonc` is an isolated deployment configuration, **disabl
 | Named-client token bucket | 60 capacity, 60/minute refill |
 | Edge approximate limiter | 60/minute per credential or anonymous network identity |
 | Concurrent coordinator requests | 16 |
+| Concurrent requests per client | 4 (`EVM_CLIENT_MAX_CONCURRENT`), including reserved body-reader slots |
 | Edge CPU allowance | Workers Free enforces 10 ms per invocation; qualify cold/warm behavior before enabling traffic |
 | Preview / workers.dev URLs | Disabled |
 | Application request logging | Disabled; no request/token/body logging added |
