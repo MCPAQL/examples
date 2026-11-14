@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../src/worker.js';
-import { readWorkerConfig, authenticatedClient, networkIdentity, boundedBody, takeBudget, MAX_WORKER_BODY } from '../src/worker-policy.js';
+import { readWorkerConfig, authenticatedClient, networkIdentity, boundedBody, takeBudget, readUsage, MAX_WORKER_BODY } from '../src/worker-policy.js';
 import { memoryStorage } from './helpers/storage.js';
 
 const a = 'a'.repeat(48), b = 'b'.repeat(48);
@@ -13,10 +13,11 @@ const request = (token = a, headers = {}) => new Request('https://electoral.exam
 test('Worker policy defaults to private authentication, strict bounded limits and distinct client identities', () => {
   assert.throws(() => readWorkerConfig({ EVM_PUBLIC_ORIGIN: env.EVM_PUBLIC_ORIGIN }));
   assert.equal(config.dailyLimit, 10_000);
+  assert.equal(config.clientDailyLimit, 1000);
   assert.equal(authenticatedClient(request(), config), 'alice');
   assert.equal(authenticatedClient(request(b), config), 'bob');
   assert.throws(() => authenticatedClient(request('invalid'), config), { status: 401 });
-  for (const patch of [{ EVM_DAILY_REQUEST_LIMIT: '0' }, { EVM_MAX_CONCURRENT: '65' }, { EVM_PUBLIC_ORIGIN: 'http://electoral.example' }, { EVM_CLIENT_TOKENS: JSON.stringify({ a, b: a }) }, { EVM_ALLOW_ANONYMOUS: 'yes' }]) assert.throws(() => readWorkerConfig({ ...env, ...patch }));
+  for (const patch of [{ EVM_DAILY_REQUEST_LIMIT: '0' }, { EVM_CLIENT_DAILY_REQUEST_LIMIT: '0' }, { EVM_MAX_CONCURRENT: '65' }, { EVM_PUBLIC_ORIGIN: 'http://electoral.example' }, { EVM_CLIENT_TOKENS: JSON.stringify({ a, b: a }) }, { EVM_ALLOW_ANONYMOUS: 'yes' }, { EVM_OPERATOR_CLIENT_IDS: '["missing"]' }, { EVM_OPERATOR_CLIENT_IDS: '["alice","alice"]' }]) assert.throws(() => readWorkerConfig({ ...env, ...patch }));
 });
 
 test('IPv6 interface rotation shares a /64 while IPv4-mapped addresses retain their own IPv4 identity', () => {
@@ -44,6 +45,47 @@ test('one credential cannot drain another client allowance or shared quota by re
   for (let i = 0; i < 2; i++) await takeBudget(storage, limits, 'bob', 1000);
   assert.equal((await storage.get('request-budget')).count, 4);
   await assert.rejects(takeBudget(storage, limits, null, 1000), { status: 429 });
+});
+
+test('per-client daily quota survives minute refills and restarts, then resets at UTC midnight', async () => {
+  const storage = memoryStorage(), limits = { ...config, clientDailyLimit: 2 };
+  await takeBudget(storage, limits, 'alice', 1000);
+  await takeBudget(storage, limits, 'alice', 61_000);
+  const before = await storage.get('request-budget');
+  await assert.rejects(takeBudget(storage, { ...limits }, 'alice', 121_000), { status: 429, message: 'Client daily admission quota exhausted' });
+  assert.deepEqual(await storage.get('request-budget'), before);
+  await takeBudget(storage, limits, 'bob', 121_000);
+  const usage = await readUsage(storage, limits, 121_000);
+  assert.equal(usage.admitted, 3);
+  assert.equal(usage.highest_client_admissions, 2);
+  assert.doesNotMatch(JSON.stringify(usage), /alice|bob/);
+  assert.equal((await readUsage(storage, limits, 86_401_000)).admitted, 0);
+  await takeBudget(storage, limits, 'alice', 86_401_000);
+  assert.equal((await storage.get('request-budget')).clients['client:alice'].count, 1);
+});
+
+test('legacy daily records migrate conservatively without granting fresh allowance', async () => {
+  const storage = memoryStorage(), limits = { ...config, clientDailyLimit: 2 };
+  await storage.put('request-budget', { day: '1970-01-01', count: 2, tokens: 10, updated: 1000, clients: { 'client:alice': { tokens: 10, updated: 1000 } } });
+  await assert.rejects(takeBudget(storage, limits, 'alice', 61_000), { status: 429 });
+  await takeBudget(storage, limits, 'bob', 61_000);
+  assert.equal((await storage.get('request-budget')).count, 3);
+  assert.equal((await storage.get('request-budget')).clients['client:bob'].count, 1);
+});
+
+test('usage requires an explicitly configured operator and strips caller identity headers', async () => {
+  const calls = [];
+  const bindings = { ...env, EVM_OPERATOR_CLIENT_IDS: '["alice"]', MCP_RATE_LIMITER: { limit: async () => ({ success: true }) }, ELECTORAL_COORDINATOR: {
+    idFromName() { return 'id'; }, get() { return { async fetch(req) { calls.push(req); return new Response('{}'); } }; },
+  } };
+  const usageRequest = (token, extra = {}) => new Request('https://electoral.example/admin/usage', { headers: { authorization: `Bearer ${token}`, 'cf-connecting-ip': '192.0.2.1', ...extra } });
+  assert.equal((await worker.fetch(usageRequest(b, { 'x-evm-client-id': 'alice' }), bindings)).status, 403);
+  assert.equal(calls.length, 0);
+  assert.equal((await worker.fetch(usageRequest(a), { ...bindings, EVM_OPERATOR_CLIENT_IDS: '[]' })).status, 403);
+  assert.equal((await worker.fetch(usageRequest(a), bindings)).status, 200);
+  assert.equal(calls[0].url, 'https://coordinator/admin/usage');
+  assert.equal(calls[0].headers.get('x-evm-client-id'), 'alice');
+  assert.equal(calls[0].headers.has('authorization'), false);
 });
 
 test('Worker body reader rejects invalid encoding, batches, oversize streams and slow bodies', async () => {

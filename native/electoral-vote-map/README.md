@@ -40,7 +40,7 @@ Stdio is the default. `--transport=stdio` selects it explicitly. The server retu
 
 ### Cloudflare Workers
 
-The adapter also has an isolated Worker implementation with coordinated admission quotas and source caching. Its configuration starts disabled; no public endpoint is deployed yet. See [Hosting and abuse controls](HOSTING.md) for the pilot profile, credential setup, real-runtime tests and remaining deployment steps.
+The adapter also has an isolated Worker implementation with coordinated global/client daily quotas, admission before body parsing and shared source caching. Its committed configuration starts disabled. A private bearer-authenticated HTTPS pilot is deployed; anonymous/public onboarding remains blocked on abuse qualification. See [Hosting and abuse controls](HOSTING.md) for the profile, operator usage endpoint, credential setup, real-runtime tests and remaining deployment steps.
 
 ### HTTP and HTTPS
 

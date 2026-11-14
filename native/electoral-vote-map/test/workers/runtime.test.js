@@ -93,6 +93,89 @@ test('coordinator keeps distinct credential quotas behind one proxy without char
   assert.equal((await app.rpc('tools/list', {}, tokenB)).status, 429);
 });
 
+test('per-client daily exhaustion persists across recreation and leaves another client quota available', { timeout: 60_000 }, async t => {
+  const directory = await mkdtemp(join(tmpdir(), 'evm-client-daily-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const vars = { EVM_CLIENT_DAILY_REQUEST_LIMIT: '2', EVM_OPERATOR_CLIENT_IDS: '["alice"]' };
+  const app = await runtime(t, { vars, persist: directory });
+  const responses = await Promise.all(Array.from({ length: 8 }, () => app.rpc('tools/list')));
+  assert.equal(responses.filter(r => r.status === 200).length, 2);
+  assert.equal(responses.filter(r => r.status === 429).length, 6);
+  await app.mf.dispose();
+  const restarted = await runtime(t, { vars, persist: directory });
+  assert.equal((await restarted.rpc('tools/list')).status, 429);
+  assert.equal((await restarted.rpc('tools/list', {}, tokenB)).status, 200);
+  const usage = await restarted.fetch('https://electoral.example/admin/usage', { headers: { authorization: `Bearer ${tokenA}` } });
+  assert.equal(usage.status, 200);
+  const summary = await usage.json();
+  assert.equal(summary.admitted, 3);
+  assert.equal(summary.highest_client_admissions, 2);
+  assert.doesNotMatch(JSON.stringify(summary), /alice|bob|test-alice|test-bob/);
+  assert.equal((await restarted.fetch('https://electoral.example/admin/usage', { headers: { authorization: `Bearer ${tokenB}`, 'x-evm-client-id': 'alice' } })).status, 403);
+});
+
+test('malformed bodies consume the sender allowance before parsing and are visible only as aggregate rejections', { timeout: 60_000 }, async t => {
+  const app = await runtime(t, { vars: { EVM_CLIENT_DAILY_REQUEST_LIMIT: '1', EVM_OPERATOR_CLIENT_IDS: '["alice"]' } });
+  const malformed = await app.fetch('https://electoral.example/mcp', { method: 'POST', headers: { authorization: `Bearer ${tokenA}`, 'content-type': 'application/json' }, body: '[]' });
+  assert.equal(malformed.status, 400);
+  assert.equal((await app.rpc('tools/list')).status, 429);
+  assert.equal((await app.rpc('tools/list', {}, tokenB)).status, 200);
+  const response = await app.fetch('https://electoral.example/admin/usage', { headers: { authorization: `Bearer ${tokenA}` } });
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  const usage = await response.json();
+  assert.equal(usage.admitted, 2);
+  assert.equal(usage.transient.rejections_by_status['400'], 1);
+  assert.equal(usage.transient.rejections_by_status['429'], 1);
+  assert.equal(app.requests.length, 0);
+});
+
+test('streaming body reception occupies coordinated concurrency and times out before MCP parsing', { timeout: 60_000 }, async t => {
+  const app = await runtime(t, { vars: { EVM_MAX_CONCURRENT: '1', EVM_OPERATOR_CLIENT_IDS: '["alice"]' } });
+  let controller;
+  const body = new ReadableStream({ start(c) { controller = c; c.enqueue(new TextEncoder().encode('{')); } });
+  t.after(() => { try { controller.close(); } catch {} });
+  const first = app.fetch('https://electoral.example/mcp', { method: 'POST', headers: { authorization: `Bearer ${tokenA}`, 'content-type': 'application/json' }, body, duplex: 'half' });
+  let active = 0;
+  for (let i = 0; i < 20 && !active; i++) {
+    const response = await app.fetch('https://electoral.example/admin/usage', { headers: { authorization: `Bearer ${tokenA}` } });
+    active = (await response.json()).active_requests;
+    if (!active) await new Promise(resolve => setTimeout(resolve, 20));
+  }
+  assert.equal(active, 1);
+  assert.equal((await app.rpc('tools/list', {}, tokenB)).status, 503);
+  assert.equal((await first).status, 408);
+  assert.equal((await app.rpc('tools/list', {}, tokenB)).status, 200);
+  assert.equal(app.requests.length, 0);
+});
+
+test('independent ingress Workers share strict global and client daily quotas through one coordinator', { timeout: 60_000 }, async t => {
+  const base = {
+    modules: true, scriptPath: fileURLToPath(new URL('../../.worker-build/worker.js', import.meta.url)),
+    compatibilityDate: '2026-11-13', compatibilityFlags: ['nodejs_compat'],
+    bindings: { ...bindings, EVM_DAILY_REQUEST_LIMIT: '3', EVM_CLIENT_DAILY_REQUEST_LIMIT: '2' },
+    durableObjects: { ELECTORAL_COORDINATOR: { className: 'ElectoralCoordinator', scriptName: 'shared-coordinator', useSQLite: true } },
+  };
+  // Separate limiter namespaces simulate independent location-local edge buckets;
+  // all three entry points still bind the same coordinator namespace and ID.
+  const mf = new Miniflare(convertV4MiniflareOptions({ cf: false, port: 0, workers: [
+    { ...base, name: 'ingress-a', ratelimits: { MCP_RATE_LIMITER: { namespace_id: '7201', simple: { limit: 100, period: 60 } } } },
+    { ...base, name: 'ingress-b', ratelimits: { MCP_RATE_LIMITER: { namespace_id: '7202', simple: { limit: 100, period: 60 } } } },
+    { ...base, name: 'shared-coordinator' },
+  ] }));
+  t.after(() => mf.dispose());
+  const edges = await Promise.all([mf.getWorker('ingress-a'), mf.getWorker('ingress-b')]);
+  const rpc = (edge, token) => edge.fetch('https://electoral.example/mcp', {
+    method: 'POST', headers: { authorization: `Bearer ${token}`, 'cf-connecting-ip': '192.0.2.1', 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }),
+  });
+  const alice = await Promise.all(Array.from({ length: 8 }, (_, i) => rpc(edges[i % 2], tokenA)));
+  assert.equal(alice.filter(r => r.status === 200).length, 2);
+  assert.equal(alice.filter(r => r.status === 429).length, 6);
+  const bob = await Promise.all(edges.map(edge => rpc(edge, tokenB)));
+  assert.equal(bob.filter(r => r.status === 200).length, 1);
+  assert.equal(bob.filter(r => r.status === 429).length, 1);
+});
+
 test('durable source cache survives runtime recreation without relabeling retrieval time', { timeout: 60_000 }, async t => {
   const directory = await mkdtemp(join(tmpdir(), 'evm-source-'));
   t.after(() => rm(directory, { recursive: true, force: true }));

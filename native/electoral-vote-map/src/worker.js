@@ -5,7 +5,7 @@ import { createMcpServer } from './mcp.js';
 import { createSiteClient } from './site.js';
 import { createPollingClient } from './polling.js';
 import { durableSourceFetch } from './worker-source.js';
-import { HttpFailure, jsonReply, failureReply, readWorkerConfig, authenticatedClient, networkIdentity, boundedBody, takeBudget } from './worker-policy.js';
+import { HttpFailure, jsonReply, failureReply, readWorkerConfig, authenticatedClient, networkIdentity, checkBodyLength, boundedBody, takeBudget, readUsage } from './worker-policy.js';
 
 export default {
   async fetch(request, env) {
@@ -27,18 +27,26 @@ export default {
       if (!success) throw new HttpFailure(429, 'Too many requests', 60);
       if (authError) throw authError;
       if (url.pathname === '/healthz' && request.method === 'GET' && !url.search) return new Response('{"status":"ok"}', { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+      if (url.pathname === '/admin/usage' && !url.search) {
+        if (!clientId || !config.operatorIds.includes(clientId)) throw new HttpFailure(403, 'Operator required');
+        if (request.method !== 'GET') return jsonReply(405, 'Only GET is supported', { allow: 'GET' });
+        const stub = env.ELECTORAL_COORDINATOR.get(env.ELECTORAL_COORDINATOR.idFromName('global-v1'));
+        return await stub.fetch(new Request('https://coordinator/admin/usage', { headers: { 'x-evm-client-id': clientId } }));
+      }
       if (url.pathname !== '/mcp' || url.search) throw new HttpFailure(404, 'Not found');
       if (!clientId && !config.anonymous) return jsonReply(401, 'Unauthorized', { 'www-authenticate': 'Bearer realm="electoral-vote-map"' });
       if (request.method !== 'POST') return jsonReply(405, 'Only POST is supported', { allow: 'POST' });
       if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) throw new HttpFailure(415, 'Expected application/json');
-      const text = await boundedBody(request);
+      checkBodyLength(request);
       const headers = new Headers();
-      for (const name of ['content-type', 'accept', 'mcp-protocol-version']) if (request.headers.has(name)) headers.set(name, request.headers.get(name));
+      for (const name of ['content-type', 'content-length', 'accept', 'mcp-protocol-version']) if (request.headers.has(name)) headers.set(name, request.headers.get(name));
       if (clientId) headers.set('x-evm-client-id', clientId);
       // Exactly one namespace-local ID for every deployment/location. Never key
       // this by the request, user, region, or revision: that would reset quotas.
       const stub = env.ELECTORAL_COORDINATOR.get(env.ELECTORAL_COORDINATOR.idFromName('global-v1'));
-      return await stub.fetch(new Request('https://coordinator/mcp', { method: 'POST', headers, body: text }));
+      // Stream into the single coordinator before reading/parsing. Its shared
+      // concurrency and quota admission now also cover slow/malformed bodies.
+      return await stub.fetch(new Request('https://coordinator/mcp', { method: 'POST', headers, body: request.body, duplex: 'half' }));
     } catch (error) { return failureReply(error); }
   },
 };
@@ -46,6 +54,7 @@ export default {
 export class ElectoralCoordinator {
   constructor(ctx, env) {
     this.ctx = ctx; this.env = env; this.active = 0;
+    this.transientStats = { since: new Date().toISOString(), rejections_by_status: {} };
     const fetchImpl = durableSourceFetch(ctx.storage);
     // The durable fetch cache owns failure expiry. A second parser-layer failure
     // cache would restart the 30s timer after eviction and delay source recovery.
@@ -57,20 +66,28 @@ export class ElectoralCoordinator {
     try {
       if (this.env.EVM_ENABLED !== 'true') throw new HttpFailure(503, 'Service disabled', 60);
       const config = readWorkerConfig(this.env), url = new URL(request.url);
-      if (request.method !== 'POST' || url.origin !== 'https://coordinator' || url.pathname !== '/mcp' || url.search) throw new HttpFailure(404, 'Not found');
+      if (url.origin !== 'https://coordinator' || url.search) throw new HttpFailure(404, 'Not found');
       const clientId = request.headers.get('x-evm-client-id');
       if (clientId && !config.tokens.some(token => token.id === clientId)) throw new HttpFailure(403, 'Unknown client');
+      if (url.pathname === '/admin/usage' && request.method === 'GET') {
+        if (!clientId || !config.operatorIds.includes(clientId)) throw new HttpFailure(403, 'Operator required');
+        return Response.json({ ...await readUsage(this.ctx.storage, config), active_requests: this.active, transient: this.transientStats }, { headers: { 'cache-control': 'no-store' } });
+      }
+      if (request.method !== 'POST' || url.pathname !== '/mcp') throw new HttpFailure(404, 'Not found');
       if (!clientId && !config.anonymous) throw new HttpFailure(403, 'Client required');
       if (this.active >= config.maxConcurrent) throw new HttpFailure(503, 'Server busy', 1);
       this.active++; admitted = true;
       await takeBudget(this.ctx.storage, config, clientId);
-      // Enforce the body bound again for any other code holding the private binding.
-      await boundedBody(request.clone());
+      const text = await boundedBody(request);
       server = createMcpServer(this.dispatch);
       const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true, maxRequestBodySize: 1024 * 1024 });
       await server.connect(transport);
-      return await transport.handleRequest(request);
-    } catch (error) { return failureReply(error); }
+      return await transport.handleRequest(new Request(request.url, { method: 'POST', headers: request.headers, body: text }));
+    } catch (error) {
+      const status = error instanceof HttpFailure ? error.status : 503;
+      this.transientStats.rejections_by_status[status] = (this.transientStats.rejections_by_status[status] ?? 0) + 1;
+      return failureReply(error);
+    }
     finally { if (admitted) this.active--; if (server) await server.close().catch(() => {}); }
   }
 }
