@@ -1,0 +1,47 @@
+name: Electoral Vote Map Example
+
+on:
+  pull_request:
+    paths:
+      - 'native/electoral-vote-map/**'
+      - '.github/workflows/electoral-vote-map.yml'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'native/electoral-vote-map/**'
+      - '.github/workflows/electoral-vote-map.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: native/electoral-vote-map/package-lock.json
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: MCPAQL/spec
+          ref: 52640154fc9d9594f1991101dd7a44a9fad3722a
+          path: .mcpaql-spec
+          persist-credentials: false
+      - name: Install locked dependencies
+        working-directory: native/electoral-vote-map
+        run: npm ci --ignore-scripts
+      - name: Test domain and MCP behavior
+        working-directory: native/electoral-vote-map
+        run: npm test
+      - name: Validate all introspection variants against pinned spec schemas
+        working-directory: native/electoral-vote-map
+        run: node scripts/check-schemas.js ../../.mcpaql-spec/schemas
+      - name: Check dependency advisories
+        working-directory: native/electoral-vote-map
+        run: npm audit --audit-level=low

@@ -35,5 +35,8 @@ CLAUDE.md
 generated/*/adapter/node_modules/
 generated/*/adapter/dist/
 
+# Native runnable examples
+native/*/node_modules/
+
 # REA validation targets, built in the VM
 generated/rea-mcp/validation/targets/build/

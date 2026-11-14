@@ -25,6 +25,12 @@ For **normative protocol specifications**, see the [spec repository](https://git
 | [Chief MCP Golden Path](generated/chief-mcp/README.md) | Capture, reviewed endpoint overrides, generated adapter, read-only parity suite, and token-footprint comparison (60 tools to 5) | Chief MCP server |
 | [Chief MCP, Project-Aware](generated/chief-mcp-projects/README.md) | Same upstream, generated with `tenancy`: the model lists projects, sees and switches the active one, and targets a project per call, instead of a project ID pinned in config | Chief MCP server |
 
+### Native Web Adapters
+
+| Example | Description | Source |
+|---------|-------------|--------|
+| [Electoral Vote Map](native/electoral-vote-map/README.md) | Discover the site's scenarios, explore state flips, apply researched congressional results under explicit assumptions, and return clickable maps through MCP-AQL. | Electoral Vote Map public map payload and share URLs |
+
 ### Native Sensor Adapters
 
 | Example | Description | Source |
@@ -51,7 +57,7 @@ Why this is cleaner right now:
 
 ## Structure
 
-Each example adapter is a Markdown file with YAML front matter following the [Adapter Element Type Specification](https://github.com/MCPAQL/spec/blob/develop/docs/adapter/element-type.md). The front matter contains all operation mappings, and the Markdown body provides human-readable documentation.
+Declarative adapters under `adapters/` are Markdown files with YAML front matter following the [Adapter Element Type Specification](https://github.com/MCPAQL/spec/blob/develop/docs/adapter/element-type.md). The front matter contains operation mappings, and the Markdown body provides human-readable documentation. Runnable generated adapters live under `generated/`; native implementations live under `native/`, with their own setup and validation instructions.
 
 ## How to Use
 

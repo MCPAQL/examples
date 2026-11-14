@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Native Electoral Vote Map MCP-AQL demo (`native/electoral-vote-map/`): live site scenario discovery, state/district edits and flips, projected electoral allocations, comparisons, and a research handoff for hypothetical maps based on congressional results. Includes a stdio server, strict introspection, source-aware results, protocol/schema checks and deterministic tests.
+
 - REA (Reverse Engineer Anything) adapter example, stage 1: static analysis (`generated/rea-mcp/`)
   - Wraps the local stdio MCP server `rea-agents@6.5.0` using the adapter generator's stdio upstream
   - Captured offline from REA's published tool catalog with `mcpaql-import-catalog`, without running REA; classified from REA's own effect flags
