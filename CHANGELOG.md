@@ -10,6 +10,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Added
 
+- Electoral Worker opt-in OAuth with Cloudflare's provider library, Google OIDC sign-in, Turnstile consent verification, separate authentication storage budgets and account quotas shared across client apps. OAuth and public enrollment remain disabled until provider setup and live qualification.
+
 - Electoral Worker per-client concurrent admission limits preserve global capacity for other clients during one credential's burst.
 
 - Electoral Worker abuse safeguards: persistent per-client daily allowances, shared admission before body parsing, and an explicitly authorized aggregate usage endpoint.
@@ -41,6 +43,8 @@ This is a rolling examples collection and uses date-based versioning
   - REA parity results (2026-10-20, isolated VM; `validation/results/2026-10-20/`): of 131 operations, 87 identical, 2 identical apart from per-process fields, 1 matched in session setup, 29 `SAME_ERROR` and 12 not run; none divergent
 
 ### Fixed
+
+- Electoral OAuth consent now disables refresh tokens when offline access is declined or not requested, bounds token lifetimes to the sign-in window, and removes stale length/encoding headers from decoded identity-provider responses.
 
 - Electoral Vote Map duplicate groups preserve each source row's original raw label, including suffix/whitespace differences, and restore the correct label when expanded with keep-all weighting.
 

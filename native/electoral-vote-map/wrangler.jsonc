@@ -3,7 +3,7 @@
   "name": "electoral-vote-map-mcpaql",
   "main": "src/worker.js",
   "compatibility_date": "2026-11-13",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "workers_dev": false,
   "preview_urls": false,
   "observability": { "enabled": false },
@@ -14,6 +14,10 @@
     "EVM_ENABLED": "false",
     "EVM_PUBLIC_ORIGIN": "https://electoral.mcpaql.org",
     "EVM_ALLOW_ANONYMOUS": "false",
+    "EVM_OAUTH_ENABLED": "false",
+    "EVM_OAUTH_PUBLIC_SIGNUP": "false",
+    "EVM_OAUTH_DCR_ENABLED": "false",
+    "EVM_OIDC_ISSUER": "https://accounts.google.com",
     "EVM_DAILY_REQUEST_LIMIT": "10000",
     "EVM_CLIENT_DAILY_REQUEST_LIMIT": "1000",
     "EVM_OPERATOR_CLIENT_IDS": "[]",
@@ -24,14 +28,30 @@
   },
   // EVM_CLIENT_TOKENS is an independent Worker secret, never Maker Perks data.
   "durable_objects": {
-    "bindings": [{ "name": "ELECTORAL_COORDINATOR", "class_name": "ElectoralCoordinator" }]
+    "bindings": [
+      { "name": "ELECTORAL_COORDINATOR", "class_name": "ElectoralCoordinator" },
+      { "name": "ELECTORAL_OAUTH_COORDINATOR", "class_name": "OAuthCoordinator" }
+    ]
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["ElectoralCoordinator"] }],
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["ElectoralCoordinator"] },
+    { "tag": "v2", "new_sqlite_classes": ["OAuthCoordinator"] }
+  ],
   "ratelimits": [{
     "name": "MCP_RATE_LIMITER",
     "namespace_id": "7201",
     "simple": { "limit": 60, "period": 60 }
+  }, {
+    "name": "OAUTH_NETWORK_LIMITER",
+    "namespace_id": "7202",
+    "simple": { "limit": 300, "period": 60 }
+  }, {
+    "name": "OAUTH_FLOW_LIMITER",
+    "namespace_id": "7203",
+    "simple": { "limit": 30, "period": 60 }
   }]
+  // OAuth additionally requires a NEW, dedicated OAUTH_KV namespace binding,
+  // provider credentials and Turnstile configuration. See OAUTH.md.
   // Workers Free enforces its 10 ms edge CPU allowance. Qualify that plan before
   // adding traffic; a paid-plan CPU override does not raise the free allowance.
 }

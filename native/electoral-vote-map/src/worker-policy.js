@@ -22,6 +22,7 @@ export function readWorkerConfig(env) {
     return Number(value);
   };
   if (env.EVM_ALLOW_ANONYMOUS !== undefined && !['true', 'false'].includes(env.EVM_ALLOW_ANONYMOUS)) throw new Error('Invalid anonymous policy');
+  if (env.EVM_OAUTH_ENABLED !== undefined && !['true', 'false'].includes(env.EVM_OAUTH_ENABLED)) throw new Error('Invalid OAuth policy');
   const tokens = [];
   if (env.EVM_CLIENT_TOKENS !== undefined) {
     if (env.EVM_CLIENT_TOKENS.length > 16_384) throw new Error('Invalid client configuration');
@@ -36,11 +37,14 @@ export function readWorkerConfig(env) {
     if (!tokens.length || tokens.length > 32) throw new Error('Invalid client configuration');
   }
   const anonymous = env.EVM_ALLOW_ANONYMOUS === 'true';
-  if (!anonymous && !tokens.length) throw new Error('Client authentication required');
+  const oauth = env.EVM_OAUTH_ENABLED === 'true';
+  if (oauth && anonymous) throw new Error('OAuth requires authenticated access');
+  if (!anonymous && !tokens.length && !oauth) throw new Error('Client authentication required');
   const operatorIds = JSON.parse(env.EVM_OPERATOR_CLIENT_IDS ?? '[]');
   if (!Array.isArray(operatorIds) || operatorIds.length > 32 || new Set(operatorIds).size !== operatorIds.length || operatorIds.some(id => !tokens.some(token => token.id === id))) throw new Error('Invalid operator configuration');
   return {
-    origin: origin.origin, anonymous, tokens, operatorIds,
+    origin: origin.origin, anonymous, oauth, tokens, operatorIds,
+    maxDailyClients: integer('EVM_MAX_DAILY_CLIENTS', oauth ? 256 : 32, 512),
     dailyLimit: integer('EVM_DAILY_REQUEST_LIMIT', 10_000, 100_000),
     clientDailyLimit: integer('EVM_CLIENT_DAILY_REQUEST_LIMIT', 1000, 100_000),
     perMinute: integer('EVM_REQUESTS_PER_MINUTE', 120, 1000),
@@ -119,7 +123,7 @@ export async function takeBudget(storage, config, clientId, time = Date.now()) {
     let client;
     if (clientId) {
       client = budget.clients[`client:${clientId}`];
-      if (!client && Object.keys(budget.clients).length >= 32) throw new HttpFailure(429, 'Client quota table full', 60);
+      if (!client && Object.keys(budget.clients).length >= config.maxDailyClients) throw new HttpFailure(429, 'Client quota table full', dailyRetry);
       client ??= { tokens: config.perClientPerMinute, updated: time, count: 0 };
       // Legacy records have no per-client count. Conservatively attribute the
       // existing global count rather than granting a new allowance on upgrade.

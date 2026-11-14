@@ -19,7 +19,9 @@
     "smoke:polling": "node scripts/polling-live-smoke.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.32.2"
+    "@cloudflare/workers-oauth-provider": "1.2.4",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "openid-client": "6.9.0"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
