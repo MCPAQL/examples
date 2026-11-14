@@ -296,3 +296,24 @@ test('polling failures cool down and strict/quarantine policy changes share one 
   await assert.rejects(partial(dataset.id));
   assert.equal(calls, 1);
 });
+
+test('duplicate groups retain each raw label and restore it for records and contributing polls', async () => {
+  const first = fixture.split('\n')[1];
+  const labels = ['Example Research-3', 'Example Research', '  Example Research-3  '];
+  const text = fixture + first.replace(labels[0], labels[1]) + '\n' + first.replace(labels[0], labels[2]) + '\n';
+  const data = parsePollingCsv(text, dataset, {});
+  const provenance = labels.map((raw_label, i) => ({ source_row: [2, 15, 16][i], raw_label }));
+  assert.deepEqual(data.records[0].source_labels, provenance);
+  const collapsed = pollAverage(data, baseQuery);
+  assert.equal(collapsed.poll_count, 2);
+  assert.deepEqual(collapsed.included_polls[0].source_labels, provenance);
+  assert.deepEqual(collapsed.duplicate_groups[0].source_labels, provenance);
+  const kept = pollAverage(data, { ...baseQuery, duplicate_policy: 'keep_all' });
+  assert.equal(kept.poll_count, 4);
+  assert.deepEqual(kept.included_polls.slice(0, 3).map(r => r.raw_label), labels);
+  assert.deepEqual(kept.included_polls.slice(0, 3).map(r => r.source_labels), provenance.map(row => [row]));
+  const local = createAdapter({ loadPolling: createPollingClient({ fixtureCsv: text }) });
+  const result = await local('mcp_aql_read', { operation: 'get_state_polls', params: { ...baseQuery, duplicate_policy: 'keep_all' } });
+  assert.equal(result.success, true);
+  assert.deepEqual(result.data.records.slice(0, 3).map(r => r.raw_label), labels);
+});

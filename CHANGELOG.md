@@ -36,6 +36,8 @@ This is a rolling examples collection and uses date-based versioning
 
 ### Fixed
 
+- Electoral Vote Map duplicate groups preserve each source row's original raw label, including suffix/whitespace differences, and restore the correct label when expanded with keep-all weighting.
+
 - Spell-check CI pins CSpell 10.5.0 and disables install lifecycle scripts, avoiding missing dependency tarballs in the moving latest release; workflow edits also trigger the check.
 
 - Electoral Vote Map admission rejections no longer consume shared or per-client tokens or reserve new identity slots. Includes regression coverage for client isolation, table/concurrency rejection, and oversized HTTP headers; bounds eviction sweeps to once per second and documents proxy/address-rotation limitations.

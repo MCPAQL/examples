@@ -124,8 +124,16 @@ export function parsePollingCsv(text, dataset, source, { row_policy = 'strict' }
         source_row: fields.source_row,
       };
       const identity = JSON.stringify({ ...record, source_row: undefined, raw_label: undefined });
-      if (seen.has(identity)) { seen.get(identity).source_rows.push(record.source_row); duplicateRows++; continue; }
+      const sourceLabel = { source_row: record.source_row, raw_label: record.raw_label };
+      if (seen.has(identity)) {
+        const group = seen.get(identity);
+        group.source_rows.push(record.source_row);
+        group.source_labels.push(sourceLabel);
+        duplicateRows++;
+        continue;
+      }
       record.source_rows = [record.source_row];
+      record.source_labels = [sourceLabel];
       record.source_group_id = `${dataset.id}:row:${record.source_row}`;
       seen.set(identity, record); records.push(record);
     } catch (error) {
@@ -188,7 +196,7 @@ export function pollRecords(data, params) {
   const duplicate_policy = params.duplicate_policy ?? 'collapse_indistinguishable';
   requireValue(['collapse_indistinguishable', 'keep_all'].includes(duplicate_policy), 'Invalid duplicate_policy');
   const groups = data.records.filter(r => r.race_id === params.race_id && isoDate(r.source_date) <= cutoff);
-  const records = duplicate_policy === 'keep_all' ? groups.flatMap(r => (r.source_rows ?? [r.source_row]).map(row => ({ ...r, source_row: row, source_rows: [row] }))) : groups;
+  const records = duplicate_policy === 'keep_all' ? groups.flatMap(r => r.source_labels.map(label => ({ ...r, source_row: label.source_row, raw_label: label.raw_label, source_rows: [label.source_row], source_labels: [label] }))) : groups;
   const counts = Object.fromEntries(RECORD_KINDS.map(kind => [kind, records.filter(r => r.kind === kind).length]));
   const partial = data.quality?.coverage === 'partial';
   return {
@@ -199,7 +207,7 @@ export function pollRecords(data, params) {
     duplicate_policy, dataset_indistinguishable_rows: data.duplicate_rows_removed,
     dataset_duplicate_rows_removed: duplicate_policy === 'keep_all' ? 0 : data.duplicate_rows_removed,
     race_duplicate_rows: groups.reduce((n, r) => n + (r.source_rows?.length ?? 1) - 1, 0),
-    duplicate_groups: groups.filter(r => r.source_rows?.length > 1).map(r => ({ source_group_id: r.source_group_id, source_rows: r.source_rows, race_id: r.race_id, source_date: r.source_date })),
+    duplicate_groups: groups.filter(r => r.source_rows?.length > 1).map(r => ({ source_group_id: r.source_group_id, source_rows: r.source_rows, source_labels: r.source_labels, race_id: r.race_id, source_date: r.source_date })),
     records, source: data.source, notes: data.notes,
   };
 }
